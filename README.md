@@ -2,16 +2,16 @@
 
 This is the working area for the individual Internet-Draft, "TODO - Your title".
 
-* [Editor's Copy](https://danwing.github.io/tsvwg-cidfi/#go.draft-wing-tsvwg-cidfi.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-wing-tsvwg-cidfi)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-wing-tsvwg-cidfi)
-* [Compare Editor's Copy to Individual Draft](https://danwing.github.io/tsvwg-cidfi/#go.draft-wing-tsvwg-cidfi.diff)
+* [Editor's Copy](https://danwing.github.io/cidfi/#go.draft-wing-cidfi.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-wing-cidfi)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-wing-cidfi)
+* [Compare Editor's Copy to Individual Draft](https://danwing.github.io/cidfi/#go.draft-wing-cidfi.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/danwing/tsvwg-cidfi/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/danwing/cidfi/blob/main/CONTRIBUTING.md).
 
 Contributions can be made by creating pull requests.
 The GitHub interface supports creating pull requests using the Edit (✏) button.

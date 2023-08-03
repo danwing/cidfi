@@ -1,5 +1,5 @@
 ---
-title: "QUIC CID Flow Indicator"
+title: "QUIC CID Flow Indicator (CIDFI)"
 abbrev: "CIDFI"
 category: std
 
@@ -141,7 +141,7 @@ Integrity:
 : The QUIC CID is integrity protected by QUIC itself, and cannot
 be modified by on-path network elements.
 
-Transport compliance:
+Internet Survival:
 : Considering DSCP has poor survival rate across
 the Internet {{pathologies}} and each network has its own DSCP
 definition, the protocol described in this document allows signaling a
@@ -149,14 +149,17 @@ mapping from QUIC CID to a specific DSCP code point. The network
 element can use this mapping to inform its traditional DSCP packet
 handling with higher confidence of the sender's DSCP intent.
 
-Same connection for metadata:
-: By using the same 5-tuple for the network-server
-communication as the client-server communication we have the best
-chance to reach the same server through load balancers.
+Side-Channel to Same Server:
+: The side-channel communcation is time-sensitive and needs to reach
+the same server.  A design using the same 5-tuple for the side-channel
+as for the primary client-server channel provides best chance to reach
+the same server through load balancers.
+
+Client Authorization:
+: The client needs to authorize network participation in CIDFI.
 
 
-
-# Network Preparation
+# Network Preparation: DNS SVCB records
 
 The local network is configured to respond to DNS SVCB
 {{!I-D.ietf-dnsop-svcb-https}} queries for _cidfi.cidfi.arpa with the
@@ -198,9 +201,7 @@ _cidfi.1.113.0.203.in-addr.arpa.  This provides a way to immediately
 deploy CIDFI, without requiring customer premise equipment support for
 DNS SVCB resource records or CIDFI aggregation.  However, it has the
 disadvantage of additional network traffic each time a client attaches
-to a network.
-
-> See also {{discuss-in-addr}}
+to a network.  See also {{discuss-in-addr}}.
 
 
 If both techniques above failed it indicates the local network does
@@ -251,7 +252,7 @@ application needs to receive network performance metrics.
 
 
 
-## Client Learns Server Supports CIDFI
+## Client Learns Server Supports CIDFI {#server-supports-cidfi}
 
 On initial connection to a QUIC server, the client includes a new QUIC
 transport parameter CIDFI.
@@ -260,16 +261,22 @@ If the server does not indicate CIDFI support, processing stops.
 
 If the server indicates CIDFI support, then:
 
- * the CIDFI server signals the TLS SNI it wants to use for
- the incoming side-channel communications from the CIDFI network
- element.  This is necessary because the CIDFI network element
- cannot see the TLS SNI of the primary QUIC connection {{?I-D.ietf-tls-esni}}.  See also {{side-channel-certificate}}.
+ * the CIDFI server sends the TLS SNI it wants to use for the
+   incoming side-channel communications from the CIDFI network
+   element.  This is necessary because the CIDFI network element does
+   not have visibility to the SNI of the primary QUIC connection
+   ({{?I-D.ietf-tls-esni}}).  See also {{side-channel-certificate}}.
 
+ * the server sends the QUIC Connection IDs it will use for its
+   server-to-network element connection, which are reserved for its
+   use (that is, cannot be used by the QUIC client for its primary
+   communication to the server).
 
  * the client sends the certificate fingerprints of the authorized
-network elements to the server.
+   network element(s) to the server, which were obtained in {{client-authorizes}}.
 
-## Client Requests Participation
+
+## Client Requests Network Element Participation
 
 Using its QUIC channel with each of the CIDFI network elements, the
 client signals both the long Connection ID and the short Connection ID
@@ -289,20 +296,19 @@ multiple NATs on the path, IPv6/IPv4 translation, and similar
 technologies complicate accurate signaling of the source IP address
 and source UDP port.
 
+After receiving this request, each network element initiates a QUIC
+connection to the server (see also {{side-channel-certificate}})
+using mutual TLS, which are validated against the certificate fingerprints
+which were provided in {{server-supports-cidfi}}.  This QUIC connection
+uses the reserved QUIC Connection IDs that were communicated to the
+
+
 
 ## Metadata Exchanged
 
-The network elements initiate a connection to the
-
-choose their own QUIC source Connection-ID
-and their own destination Connection-ID.  This MUST be different
-from the source and destination Connection-IDs used towards that
-server on that same 5-tuple.
-
-
 There are two types of metadata exchanged, described below.
 
-### Server to Network Elements
+### Server to Network Elements {#server-to-network}
 
 To each of the network elements, the serverr sends its mapping
 of QUIC CIDs to DSCP code points.
@@ -314,33 +320,37 @@ CID.  This can be accomplished by sending the new CID well in advance
 of changing CIDs.
 
 
-### Network Elements to Server
+### Network Element to Server {#network-to-server}
 
-The network elements This will be bandwidth, burst rate, and other
-information such as defined in
-{{I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
+The network element send network performance information to the
+server.  This performance information pertains to this connection's
+allowed (or available) bandwidth, burst rate, and other information
+such as defined in {{I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
 
-
+This information is sent whenever it changes significantly, but MUST
+NOT be sent more frequently than once every second.
 
 
 # CID Collision {#collision}
 
 The QUIC client and server can change their QUIC CIDs.  A CID collision
-occurs if those CIDs are also used by the network element(s) on the same
-5-tuple.
+would occur if those CIDs are also used by the network element(s) on the
+side-channel, which shares the same 5-tuple.
 
-To avoid this problem, the network elements and server convey a set of CIDs
-they will use for their side channel communication, which MUST NOT be
-used by the QUIC client or QUIC server for their QUIC channel.  This set
-of reserved CIDs is purposefully small so that the QUIC client and server
-are still free to use a large set of CIDs to preserve
+To avoid CID collision the network elements and server sends a set of
+CIDs they will use for their side channel communication through the
+client.  The client is the only party that has a communication path to
+the CIDFI network element(s) and the server.  This set of reserved
+CIDs is purposefully small (~4) so that the QUIC client and server are
+able to use almost their entire CID space.
 
-## Topology Change {#topology}
+TODO: more details.
 
-Network topology change:  When topology changes (such as switching
-to a backup WAN connection, or such as switching from Wi-Fi to 5G),
-the QUIC server will consider this a connection migration and will
-issue a PATH_CHALLENGE.
+# Topology Change {#topology}
+
+When topology changes (such as switching to a backup WAN connection,
+or such as switching from Wi-Fi to 5G), the QUIC server will consider
+this a connection migration and will issue a PATH_CHALLENGE.
 
 Upon receipt of PATH_CHALLENGE the CIDFI-aware client SHOULD
 re-discover its CIDFI network elements {{discovery}}.  If that
@@ -356,14 +366,19 @@ IDs (see {{collision}}).
 
 This section discusses the issues that benefit from wider discussion.
 
-## Edge Router Packet Examination
+## Overhead of Packet Examination
 
-If CID-to-DSCP mapping was signaled by the server, the edge router
-has to examine each packet for a matching CID for the lifetime of
-the connection.  This is more computationally expensive than examining
-DSCP bits.
+If CID-to-DSCP mapping was signaled by the server as described in
+{{server-to-network}}, the edge router has to examine each packet for
+a matching CID for the lifetime of the connection.
 
-## Mapping CID to DSCP
+It may be helpful to DSCP mark the packet after examination to reduce
+their burden of examining the packets; however, this requires
+coordination of DSCP meanings in those downstream networks which would
+would persist as an operational burden.
+
+
+## Overhead of Mapping CID to DSCP
 
 Network Elements have to maintain per-5-tuple mapping of QUIC CID to
 DSCP, which needs updating whenever sender changes its CID.  This is
@@ -380,19 +395,22 @@ The in-addr.arpa discovery technique in {{discovery}} incurs load on
 arpa servers (not cool) and we might never be able to sunset that
 mechanism entirely.  Need other ideas.
 
-## Side-Channel Certificate {#side-channel-certificate}
+## Privacy Side-Channel Certificate {#side-channel-certificate}
 
-Assuming the primary QUIC channel is using {{I-D.ietf-tls-esni}}, the
-server is likely to share some kind of identifying information in the
-certificate it wants to use for network-to-server communications, which
-is now known to the network operator.  This is undesirable.  While
-raw public keys {{?RFC7250}} offers some relief, raw public keys can
-still be correlated with known servers.
+When providing its certificate for authenticating the network
+element-to-server connection, the server is likely to share
+identifying information.  This discloses additional information to the
+network operator which may have been encrypted {{?I-D.ietf-tls-esni}}.
+While raw public keys {{?RFC7250}} offers some relief, raw public keys
+can still be correlated with known servers.
 
-An idea:  client performs the side-channel QUIC handshake with server,
-then hands keys to the CIDFI network element.  This means the network
-element doesn't perform QUIC handshake with the server and never knows
-server's CIDFI certificate.
+An idea: client performs the side-channel QUIC handshake with server
+then hands QUIC security context to the CIDFI network element, which
+takes over that QUIC connection on that same 5-tuple.  This means the
+CIDFI network element does not perform QUIC handshake with the server
+and never knows server's CIDFI certificate.  This incurs a little more
+air time traffic while retaining server identity privacy.
+
 
 
 # Security Considerations
@@ -444,7 +462,9 @@ The packet format would be a {{!RFC8489}} request packet containing
 a new STUN "CIDFI" attribute.  The STUN "CIDFI" attribute in the request would
 contain 512 null octets.  The 'counter' field allows network elements to
 increment that counter and, if fewer FQDNs are inside the packet, it indicates
-the packet wasn't big enough to contain all the desired FQDNs.
+the packet was not big enough to contain all the desired FQDNs and a larger
+packet should be originated by the client.  However, this code path is unlikely to
+get much exercise.
 
 ~~~~~
  0                   1                   2                   3
