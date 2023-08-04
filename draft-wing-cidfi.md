@@ -200,7 +200,7 @@ sent to its locally-connected clients.
 
 On network attach or detected topology change (see {{topology}}), the
 client determines if the network supports CIDFI and authorzes those
-network elements. 
+network elements.
 
 ## Client Learns Local Network Supports CIDFI {#discovery}
 
@@ -259,7 +259,7 @@ TODO: specify the encoding of the above information.
 On each connection to a server:
 
   1. On connection to a server, a client learns that the server supports CIDFI ({{server-supports-cidfi}}).
-  2. Client contacts the network elements learned from step (1) and requests
+  2. Client contacts the network elements learned from {{discovery}} and requests
      their participation.
   3. Network elements connect to the server by using the same 5-tuple
      as the client's existing QUIC session with the server.  This is the metadata
