@@ -71,6 +71,10 @@ informative:
     date: 2018-05
     target: https://www.sciencedirect.com/science/article/pii/S0140366417312835
 
+     IANA-QUIC:
+        title: QUIC
+        target: https://www.iana.org/assignments/quic/quic.xhtml
+        date: 2023-07-26
 
 --- abstract
 
@@ -79,32 +83,32 @@ individual packets between the network and server can improve the user
 experience especially on wireless networks which incur significant
 variability.
 
-This document describes how a client and server can cooperate so
-that their QUIC stream can be augmented with information about network
-conditions and augmented with information about packet importance.
+This document describes how clients and servers can cooperate so
+that their QUIC streams can be augmented with information about network
+conditions and packet importance.
 
 --- middle
 
 # Introduction
 
 This document gives an overview of CIDFI (pronounced "sid fee") which is
-a system of several protocols that provide both the QUIC {{!RFC9300}} client and
+a system of several protocols that provides both the QUIC {{!RFC9300}} client and
 the QUIC server with a list of the local network's CIDFI-aware network elements.
 Both the client and the server authorize the use of each of the CIDFI-aware
-network elements.  After authorization and activation of those CIDFI network
+network elements in a QUIC connection. After authorization and activation of those CIDFI network
 elements, the server sends metadata to
-the network element and the network element sends metadata to the
-server.  The metadata includes:
-  - network characteristics from the network element to the server, such as bandwidth
-  - DSCP mappings of a server's QUIC Connection IDs from the server towards the QUIC client
+a network element and the network element sends metadata to the
+server. The order and directionality of supplying metadata is service-specific. The metadata includes:
+  - Network characteristics from the network element to the server, such as bandwidth.
+  - DSCP mappings of a server's QUIC Connection IDs from the server towards the QUIC client.
 
-Below is a network diagram of a CIDFI system showing two
+{{arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
 bandwidth-constrained link between a smartphone handset and its Radio
 Access Newwork (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
-domains such as WiFi and an edge router.
+domains such as Wi-Fi and an edge router.
 
 ~~~~~
                            |                     |
@@ -126,7 +130,7 @@ domains such as WiFi and an edge router.
                            |                     |
  home/enterprise network   |    ISP network      |  server network
 ~~~~~
-{: artwork-align="center" title="Network Diagram"}
+{: #arch artwork-align="center" title="Network Diagram"}
 
 This document attempts to solve the problems described in
 {{?I-D.joras-sadcdn}}, {{?I-D.reddy-tsvwg-explcit-signal}}, and
@@ -139,12 +143,12 @@ This document attempts to solve the problems described in
 CID:
 : QUIC Connection Identifier.  Unless short or long are called out
 explicitly, this term covers both the value of the long header
-(Section 17.2 of {{!RFC9300}}) Connection ID and the length and value
-of the short header Connection ID (Section 17.3 of {{RFC9300}}).
+({{Section 17.2 of !RFC9300}}) Connection ID and the length and value
+of the short header Connection ID ({{Section 17.3 of !RFC9300}}).
 
-side channel:
-: communication between network element and server, or network element and client,
-which occurs within the same 5-tuple as the (primary) QUIC channel between client
+Side channel:
+: A communication between a network element and a server, or a network element and a client.
+The side channel between a netwrok element and a server occurs within the same 5-tuple as the (primary) QUIC connection between client
 and server.
 
 
@@ -152,20 +156,20 @@ and server.
 
 Privacy:
 : Only disclose packet importance to necessary network elements.  The
-importance of a packet is signaled by its QUIC CID and the mapping of a CID to
+importance of a packet is signaled by its QUIC CIDs and the mapping of a CID to
 its importance is communicated over an encrypted channel between the sender
 and the network element.
 
 Integrity:
-: The QUIC CID is integrity protected by QUIC itself, and cannot
+: The QUIC CIDs are integrity protected by QUIC itself, and cannot
 be modified by on-path network elements.
 
 Internet Survival:
 : Considering DSCP has poor survival rate across
 the Internet {{pathologies}} and each network has its own DSCP
-definition, the protocol described in this document allows signaling a
-mapping from QUIC CID to a specific DSCP code point. The network
-element can use this mapping to inform its traditional DSCP packet
+definition, the protocol described in this document allows senders to signal a
+mapping from QUIC CIDs to a specific DSCP value. Network
+elements can use this mapping to inform its conventional DSCP packet
 handling with higher confidence of the sender's DSCP intent.
 
 Side-Channel to Same Server:
@@ -178,7 +182,7 @@ Client Authorization:
 : The client needs to authorize network participation in CIDFI.
 
 
-# Network Preparation: DNS SVCB records
+# Network Preparation: DNS SVCB Records
 
 The local network is configured to respond to DNS SVCB
 {{!I-D.ietf-dnsop-svcb-https}} queries for _cidfi.cidfi.arpa with the
@@ -196,9 +200,9 @@ sent to its locally-connected clients.
 
 On network attach or detected topology change (see {{topology}}), the
 client determines if the network supports CIDFI and authorzes those
-network elements.
+network elements. 
 
-## Client learns local network supports CIDFI {#discovery}
+## Client Learns Local Network Supports CIDFI {#discovery}
 
 > ** Note: For this section, a different approach using probe packets is described in {{probe}}
   but the authors are currently not pursuing that technique (additional traffic, additional
@@ -206,8 +210,8 @@ network elements.
 
 The client determines if the local network provides CIDFI service by:
 
-* issuing a query to the local DNS server for _cidfi.cidfi.arpa. with
-the SVCB resource record type (64) {{I-D.ietf-dnsop-svcb-https}}.  If
+* Issuing a query to the local DNS server for _cidfi.cidfi.arpa. with
+the SVCB resource record type (64) {{!I-D.ietf-dnsop-svcb-https}}.  If
 this succeeds, processing skips to {{client-authorizes}}.
 
 * If the above DNS response returned no answer, the client determines
@@ -225,23 +229,24 @@ to a network.  See also {{discuss-in-addr}}.
 If both techniques above failed it indicates the local network does
 not support CIDFI and processing stops.
 
+> Some networks (e.g., cellular networks) may advertize CIDIFI support by means of dedicated Informaiton Elements during network attachments.
 
-## Client authorizes CIDFI network elements {#client-authorizes}
+## Client Authorizes CIDFI Network Elements {#client-authorizes}
 
-The SVCB response from the previous step will contain one or more
-CIDFI servers.  For example a CIDFI server belonging to the local
-Wi-Fi network and another CIDFI server belonging to the Internet
+The SVCB response from the previous step in {{discovery}} will contain one or more
+CIDFI-aware network elements.  For example a CIDFI-aware network element belonging to the local
+Wi-Fi network and another CIDFI-aware network element belonging to the Internet
 Service Provider (ISP).  In cases of (active/active or active/standby)
 multihoming, multiple ISPs might be provided.
 
-The client authorizes each of the CIDFI endpoints using its local
+The client authorizes each of the CIDFI-aware network elements using its local
 policy.  This policy might prompt the user, allow certain names (e.g.,
 *.example.net if the user's ISP is configured to be example.net),
 connect to the CIDFI servers and validate certificate or certificate
 chains, and so forth.
 
-After authorizing a subset of the CIDFI servers, the client connects
-to that subset of authorized CIDFI servers and obtains their
+After authorizing a subset of the CIDFI-aware network elements, the client connects
+to that subset of authorized CIDFI-aware network elements and obtains their
 certificate fingerprints and capabilities (ability to report network
 constraints, ability to perform CID-to-DSCP mapping) for use when
 communicating with a CIDFI-aware QUIC server.
@@ -253,7 +258,7 @@ TODO: specify the encoding of the above information.
 
 On each connection to a server:
 
-  1. On connection to server, client learns server supports CIDFI.
+  1. On connection to a server, a client learns that the server supports CIDFI ({{server-supports-cidfi}}).
   2. Client contacts the network elements learned from step (1) and requests
      their participation.
   3. Network elements connect to the server by using the same 5-tuple
@@ -273,11 +278,10 @@ and to the 5G modem its mapping from QUIC CID to DSCP and the
 application needs to receive network performance metrics.
 
 
-
 ## Client Learns Server Supports CIDFI {#server-supports-cidfi}
 
 On initial connection to a QUIC server, the client includes a new QUIC
-transport parameter CIDFI which is remembered for 0-RTT.
+transport parameter CIDFI ({{iana-tp}}) which is remembered for 0-RTT.
 
 If the server does not indicate CIDFI support, processing stops.
 
@@ -288,7 +292,7 @@ If the server indicates CIDFI support, then:
    element.  This is necessary because the CIDFI network element does
    not have visibility to the SNI of the primary QUIC connection
    ({{?I-D.ietf-tls-esni}}).  See also {{side-channel-certificate}}
-   for an alternative approach that has better privacy properties.
+   for an alternate approach that has better privacy properties.
 
  * the server sends the QUIC Connection IDs it will use for its
    server-to-network element connection, which are reserved for its
@@ -300,12 +304,12 @@ If the server indicates CIDFI support, then:
 
 TODO: specify the encoding of the above information.
 
-## Client Requests Network Element Participation
+## Client Requests Network Element's Participation
 
-Using its QUIC channel with each of the CIDFI network elements, the
+Using its QUIC channel with each of the CIDFI network elements it elects for a connection, the
 client signals both the long Connection ID and the short Connection ID
 length and Connection ID of the primary communication to the network
-element.  As QUIC allows changing the Connection ID and to avoid loss
+element.  As QUIC allows changing the Connection IDs and to avoid loss
 of CIDFI functionality, the client SHOULD additionally signal the next
 long and short Connection ID it anticipates using with the server.  The
 CIDFI network element MUST NOT use those signaled CIDs for its own
@@ -314,32 +318,31 @@ communication with the server.
 The client obtains the CIDFI network element's list of reserved QUIC
 CIDs (see {{collision}}).
 
-Note the source IP address and source UDP port are not signaled by
+Note that the source IP address and source UDP port number are not signaled by
 design.  This is because NATs ({{?NAPT=RFC3022}}, {{?NAT=RFC2663}}),
 multiple NATs on the path, IPv6/IPv4 translation, and similar
 technologies complicate accurate signaling of the source IP address
-and source UDP port.
+and source UDP port number.
 
-After receiving this request, each network element initiates a QUIC
+After receiving a request for participation from a client, each network element initiates a QUIC
 connection to the server (see also {{side-channel-certificate}})
 using mutual TLS, which are validated against the certificate fingerprints
-which were provided in {{server-supports-cidfi}}.  This QUIC connection
-uses the reserved QUIC Connection IDs that were communicated to the
-
+which are provided in {{server-supports-cidfi}}.  This QUIC connection
+uses the reserved QUIC Connection IDs that were communicated to the client by the server.
 
 
 ## Metadata Exchanged
 
-There are two types of metadata exchanged, described below.
+There are two types of metadata exchanged, described in the following sub-sections.
 
 ### Server to Network Elements {#server-to-network}
 
-To each of the network elements, the serverr sends its mapping
-of QUIC CIDs to DSCP code points.
+To each of the network elements, the server sends its mapping
+of QUIC CIDs to DSCP.
 
 To allow the QUIC endpoints to change their QUIC CIDs and preserve the
 network element treatment of the new CID, the 'next CID' MUST be
-communicated to the network elements prior to switching to the new
+communicated to the network elements prior to switching to a new
 CID.  This can be accomplished by sending the new CID well in advance
 of changing CIDs.
 
@@ -349,7 +352,7 @@ of changing CIDs.
 The network element send network performance information to the
 server.  This performance information pertains to this connection's
 allowed (or available) bandwidth, burst rate, and other information
-such as defined in {{I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
+such as defined, e.g., in {{?I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
 
 This information is sent whenever it changes significantly, but MUST
 NOT be sent more frequently than once every second.
@@ -377,7 +380,7 @@ or such as switching from Wi-Fi to 5G), the QUIC server will consider
 this a connection migration and will issue a PATH_CHALLENGE.
 
 Upon receipt of PATH_CHALLENGE the CIDFI-aware client SHOULD
-re-discover its CIDFI network elements {{discovery}}.  If that
+re-discover (if not already done) its CIDFI network elements {{discovery}}.  If that
 set of network elements differs from the previous set, the client
 SHOULD continue with normal CIDFI processing.
 
@@ -440,7 +443,6 @@ air time traffic while retaining server identity privacy.
 We want to reduce network communications to start CIDFI.
 
 
-
 # Security Considerations
 
 TODO Security
@@ -448,9 +450,14 @@ TODO Security
 
 # IANA Considerations
 
-## New QUIC Transport Parameter
+## New QUIC Transport Parameter {#iana-tp}
 
-Register new QUIC transport parameter "CIDFI", remembered for 0-RTT.
+This document requests IANA to register the following new permanent QUIC transport parameter
+in the "QUIC Transport Parameters" registry under the "QUIC" registry group available at {{IANA-QUIC}}:
+
+|Value|	Parameter Name|	Reference|
+|TBD1| CIDFI| This-Document|
+{: title="New QUIC Transport Parameter"}
 
 ## Special-use Domain Name
 
