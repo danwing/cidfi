@@ -71,10 +71,10 @@ informative:
     date: 2018-05
     target: https://www.sciencedirect.com/science/article/pii/S0140366417312835
 
-     IANA-QUIC:
-        title: QUIC
-        target: https://www.iana.org/assignments/quic/quic.xhtml
-        date: 2023-07-26
+  IANA-QUIC:
+    title: QUIC
+    target: https://www.iana.org/assignments/quic/quic.xhtml
+    date: 2023-07-26
 
 --- abstract
 
