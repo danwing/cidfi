@@ -142,7 +142,7 @@ Access Newwork (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
 domains such as Wi-Fi and an edge router.
 
-~~~~~
+~~~~~ aasvg
                            |                     |
 +--------+     +--------+  |  +--------+         |
 | CIDFI- |     | CIDFI- |  |  | CIDFI- |         |
@@ -162,7 +162,7 @@ domains such as Wi-Fi and an edge router.
                            |                     |
  home/enterprise network   |    ISP network      |  server network
 ~~~~~
-{: #fig-arch artwork-align="center" title="Network Diagram"}
+{: #fig-arch artwork-align="center" title="Network Diagram" :height=88}
 
 The QUIC-encrypted communication between the CIDFI-aware network
 element and the CIDFI-aware server is a side channel which uses the
@@ -171,12 +171,12 @@ client and the QUIC server.  In the figure below, steps (1) through
 (3) are a normal QUIC handshake, and steps (4) through (6) are the
 side-channel QUIC handshake.
 
-~~~~~
-203.0.113.1/12345
-  +--------+         +---------+                  203.0.113.2/443
-  | CIDFI- |         | CIDFI-  |                     +--------+
-  | aware  |         | aware   |                     | CIDFI- |
-  | QUIC   |         | network |                     | aware  |
+~~~~~ aasvg
+203.0.113.1/12345                                203.0.113.2/443
+  +--------+         +---------+                     +--------+
+  | CIDFI- |         | CIDFI-  |                     | CIDFI- |
+  | aware  |         | aware   |                     | aware  |
+  | QUIC   |         | network |                     | QUIC   |
   | client |         | element |                     | server |
   +---+----+         +----+----+                     +---+----+
       |                   |                              |
