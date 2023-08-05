@@ -20,7 +20,7 @@ keyword:
  - 5G
  - Wi-Fi
  - WiFi
- - DSCP
+
 
 venue:
 #  group: "Transport Area Working Group"
@@ -59,22 +59,49 @@ author:
 normative:
 
 informative:
+
   pathologies:
-    title: Exploring DSCP modification pathologies in the Internet
-    author:
+     title: Exploring DSCP modification pathologies in the Internet
+     author:
       -
         name: Ana Custura
       -
         name: Raffaello Secchi
       -
         name: Gorry Fairhurst
-    date: 2018-05
-    target: https://www.sciencedirect.com/science/article/pii/S0140366417312835
+     date: 2018-05
+     target: https://www.sciencedirect.com/science/article/pii/S0140366417312835
+
+  wifi-aggregation:
+    title: "Ending the Anomaly: Achieving Low Latency and Airtime Fairness in WiFi"
+    author:
+      -
+        name: Toke Høiland-Jørgensen
+      -
+        name: Michał Kazior
+      -
+        name: Dave Täht
+      -
+        name: Per Hurtig
+      -
+        name: Anna Brunstrom
+    target: https://www.usenix.org/conference/atc17/technical-sessions/presentation/hoilan-jorgesen
+    date: 2017-05-22
 
   IANA-QUIC:
     title: QUIC
     target: https://www.iana.org/assignments/quic/quic.xhtml
     date: 2023-07-26
+
+  IANA-WKU:
+    title: "Well-known URIs"
+    target: https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml
+    date: 2023-06-20
+
+  DSCP-Registry:
+    title: Differentiated Services Field Codepoints (DSCP)
+    target: https://www.iana.org/assignments/dscp-registry/dscp-registry.xhtml
+    date: 2023-07-21
 
 
 
@@ -104,9 +131,10 @@ a network element and the network element sends metadata to the
 server.  The order and directionality of supplying metadata is service-specific. The metadata includes:
 
   - Network characteristics from the network element to the server, such as bandwidth
-  - DSCP mappings of a server's QUIC Connection IDs from the server towards the QUIC client
+  - Mapping server's transmitted DCIDs on primary QUIC connection to metadata, such as priority
 
-{{arch}} provides a sample network diagram of a CIDFI system showing two
+
+{{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
 bandwidth-constrained link between a smartphone handset and its Radio
@@ -134,7 +162,7 @@ domains such as Wi-Fi and an edge router.
                            |                     |
  home/enterprise network   |    ISP network      |  server network
 ~~~~~
-{: #arch artwork-align="center" title="Network Diagram"}
+{: #fig-arch artwork-align="center" title="Network Diagram"}
 
 The QUIC-encrypted communication between the CIDFI-aware network
 element and the CIDFI-aware server is a side channel which uses the
@@ -173,7 +201,7 @@ side-channel QUIC handshake.
 
 This document attempts to solve the problems described in
 {{?I-D.joras-sadcdn}}, {{?I-D.reddy-tsvwg-explcit-signal}}, and
-{{?I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
+several metadata parameters of {{?I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
 
 # Conventions and Definitions
 
@@ -205,12 +233,11 @@ Integrity:
 be modified by on-path network elements.
 
 Internet Survival:
-: Considering DSCP has poor survival rate across
-the Internet {{pathologies}} and each network has its own DSCP
-finition, the protocol described in this document allows senders to signal a
-mapping from QUIC CIDs to a specific DSCP value. Network
-elements can use this mapping to inform its conventional DSCP packet
-handling with higher confidence of the sender's DSCP intent.
+: Metadata signaling, per-packet signaling,
+(in the side channel) of both per-packet metadata (in the server-to-network element direction) and
+which maps to both primary channeusing QUIC Destination CID) is expected to surpass the
+survival of other mechanisms and to reduce operational burden of non-CIDFI-aware
+routers.
 
 Side-Channel to Same Server:
 : The side-channel communcation is time-sensitive and needs to reach
@@ -287,9 +314,8 @@ chains, and so forth.
 After authorizing a subset of the CIDFI-aware network elements, the
 client makes a new connection (on a new 5-tuple) to those CIDFI-aware
 network elements and obtains their certificate fingerprints and
-capabilities (ability to report network constraints, ability to
-perform CID-to-DSCP mapping) for later use when communicating with a
-CIDFI-aware QUIC server.
+metadata that will be exchanged (see {{metadata-exchanged}}) for later use
+when communicating with a CIDFI-aware QUIC server.
 
 TODO: specify the encoding of the above information.
 
@@ -304,8 +330,9 @@ On each connection to a server:
   3. Network elements connect to the server by using the same UDP 4-tuple
      as the client's existing QUIC session with the server.  This is the metadata
      side channel.
-  4. Over that side channel, the QUIC server communicates its QUIC CID-to-DSCP mappings to the network
-     elements and the network elements send network performance data to the server.
+  4. Over that side channel, the QUIC server communicates its mapping from transmitted
+     QUIC Destination CIDs to packet metadata.  Over that same side channel the CIDFI network
+     element communicates network performance data to the server.
 
 These steps are described below.
 
@@ -314,8 +341,8 @@ functions in its direction.  This functionality will be expanded in
 later versions of this document.  For example, a mobile device
 connected to Wi-Fi with 5G backhaul might be running an interactive
 audio/video application needs to indicate to its internal Wi-Fi driver
-and to the 5G modem its mapping from QUIC CID to DSCP and the
-application needs to receive network performance metrics.
+and to the 5G modem its mapping from QUIC Destination CID to per-packet
+metadata and the application needs to receive network performance metrics.
 
 
 
@@ -374,36 +401,40 @@ uses the reserved QUIC Connection IDs that were communicated to the client by th
 
 
 
-## Metadata Exchanged
+## Mechanism for Metadata Exchange
 
 There are two types of metadata exchanged, described in the following sub-sections.
 
 ### Server to Network Elements {#server-to-network}
 
 To each of the network elements, the server sends its mapping
-of QUIC CIDs to DSCP code points.
+of QUIC CIDs to packet metadata (see {#packet-metadata}).
 
 To allow the QUIC endpoints to change their QUIC CIDs and preserve the
-network element treatment of the new CID, the 'next CID' MUST be
-communicated to the network elements prior to switching to a new
-CID.  This can be accomplished by sending the new CID well in advance
-of changing CIDs.
+network element treatment of the new CID, the same Destination CIDs
+communicated to the peer (as described in {{Section 5.1.1 of RFC9000}})
+MUST be communicated to the CIDFI network element.
 
+For each network element sending metadata in the same UDP 4-tuple, the
+network element's Destination CID is not counted against the primary
+QUIC connection's active_connection_id_limit (see {{Section 5.1.1 of RFC9000}}).
+
+The actual metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
 ### Network Element to Server {#network-to-server}
 
-The network element send network performance information to the
-server.  This performance information pertains to this connection's
-allowed (or available) bandwidth, burst rate, and other information
-(e.g., as defined in {{I-D.kaippallimalil-tsvwg-media-hdr-wireless}}).
+The network element send network performance information to the server
+which is intended to influence the sender'ss traffic rate (such as
+improving or reducing fidelity of the audio or video).
 
 This information is sent whenever it changes significantly, but MUST
 NOT be sent more frequently than once every second.
 
+The actual metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
 # Interaction with Load Balancers {#load-balancers}
 
-ECMP load balancers work with this mechanism unchanged, as the
+ECMP load balancers ({{Section 5.2.3 of !RFC9000}} work with this mechanism unchanged, as the
 source 3-tuple is the same for the primary QUIC session and the
 side-channel QUIC session.  Similarly an ECMP load balancer that
 front-ends a CID load balancer will send both the primary and
@@ -447,23 +478,117 @@ receives a QUIC packet with one of the CIDFI-reserved Connection
 IDs (see {{collision}}).
 
 
+# Details of Metadata Exchanged {#metadata-exchanged}
+
+This section describes the metadata that can be exchanged from the
+CIDFI-aware network element to the server (generally network
+performance information) and from the server to the CIDFI-aware
+network element.
+
+## CIDFI-aware Network Element to Server
+
+## Server to CIDFI-aware Network Element
+
+### Mapping Metadata Parameters to DCIDs {#metadata-parameters}
+
+Several of the metadata parameters from {{Section 4.2 of
+I-D.kaippallimalil-tsvwg-media-hdr-wireless}} can be mapped to QUIC
+Destination CID.
+
+Importance:
+: As described in {{Section 4.2.5 of I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
+
+Data burst:
+: As described in {{Section 4.2.6 of I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
+
+Delay budget:
+: The time, in milliseconds, before this packet has no value to the receiver.  Because
+{{I-D.kaippallimalil-tsvwg-media-hdr-wireless}} defines a multi-packet "MDU"
+identifier but QUIC Destination ID does not, the delay budget functionality
+is diminished with CIDFI.
+
+The other metadata parameters defined in
+{{I-D.kaippallimalil-tsvwg-media-hdr-wireless}} -- Timestamp, MDU
+Sequence, and Packet Counter -- are not available with CIDFI because they cannot
+be mapped to a QUIC Destination CID.
+
+Over the side-channel QUIC connection, the server sends an HTTP PUT
+request to the well-known URI ".cidfi/metadata-parameters" with an
+application/json body containing JSON indicating the Destination CID
+length and the mapping of importance, burst, and delay budget to the
+Destination CIDs:
+
+~~~~~
+  {"dcidlength":3,
+     "map":[
+       {"importance":17,"burst":83,"delaybudget":71,"dcids":[551,381]},
+       {"importance":3,"burst":888,"delaybudget":180,"dcids":[89,983]},
+       {"importance":7,"burst":37,"delaybudget":55,"dcids":[33]}]}
+~~~~~
+
+The CIDFI-aware network element responds with 200 Ok.
+
+### Mapping DiffServ Code Point (DSCP) to DCIDs
+
+A mapping from QUIC Destination CID to DiffServ code point
+{{!RFC2474}} leverages existing DiffServ handling that may already
+exist in the CIDFI network element.  If there are downstream network
+elements configured with the same DiffServ code point the CIDFI
+network element could mark the packet with that code point as well.
+
+Signaling the DiffServ values for different QUIC Destination CID
+increases the edge network's confidence the sender's DiffServ intent
+is preserved into the edge network, even if the DSCP bits were
+modified en route to the edge network (e.g., {{pathologies}}).
+
+Over the side-channel QUIC connection, the server sends an HTTP
+PUT request to the well-known URI ".cidfi/dscp" with an application/json
+body containing JSON indicating the Destination CID length and mapping
+the DSCP code-point from {{DSCP-Registry}} to the Destination CIDs:
+
+~~~~~
+  {"dcidlength":3,
+     "map":[
+       {"dscp":10,"dcids":[551,381]},
+       {"dscp":46,"dcids":[89,983]},
+       {"dscp":12,"dcids":[33]}]}
+~~~~~
+{: #fig-dscp-json artwork-align="left" title="Example JSON for DSCP Mapping"}
+
+The CIDFI-aware network element responds with 200 Ok.
+
+TODO: define ABNF
+
+
+## CIDFI-aware Network Element to Server
+
+Bandwidth.  Other parameters from {{I-D.joras-sadcdn}}.
+
+TODO: fill in this section.
+
+
 # Discussion Points
 
 This section discusses the issues that benefit from wider discussion.
 
 ## Overhead of Packet Examination
 
-If CID-to-DSCP mapping was signaled by the server as described in
-{{server-to-network}}, the edge router has to examine each packet for
-a matching CID for the lifetime of the connection.
-
-It may be helpful to DSCP mark the packet after examination to reduce
-their burden of examining the packets; however, this requires
-coordination of DSCP meanings in those downstream networks which would
-would persist as an operational burden.
+If CID-to-packet metadata was signaled by the server as described in
+{{server-to-network}}, the edge router has to examine the UDP payload
+of each packet for a matching Destination CID for the lifetime of the
+connection.
 
 
-## Overhead of Mapping CID to DSCP
+## Interaction with Wi-Fi Packet Aggregation
+
+Per-packet metadata influences transmission of that packet but may
+well conflict with some Wi-Fi optimizations (e.g., {{wifi-aggregation}})
+and similar 5G optimizations.
+
+his impact needs further study.
+
+
+## Overhead of Mapping CID to packet metadata
 
 Network Elements have to maintain a mapping between each UDP 4-tuple
 and QUIC CID and its DSCP code point.  This also needs updating
@@ -474,13 +599,15 @@ as proposed in {{?I-D.zmlk-quic-te}}.  However, this will ossify
 the meaning of those QUIC CIDs.  It also requires all networks to
 agree on the meaning of those QUIC CIDs.
 
+
 ## Discovery using in-addr.arpa  {#discuss-in-addr}
 
-The in-addr.arpa discovery technique in {{discovery}} incurs load on
+: The in-addr.arpa discovery technique in {{discovery}} incurs load on
 arpa servers (not cool) and we might never be able to sunset that
-mechanism entirely.  Need other ideas.
+mechanism entirely.  Need other ideas when SVCB can't be used.
 
-## Privacy Side-Channel Certificate {#side-channel-certificate}
+
+## Privacy of Side-Channel Certificate {#side-channel-certificate}
 
 When providing its certificate for authenticating the network
 element-to-server connection, the server is likely to share
@@ -496,9 +623,23 @@ CIDFI network element does not perform QUIC handshake with the server
 and never knows server's CIDFI certificate.  This incurs a little more
 air time traffic while retaining server identity privacy.
 
-## Delay to Start CIDFI
 
-We want to reduce network communications to start CIDFI.
+## Improve CIDFI Initialization time
+
+Find approaches to further reduce network communications to start CIDFI.
+
+
+## Primary QUIC Channel CID Change {#primary-cid-change}:
+
+Because the CIDFI network element, QUIC server, and QUIC client all
+cooperate to share the primary QUIC connection's Destination CID,
+when a new CIDFI network element is involved (e.g., due to client
+attaching to a different network), a new Destination CID SHOULD
+be used for the reasons discussed in {{Section 9.5 of !RFC9000}}}.
+
+Do we want/need CIDFI network element to change the Destination CID of
+its metadata communication in conjunction with the client changing its
+Destination CID?
 
 
 
@@ -519,9 +660,14 @@ in the "QUIC Transport Parameters" registry under the "QUIC" registry group avai
 {: title="New QUIC Transport Parameter"}
 
 
-## Special-use Domain Name
+## New Well-known URI "cidfi"
 
-Register new special-use domain name cidfi.arpa.
+This document requests IANA to register the new well-known URI "cidfi" in the
+"Well-Known URIs" registry available at {{IANA-WKU}}.
+
+## New Special-use Domain Name
+
+Register new special-use domain name cidfi.arpa for DNS SVCB discovery.
 
 --- back
 
@@ -586,5 +732,9 @@ get much exercise.
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+Thanks to Dave Täht, Magnus Westerlund, Christian Huitema, Gorry Fairhurst,
+and Tom Herbert for hallway discussions and feedback at TSVWG that encouraged
+the authors to consider the approach described in this document.
+
+
 
