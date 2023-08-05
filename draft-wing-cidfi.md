@@ -519,11 +519,12 @@ length and the mapping of importance, burst, and delay budget to the
 Destination CIDs:
 
 ~~~~~
-  {"dcidlength":3,
-     "map":[
-       {"importance":17,"burst":83,"delaybudget":71,"dcids":[551,381]},
-       {"importance":3,"burst":888,"delaybudget":180,"dcids":[89,983]},
-       {"importance":7,"burst":37,"delaybudget":55,"dcids":[33]}]}
+  {"metadata-parameters":[{"quicversion":1,
+    "dcidlength":3,
+       "map":[
+       {"importance":17,"burst":83,"delay":71,"dcids":[551,381]},
+       {"importance":3,"burst":888,"delay":180,"dcids":[89,983]},
+       {"importance":7,"burst":37,"delay":55,"dcids":[33]}]}]}
 ~~~~~
 
 The CIDFI-aware network element responds with 200 Ok.
@@ -547,11 +548,11 @@ body containing JSON indicating the Destination CID length and mapping
 the DSCP code-point from {{DSCP-Registry}} to the Destination CIDs:
 
 ~~~~~
-  {"dcidlength":3,
-     "map":[
-       {"dscp":10,"dcids":[551,381]},
-       {"dscp":46,"dcids":[89,983]},
-       {"dscp":12,"dcids":[33]}]}
+  {"dscp":[{"quicversion":1,
+    "dcidlength":3,
+    "map":[
+      {"dscp":10,"dcids":[123,456]},
+      {"dscp":46,"dcids":[998,183]}]}]}
 ~~~~~
 {: #fig-dscp-json artwork-align="left" title="Example JSON for DSCP Mapping"}
 
