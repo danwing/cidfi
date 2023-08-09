@@ -514,7 +514,7 @@ Delay budget:
 Some other metadata parameters from {{Section 4.2 of
 I-D.kaippallimalil-tsvwg-media-hdr-wireless}} cannot be successfully
 mapped into QUIC Destination ID such as timestamp, MDU
-Sequence, and Packet Counter.  
+Sequence, and Packet Counter.
 
 Over the CIDFI-dedicated QUIC stream, the server sends mapping
 information to the client when then propagates that information
