@@ -105,11 +105,6 @@ informative:
     target: https://www.iana.org/assignments/dns-svcb/dns-svcb.xhtml
     date: 2023-06-13
 
-  DSCP-Registry:
-    title: Differentiated Services Field Codepoints (DSCP)
-    target: https://www.iana.org/assignments/dscp-registry/dscp-registry.xhtml
-    date: 2023-07-21
-
 
 
 --- abstract
@@ -187,13 +182,14 @@ specifically for mapping from the QUIC Destination CID to the packet
 importance and for the TLS-encrypted communication from the client.
 
 In {{network-to-server}} this document describes network-to-server signaling
-similar to the use-case described in {{?I-D.joras-sadcdn}}, with metadata
+similar to the use-case described in {{Section 2 of ?I-D.joras-sadcdn}}, with metadata
 relaying through the client.
 
 In {{server-to-network}} this document describes server-to-network
 metadata signaling similar to the use-cases described in
-{{?I-D.reddy-tsvwg-explcit-signal}} and
-{{?I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
+{{?I-D.reddy-tsvwg-explcit-signal}},
+{{?I-D.kaippallimalil-tsvwg-media-hdr-wireless}}, and {{Section 3 of
+I-D.joras-sadcdn}}.
 
 
 # Conventions and Definitions
@@ -272,8 +268,8 @@ network elements ({{client-authorizes}}).
 
 > ** Note: For this section, a different approach using probe packets
   is described in {{probe}} but the authors are currently not pursuing
-  that technique (because of additional traffic and the additional
-  delay to establish CIDFI on a new connection).  It is retained for
+  that technique because of additional traffic and the additional
+  delay to establish CIDFI on a new connection.  It is retained for
   discussion.
 
 The client determines if the local network provides CIDFI service by
@@ -282,9 +278,8 @@ _cidfi-aware.cidfi.arpa. with the SVCB resource record type (64)
 {{I-D.ietf-dnsop-svcb-https}}.  If this succeeds, processing skips to
 {{client-authorizes}}.
 
-
-If both techniques above failed it indicates the local network does
-not support CIDFI and processing stops.
+If discovery failed it indicates the local network does not support
+CIDFI and processing stops.
 
 
 ## Client Authorizes CIDFI Network Elements {#client-authorizes}
@@ -302,7 +297,7 @@ client makes a new HTTPS connection to each of those CIDFI-aware
 network elements and validates their certificates.
 
 
-# Client Operation on Each Connection to a Server
+# Client Operation on Each Server Connection
 
 When a QUIC client connects to a QUIC server:
 
@@ -477,12 +472,6 @@ network element.
 communication and over the CIDFI-dedicated QUIC stream between the
 QUIC client and QUIC server.
 
-## CIDFI-aware Network Element to Server
-
-Because there is no direct communications from the network element
-to the server the communications are relayed through the client.
-
-TODO:  details.
 
 
 ## Server to CIDFI-aware Network Element
@@ -509,7 +498,13 @@ Data burst:
 : As described in {{Section 4.2.6 of I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
 
 Delay budget:
-: As described in {{Section 4.2.6 of I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
+: As described in {{Section 4.2.6 of
+I-D.kaippallimalil-tsvwg-media-hdr-wireless}}, counting from when the packet
+arrives at the CIDFI-aware network element to when it is transmitted.
+The client knows its own jitter (playout) buffer length and the client
+and server can calculate the one-way delay using timestamps.  With
+that information, the client can adjust the server's signaled delay
+budget with the client's own knowledge.  TODO: provide details.
 
 Some other metadata parameters from {{Section 4.2 of
 I-D.kaippallimalil-tsvwg-media-hdr-wireless}} cannot be successfully
@@ -530,9 +525,9 @@ and protocol:
   {"metadata-parameters":[{"quicversion":1,
     "dcidlength":3,
        "map":[
-       {"importance":17,"burst":83,"delay":71,"dcids":[551,381]},
-       {"importance":3,"burst":888,"delay":180,"dcids":[89,983]},
-       {"importance":7,"burst":37,"delay":55,"dcids":[33]}]}]}
+       {"import":17,"burst":83,"delaybudget":71,"dcids":[551,381]},
+       {"import":3,"burst":888,"delaybudget":180,"dcids":[89,983]},
+       {"import":7,"burst":37,"delaybudget":55,"dcids":[33]}]}]}
 ~~~~~
 
 
@@ -569,18 +564,39 @@ and protocol:
 
 
 
-
-
 ## CIDFI-aware Network Element to Server
 
-Bandwidth.  Other parameters from {{I-D.joras-sadcdn}}.
+The CIDFI-aware client informs the network element of the client's
+received Destination CIDs.  As bandwidth availability to that client
+changes, the CIDFI-aware network element updates the client with new
+metadata.
 
-TODO: fill in this section.
+For discussion purposes, JSON is shown below to give a flavor of the
+data sent from the CIDFI-aware network element to the client.  The
+authors anticipate a more efficient encoding such as {{!CBOR=RFC8949}}
+or pick-your-favorite encoding and protocol:
 
+~~~~~
+  {"dcid":123,
+   "bandwidth":"1Mbps"}
+~~~~~
+
+The client then sends that information to the server in the CIDFI-dedicated
+QUIC stream associated with that same Connection ID.
 
 # Discussion Points
 
 This section discusses the issues that benefit from wider discussion.
+
+## DCID ownership
+
+We don't want any arbitrary client to set DCID mappings or to receive
+network metadata for other client's DCIDs; rather, just for its DCIDs.
+
+How can client prove its ownership of a DCID to the CIDFI-aware
+network element?  Knowing the 4-tuple is one answer, but gets
+complicated considering address translation (IPv4 NAT, IPv4 NAPT,
+IPv6/IPv4).
 
 ## Overhead of Packet Examination
 
