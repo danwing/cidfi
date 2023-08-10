@@ -596,7 +596,38 @@ network metadata for other client's DCIDs; rather, just for its DCIDs.
 How can client prove its ownership of a DCID to the CIDFI-aware
 network element?  Knowing the 4-tuple is one answer, but gets
 complicated considering address translation (IPv4 NAT, IPv4 NAPT,
-IPv6/IPv4).
+IPv6/IPv4).  Better idea:  network element sends client a nonce
+which client has to send on the relevant primary QUIC socket.  The
+nonce could be a STUN packet (which is distinguishable from a
+QUIC packet, and is discarded by the remote peer).
+
+
+~~~~~ aasvg
+                                    CIDFI-aware
+   client                           edge router           server
+     |                                    |                  |
+   .. ..                                .. ..              .. ..
+     |                                    |                  |
+     |  "Map DCID=xyz as high importance" |                  |
+     +----------------------------------->|                  |
+     |  Prove it by sending nonce=12345   |                  |
+     |<-----------------------------------+                  |
+     |  nonce=12345                       |                  |
+     +------------------------------------------------------>|
+     |                                    |                  |
+     |                            "I saw my challenge!"      |
+     |                                    |                  |
+     |  "Map DCID=xyz as high importance" |                  |
+     +----------------------------------->|                  |
+     |  Ok                                |                  |
+     |<-----------------------------------+                  |
+~~~~~
+
+This has added advantage that CIDFI-aware network element only
+needs to start looking for QUIC DCIDs after that Nonce challenge
+completes on that UDP 4-tuple.
+
+
 
 ## Overhead of Packet Examination
 
