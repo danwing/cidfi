@@ -298,7 +298,8 @@ similar.
 After authorizing that subset of CIDFI-aware network elements, the
 client makes a new HTTPS connection to each of those CIDFI-aware
 network elements, validates their certificates, and obtains a CIDFI
-nonce from each network element used in {{participation}}.
+nonce from each network element used in {{participation}} to prove
+ownership of the UDP 4-tuple.
 
 
 # Client Operation on Each Server Connection
@@ -346,7 +347,7 @@ this CIDFI-dedicated stream as described in {{initial-metadata-exchange}}.
 At this point the client is aware of the server's (short) Destination
 CID.
 
-## Client Requests CIDFI Network Element's Participation {#participation}
+## Client Proves Ownership of UDP 4-Tuple
 
 To ensure the client exchanges information about its its own UDP 4-tuple
 with the CIDFI-network element, the client sends the CIDFI nonce it
@@ -375,46 +376,20 @@ CIDFI-aware network element.
      |                                    |                  |
      |  QUIC Initial, transport parameter=CIDFI              |
      +------------------------------------------------------>|
-     |  QUIC Initial, transport parameter=CIDFI              |
-     |<------------------------------------------------------+
      |  STUN nonce=12345                  |                  |
      +------------------------------------------------------>|
-     |                                    |               discard
+     |                                    |              discarded
+     |                                    |                  |
      |                            "I saw my nonce!"          |
      |                                    |                  |
+     |  QUIC Initial, transport parameter=CIDFI              |
+     |<------------------------------------------------------+
      |  "Map DCID=xyz as high importance" |                  |
      +----------------------------------->|                  |
      |  Ok                                |                  |
      |<-----------------------------------+                  |
 ~~~~~
 
-Using its HTTPS channel with each of the CIDFI network elements it previously authorized for CIDFI participation, the
-client signals the mapping of the server's transmitted short Destination Connection ID
-and its length to the CIDFI-aware network element.
-
-To maintain CIDFI functions when the QUIC server changes its transmitted
-Destination Connection ID, the server needs to send an additional NEW_CONNECTION_ID.
-This allows the client to signal both the currently-active DCID and the "next"
-DCID to the CIDFI network element so those can be used when the server
-wants to change its transmitted Destination Connection ID due to expiration.  Importantly, when the
-server wants to change its QUIC wants to change its transmitted Destination Connection
-ID due to QUIC-detected topology change, the server can immediately do that and the
-(new) network remains unable to link the two QUIC sessions ({{Section 9.5 of QUIC}}).
-When a QUIC-detected topology change occurs the client has to re-execute CIDFI discovery
-on the new network.
-
-
-Note that source IP address and source UDP port number are not
-signaled by design.  This is because NATs ({{?NAPT=RFC3022}},
-{{?NAT=RFC2663}}), multiple NATs on the path, IPv6/IPv4 translation,
-similar technologies, and QUIC connection migration all complicate
-accurate signaling of the source IP address and source UDP port
-number.
-
-If the CIDFI-aware router receives the HTTP map request but has not
-yet seen the STUN nonce message, it rejects the mapping request. This
-causes the client to re-send both the STUN nonce message and the
-mapping request(s).
 
 ### STUN CIDFI-NONCE Attribute
 
@@ -439,7 +414,45 @@ The CIDFI nonce is 128 bits and multiple nonces can be transmitted in
 a single STUN Binding Indication packet.  The STUN "Message Length"
 field indicates how many Nonces are contained within the STUN message.
 
-## Mechanism for Metadata Exchange {#initial-metadata-exchange}
+
+## Client Requests CIDFI Network Element's Participation {#participation}
+
+Using its HTTPS channel with each of the CIDFI network elements it
+previously authorized for CIDFI participation, the client signals the
+mapping of the server's transmitted short Destination Connection ID
+and its length to the CIDFI-aware network element.  As server support
+of the QUIC CIDFI transport parameter is remembered for 0-RTT, the
+client can immediately send the nonce.
+
+The primary purpose of a second Connection ID is connection migration
+({{Section 9 of QUIC}}).  With CIDFI, additional Connection IDs are
+necessary to:
+  * maintain CIDFI operation when topology remains the same.
+  * use Destination Connection ID to indicate packet importance
+
+To maintain CIDFI operation when topology remains the same, the
+CIDFI client signals the CIDFI-aware network elements of that 'next'
+Destination CID.  When QUIC detects a topology change, however, that
+Destination CID MUST NOT be used by the peer, otherwise it links
+the communication on the old topology to the new topology ({{Section 9.5 of QUIC}}).
+Thus, an additional Connection ID is purposefully not communicated
+from the CIDFI client to its CIDFI-aware network elements, so that
+Connection ID can be immediately used by the peer during connection
+migration when the topology changes.
+
+Note the source IP address and source UDP port number are not signaled
+by design.  This is because NATs ({{?NAPT=RFC3022}},
+{{?NAT=RFC2663}}), multiple NATs on the path, IPv6/IPv4 translation,
+similar technologies, and QUIC connection migration all complicate
+accurate signaling of the source IP address and source UDP port
+number.
+
+If the CIDFI-aware router receives the HTTP map request but has not
+yet seen the STUN nonce message, it rejects the mapping request. This
+causes the client to re-send both the STUN nonce message and the
+mapping request(s).
+
+## Initial Metadata Exchange {#initial-metadata-exchange}
 
 There are two types of metadata exchanged, described in the following sub-sections.
 
@@ -507,7 +520,7 @@ update more frequently than once every second.
 
 The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
-## Ongoing metadata exchange {#ongoing-metadata-exchange}
+## Ongoing Metadata Exchange {#ongoing-metadata-exchange}
 
 For the duration of the primary QUIC connection between the QUIC client and
 QUIC server, the client relays network element metadata changes to the server, and server's
@@ -667,12 +680,21 @@ QUIC stream associated with that same Connection ID.
 
 This section discusses the issues that benefit from wider discussion.
 
-## Overhead of Packet Examination
+## Client versus Server Signaling CID-to-importance Mapping
 
-If CID-to-packet metadata was signaled by the server as described in
-{{server-to-network}}, the edge router has to examine the UDP payload
-of each packet for a matching Destination CID for the lifetime of the
-connection.
+Need to evaluate number of round trips (and other overhead) of client
+signaling CID-to-importance mapping or server signaling CID-to-importance
+mapping.
+
+
+## Overhead of QUIC Packet Examination
+
+If CID-to-importance metadata was signaled by the server as described
+in {{server-to-network}}, the CIDFI-aware network elements have to
+examine the UDP payload of each packet for a matching Destination CID
+for the lifetime of the connection.  This is somewhat assuaged by
+the STUN nonce transmitted which may well be an easier signal to
+identify.
 
 
 ## Interaction with Wi-Fi Packet Aggregation
@@ -733,6 +755,11 @@ Communications are relayed through the client because only the
 client and server knows the identity of the server and can validate
 its certificate.
 
+For an attacker to succeed with the nonce challenge against a victim's
+UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE packet using the
+victim's source IP address.  Such spoofing of a victim's IP address is
+generally prevented on local networks (e.g., {{?RFC2827}} for IPv4,
+{{?RFC7513}} for IPv6).
 
 
 
