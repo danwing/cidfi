@@ -105,7 +105,10 @@ informative:
     target: https://www.iana.org/assignments/dns-svcb/dns-svcb.xhtml
     date: 2023-06-13
 
-
+  IANA-STUN:
+    title: STUN Attributes
+    target: https://www.iana.org/assignments/stun-parameters/stun-parameters.xhtml
+    date: 2023-03-20
 
 --- abstract
 
@@ -294,7 +297,8 @@ similar.
 
 After authorizing that subset of CIDFI-aware network elements, the
 client makes a new HTTPS connection to each of those CIDFI-aware
-network elements and validates their certificates.
+network elements, validates their certificates, and obtains a CIDFI
+nonce from each network element used in {{participation}}.
 
 
 # Client Operation on Each Server Connection
@@ -333,32 +337,107 @@ If the server does not indicate CIDFI support, processing stops.
 If the server indicates CIDFI support, then the server creates a
 new Server-Initiated, Bidirectional stream which is dedicated to
 CIDFI communication.  This stream number is communicated in the
-CIDFI transport response during the QUIC handshake.
+CIDFI transport response during the QUIC handshake.  TODO: specify
+how CIDFI stream number is communicated to client.
 
 The QUIC client and QUIC server exchange CIDFI information over
 this CIDFI-dedicated stream as described in {{initial-metadata-exchange}}.
 
-## Client Requests Network Element's Participation {#participation}
+At this point the client is aware of the server's (short) Destination
+CID.
 
-Using its QUIC channel with each of the CIDFI network elements it previously authorized for CIDFI participation, the
-client signals both the long Connection ID and the short Connection ID
-length and Connection ID of the primary communication to the network
-element.  As QUIC allows changing the Connection IDs and to avoid loss
-of CIDFI functionality, the client SHOULD additionally signal the next
-short Destination Connection ID it anticipates using with the server as
-this preserves CIDFI operation during normal CID changes when topology
-remains the same.  However, if QUIC detects a topology change that
-Destination CID which was signaled to the (previous) CIDFI element MUST
-NOT be reused on the new topology, else the two sessions can be linked
-(see {{Section 9.5 of QUIC}}).
+## Client Requests CIDFI Network Element's Participation {#participation}
+
+To ensure the client exchanges information about its its own UDP 4-tuple
+with the CIDFI-network element, the client sends the CIDFI nonce it
+obtained from {{client-authorizes}}.  The ability to transmit the nonce
+on the same UDP 4-tuple as the QUIC connection indicates ownership of
+that IP address and UDP port.  The nonce is encapsulated in a STUN
+CIDFI-NONCE message ({{iana-stun}}) using the same UDP 4-tuple as the QUIC connection
+to the server.  If there are multiple CIDFI-aware network elements,
+the single STUN message contains a nonce from each of them.
+
+The figure below shows the message flow around the steps to obtain
+the nonce from the CIDFI-aware router, send the nonce in the same
+UDP 4-tuple towards the QUIC server, and provide the mapping to the
+CIDFI-aware network element.
+
+~~~~~ aasvg
+                                    CIDFI-aware            QUIC
+   client                           edge router           server
+     |                                    |                  |
+     |  Enroll CIDFI router to partipate  |                  |
+     +----------------------------------->|                  |
+     |  Ok.  nonce=12345                  |                  |
+     |<-----------------------------------+                  |
+     |                                    |                  |
+     :                                    :                  :
+     |                                    |                  |
+     |  QUIC Initial, transport parameter=CIDFI              |
+     +------------------------------------------------------>|
+     |  QUIC Initial, transport parameter=CIDFI              |
+     |<------------------------------------------------------+
+     |  STUN nonce=12345                  |                  |
+     +------------------------------------------------------>|
+     |                                    |               discard
+     |                            "I saw my nonce!"          |
+     |                                    |                  |
+     |  "Map DCID=xyz as high importance" |                  |
+     +----------------------------------->|                  |
+     |  Ok                                |                  |
+     |<-----------------------------------+                  |
+~~~~~
+
+Using its HTTPS channel with each of the CIDFI network elements it previously authorized for CIDFI participation, the
+client signals the mapping of the server's transmitted short Destination Connection ID
+and its length to the CIDFI-aware network element.
+
+To maintain CIDFI functions when the QUIC server changes its transmitted
+Destination Connection ID, the server needs to send an additional NEW_CONNECTION_ID.
+This allows the client to signal both the currently-active DCID and the "next"
+DCID to the CIDFI network element so those can be used when the server
+wants to change its transmitted Destination Connection ID due to expiration.  Importantly, when the
+server wants to change its QUIC wants to change its transmitted Destination Connection
+ID due to QUIC-detected topology change, the server can immediately do that and the
+(new) network remains unable to link the two QUIC sessions ({{Section 9.5 of QUIC}}).
+When a QUIC-detected topology change occurs the client has to re-execute CIDFI discovery
+on the new network.
 
 
-Note that source IP address and source UDP port number are not signaled by
-design.  This is because NATs ({{?NAPT=RFC3022}}, {{?NAT=RFC2663}}),
-multiple NATs on the path, IPv6/IPv4 translation, and similar
-technologies complicate accurate signaling of the source IP address
-and source UDP port number.
+Note that source IP address and source UDP port number are not
+signaled by design.  This is because NATs ({{?NAPT=RFC3022}},
+{{?NAT=RFC2663}}), multiple NATs on the path, IPv6/IPv4 translation,
+similar technologies, and QUIC connection migration all complicate
+accurate signaling of the source IP address and source UDP port
+number.
 
+If the CIDFI-aware router receives the HTTP map request but has not
+yet seen the STUN nonce message, it rejects the mapping request. This
+causes the client to re-send both the STUN nonce message and the
+mapping request(s).
+
+### STUN CIDFI-NONCE Attribute
+
+The format of the STUN CIDFI-NONCE attribute is:
+
+~~~~~
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                  Nonce-1 (128 bits)                           |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+:                                                               :
+:                  Nonce-2 (128 bits)                           :
+:                                                               :
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~~
+{: artwork-align="center" #fig-stun-cidfi-nonce title="Format of CIDFI-NONCE Attribute"}
+
+The CIDFI nonce is 128 bits and multiple nonces can be transmitted in
+a single STUN Binding Indication packet.  The STUN "Message Length"
+field indicates how many Nonces are contained within the STUN message.
 
 ## Mechanism for Metadata Exchange {#initial-metadata-exchange}
 
@@ -588,47 +667,6 @@ QUIC stream associated with that same Connection ID.
 
 This section discusses the issues that benefit from wider discussion.
 
-## DCID ownership
-
-We don't want any arbitrary client to set DCID mappings or to receive
-network metadata for other client's DCIDs; rather, just for its DCIDs.
-
-How can client prove its ownership of a DCID to the CIDFI-aware
-network element?  Knowing the 4-tuple is one answer, but gets
-complicated considering address translation (IPv4 NAT, IPv4 NAPT,
-IPv6/IPv4).  Better idea:  network element sends client a nonce
-which client has to send on the relevant primary QUIC socket.  The
-nonce could be a STUN packet (which is distinguishable from a
-QUIC packet, and is discarded by the remote peer).
-
-
-~~~~~ aasvg
-                                    CIDFI-aware
-   client                           edge router           server
-     |                                    |                  |
-   .. ..                                .. ..              .. ..
-     |                                    |                  |
-     |  "Map DCID=xyz as high importance" |                  |
-     +----------------------------------->|                  |
-     |  Prove it by sending nonce=12345   |                  |
-     |<-----------------------------------+                  |
-     |  nonce=12345                       |                  |
-     +------------------------------------------------------>|
-     |                                    |                  |
-     |                            "I saw my challenge!"      |
-     |                                    |                  |
-     |  "Map DCID=xyz as high importance" |                  |
-     +----------------------------------->|                  |
-     |  Ok                                |                  |
-     |<-----------------------------------+                  |
-~~~~~
-
-This has added advantage that CIDFI-aware network element only
-needs to start looking for QUIC DCIDs after that Nonce challenge
-completes on that UDP 4-tuple.
-
-
-
 ## Overhead of Packet Examination
 
 If CID-to-packet metadata was signaled by the server as described in
@@ -725,6 +763,11 @@ Register new special-use domain name cidfi.arpa for DNS SVCB discovery.
 
 This document requests IANA to register the new DNS SVCB "_cidfi-aware" in
 the "DNS Service Bindings (SVCB)" registry available at {{IANA-SVCB}}.
+
+## New STUN Attribute {#iana-stun}
+
+This document requests IANA to register the new STUN attribute "CIDFI-NONCE"
+in the "STUN Attributes" registry available at {{IANA-STUN}}.
 
 
 --- back
