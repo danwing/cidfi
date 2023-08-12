@@ -39,7 +39,7 @@ author:
     organization: Cloud Software Group, Inc.
     abbrev: Cloud Software Group
     country: United States of America
-    email: ["danwing@gmail.com", "dan.wing@cloud.com"]
+    email: ["danwing@gmail.com"]
  -
     fullname: Tirumaleswar Reddy
     organization: Nokia
@@ -192,7 +192,8 @@ In {{server-to-network}} this document describes server-to-network
 metadata signaling similar to the use-cases described in
 {{?I-D.reddy-tsvwg-explcit-signal}},
 {{?I-D.kaippallimalil-tsvwg-media-hdr-wireless}}, and {{Section 3 of
-I-D.joras-sadcdn}}.
+I-D.joras-sadcdn}}.  The server-to-network mechanism can also
+benefit {{?I-D.ietf-avtcore-rtp-over-quic}}.
 
 
 # Conventions and Definitions
@@ -347,29 +348,30 @@ this CIDFI-dedicated stream as described in {{initial-metadata-exchange}}.
 At this point the client is aware of the server's (short) Destination
 CID.
 
-## Client Proves Ownership of UDP 4-Tuple
+## Client Sends Nonce on UDP 4-Tuple
 
-To ensure the client exchanges information about its its own UDP 4-tuple
-with the CIDFI-network element, the client sends the CIDFI nonce it
-obtained from {{client-authorizes}}.  The ability to transmit the nonce
-on the same UDP 4-tuple as the QUIC connection indicates ownership of
-that IP address and UDP port.  The nonce is encapsulated in a STUN
-CIDFI-NONCE message ({{iana-stun}}) using the same UDP 4-tuple as the QUIC connection
-to the server.  If there are multiple CIDFI-aware network elements,
-the single STUN message contains a nonce from each of them.
+To ensure the client messages to the CIDFI-aware network element
+pertain only to the client's own UDP 4-tuple, the client sends the
+CIDFI nonce it obtained from {{client-authorizes}} over the QUIC UDP
+4-tuple.  The ability to transmit the nonce on the same UDP 4-tuple as
+the QUIC connection indicates ownership of that IP address and UDP
+port.  The nonce is encapsulated in a STUN CIDFI-NONCE message
+({{iana-stun}}) using the same UDP 4-tuple as the QUIC connection to
+the server.  If there are multiple CIDFI-aware network elements, the
+single STUN message contains a nonce from each of them.
 
-The figure below shows the message flow around the steps to obtain
+The figure below shows a summarized message flow obtaining
 the nonce from the CIDFI-aware router, send the nonce in the same
-UDP 4-tuple towards the QUIC server, and provide the mapping to the
+UDP 4-tuple towards the QUIC server, and providing the mapping to the
 CIDFI-aware network element.
 
 ~~~~~ aasvg
-                                    CIDFI-aware            QUIC
+    QUIC                            CIDFI-aware            QUIC
    client                           edge router           server
      |                                    |                  |
-     |  Enroll CIDFI router to partipate  |                  |
+     |  HTTP: Enroll CIDFI router to partipate               |
      +----------------------------------->|                  |
-     |  Ok.  nonce=12345                  |                  |
+     |  HTTP: Ok.  nonce=12345            |                  |
      |<-----------------------------------+                  |
      |                                    |                  |
      :                                    :                  :
@@ -382,20 +384,29 @@ CIDFI-aware network element.
      |                                    |                  |
      |                            "I saw my nonce!"          |
      |                                    |                  |
+     |  HTTP: "Map DCID=xyz as high importance"              |
+     +----------------------------------->|                  |
      |  QUIC Initial, transport parameter=CIDFI              |
      |<------------------------------------------------------+
-     |  "Map DCID=xyz as high importance" |                  |
-     +----------------------------------->|                  |
-     |  Ok                                |                  |
+     |  HTTP: Ok                          |                  |
      |<-----------------------------------+                  |
 ~~~~~
+
+Once the CIDFI-aware network element sees the nonce on a UDP 4-tuple
+it only informs the same CIDFI client to which it issued that nonce
+of activity on that 4-tuple and only allows CID mapping for that
+same UDP 4-tuple.  This restriction prevents an attacker (who
+sees that Nonce value being transmitted in the victim's STUN packet) from
+transmitting that victim's Nonce on the attacker's own UDP 4-tuple
+and learning or changing information about traffic within the
+victim's UDP 4-tuple.
 
 
 ### STUN CIDFI-NONCE Attribute
 
 The format of the STUN CIDFI-NONCE attribute is:
 
-~~~~~
+~~~~~ aasvg
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -411,8 +422,9 @@ The format of the STUN CIDFI-NONCE attribute is:
 {: artwork-align="center" #fig-stun-cidfi-nonce title="Format of CIDFI-NONCE Attribute"}
 
 The CIDFI nonce is 128 bits and multiple nonces can be transmitted in
-a single STUN Binding Indication packet.  The STUN "Message Length"
-field indicates how many Nonces are contained within the STUN message.
+a single STUN Binding Indication packet {{Section 6.1 of !RFC8489}}.
+The STUN "Message Length" field indicates how many Nonces are
+contained within the STUN message.
 
 
 ## Client Requests CIDFI Network Element's Participation {#participation}
@@ -448,9 +460,45 @@ accurate signaling of the source IP address and source UDP port
 number.
 
 If the CIDFI-aware router receives the HTTP map request but has not
-yet seen the STUN nonce message, it rejects the mapping request. This
-causes the client to re-send both the STUN nonce message and the
-mapping request(s).
+yet seen the STUN nonce message it rejects the mapping request with a
+403 and provides a new nonce.  The new nonce avoids the problem of an
+attacker seeing the previous nonce and using that nonce on its own UDP
+4-tuple.  The client then sends a new STUN message with that new nonce
+value and send a new HTTP mapping request(s).  This interaction is
+highlighted in the simplified message flow, below.
+
+~~~~~ aasvg
+                                    CIDFI-aware            QUIC
+   client                           edge router           server
+     |                                    |                  |
+     |  HTTP: Enroll CIDFI router to partipate               |
+     +----------------------------------->|                  |
+     |  HTTP: Ok.  nonce=12345            |                  |
+     |<-----------------------------------+                  |
+     |                                    |                  |
+     :                                    :                  :
+     |                                    |                  |
+     |  QUIC Initial, transport parameter=CIDFI              |
+     +------------------------------------------------------>|
+     |  STUN nonce=12345                  |                  |
+     +--------------------> X (lost)      |                  |
+     |                                    |                  |
+     |  HTTP: "Map DCID=xyz as high importance"              |
+     +----------------------------------->|                  |
+     |  HTTP: 403, new Nonce=5678         |                  |
+     |<-----------------------------------|                  |
+     |  STUN nonce=5678                   |                  |
+     +------------------------------------------------------>|
+     |                                    |              discarded
+     |                                    |                  |
+     |                            "I saw my nonce!"          |
+     |                                    |                  |
+     |  HTTP: "Map DCID=xyz as high importance"              |
+     +----------------------------------->|                  |
+     |  Ok                                |                  |
+     |<-----------------------------------+                  |
+~~~~~
+{: align="center" title="Client re-transmtting lost nonce"}
 
 ## Initial Metadata Exchange {#initial-metadata-exchange}
 
@@ -678,7 +726,12 @@ QUIC stream associated with that same Connection ID.
 
 # Discussion Points
 
-This section discusses the issues that benefit from wider discussion.
+This section discusses known issues that would benefit from wider discussion.
+
+## PvD versus DNS SVCB
+
+Instead of DNS SVCB consider using Provisioning Domain {{?RFC8801}} instead.
+
 
 ## Client versus Server Signaling CID-to-importance Mapping
 
@@ -756,10 +809,13 @@ client and server knows the identity of the server and can validate
 its certificate.
 
 For an attacker to succeed with the nonce challenge against a victim's
-UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE packet using the
-victim's source IP address.  Such spoofing of a victim's IP address is
-generally prevented on local networks (e.g., {{?RFC2827}} for IPv4,
-{{?RFC7513}} for IPv6).
+UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE packet using
+the victim's source IP address.  Such spoofing of a victim's IP
+address is prevented on nearly every network deployment using
+{{?RFC2827}}, {{?RFC7513}}, {{?RFC6105}}, and/or {{?RFC6620}}.  If
+the attacker can observe the Nonce and transmit that same Nonce
+ahead of the victim's Nonce, the attacker does not obtain more
+information via CIDFI.
 
 
 
