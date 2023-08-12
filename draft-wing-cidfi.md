@@ -366,31 +366,32 @@ UDP 4-tuple towards the QUIC server, and providing the mapping to the
 CIDFI-aware network element.
 
 ~~~~~ aasvg
-    QUIC                            CIDFI-aware            QUIC
-   client                           edge router           server
-     |                                    |                  |
-     |  HTTP: Enroll CIDFI router to partipate               |
-     +----------------------------------->|                  |
-     |  HTTP: Ok.  nonce=12345            |                  |
-     |<-----------------------------------+                  |
-     |                                    |                  |
-     :                                    :                  :
-     |                                    |                  |
-     |  QUIC Initial, transport parameter=CIDFI              |
-     +------------------------------------------------------>|
-     |  STUN nonce=12345                  |                  |
-     +------------------------------------------------------>|
-     |                                    |              discarded
-     |                                    |                  |
-     |                            "I saw my nonce!"          |
-     |                                    |                  |
-     |  HTTP: "Map DCID=xyz as high importance"              |
-     +----------------------------------->|                  |
-     |  QUIC Initial, transport parameter=CIDFI              |
-     |<------------------------------------------------------+
-     |  HTTP: Ok                          |                  |
-     |<-----------------------------------+                  |
+ QUIC                            CIDFI-aware            QUIC
+client                           edge router           server
+  |                                    |                  |
+  |  HTTP: Enroll CIDFI router to partipate               |
+  +----------------------------------->|                  |
+  |  HTTP: Ok.  nonce=12345            |                  |
+  |<-----------------------------------+                  |
+  |                                    |                  |
+  :                                    :                  :
+  |                                    |                  |
+  |  QUIC Initial, transport parameter=CIDFI              |
+  +------------------------------------------------------>|
+  |  STUN nonce=12345                  |                  |
+  +------------------------------------------------------>|
+  |                                    |              discarded
+  |                                    |                  |
+  |                            "I saw my nonce!"          |
+  |                                    |                  |
+  |  HTTP: "Map DCID=xyz as high importance"              |
+  +----------------------------------->|                  |
+  |  QUIC Initial, transport parameter=CIDFI              |
+  |<------------------------------------------------------+
+  |  HTTP: Ok                          |                  |
+  |<-----------------------------------+                  |
 ~~~~~
+{: artwork-align="center"}
 
 Once the CIDFI-aware network element sees the nonce on a UDP 4-tuple
 it only informs the same CIDFI client to which it issued that nonce
@@ -468,37 +469,37 @@ value and send a new HTTP mapping request(s).  This interaction is
 highlighted in the simplified message flow, below.
 
 ~~~~~ aasvg
-                                    CIDFI-aware            QUIC
-   client                           edge router           server
-     |                                    |                  |
-     |  HTTP: Enroll CIDFI router to partipate               |
-     +----------------------------------->|                  |
-     |  HTTP: Ok.  nonce=12345            |                  |
-     |<-----------------------------------+                  |
-     |                                    |                  |
-     :                                    :                  :
-     |                                    |                  |
-     |  QUIC Initial, transport parameter=CIDFI              |
-     +------------------------------------------------------>|
-     |  STUN nonce=12345                  |                  |
-     +--------------------> X (lost)      |                  |
-     |                                    |                  |
-     |  HTTP: "Map DCID=xyz as high importance"              |
-     +----------------------------------->|                  |
-     |  HTTP: 403, new Nonce=5678         |                  |
-     |<-----------------------------------|                  |
-     |  STUN nonce=5678                   |                  |
-     +------------------------------------------------------>|
-     |                                    |              discarded
-     |                                    |                  |
-     |                            "I saw my nonce!"          |
-     |                                    |                  |
-     |  HTTP: "Map DCID=xyz as high importance"              |
-     +----------------------------------->|                  |
-     |  Ok                                |                  |
-     |<-----------------------------------+                  |
+                                 CIDFI-aware            QUIC
+client                           edge router           server
+  |                                    |                  |
+  |  HTTP: Enroll CIDFI router to partipate               |
+  +----------------------------------->|                  |
+  |  HTTP: Ok.  nonce=12345            |                  |
+  |<-----------------------------------+                  |
+  |                                    |                  |
+  :                                    :                  :
+  |                                    |                  |
+  |  QUIC Initial, transport parameter=CIDFI              |
+  +------------------------------------------------------>|
+  |  STUN nonce=12345                  |                  |
+  +--------------------> X (lost)      |                  |
+  |                                    |                  |
+  |  HTTP: "Map DCID=xyz as high importance"              |
+  +----------------------------------->|                  |
+  |  HTTP: 403, new Nonce=5678         |                  |
+  |<-----------------------------------|                  |
+  |  STUN nonce=5678                   |                  |
+  +------------------------------------------------------>|
+  |                                    |              discarded
+  |                                    |                  |
+  |                            "I saw my nonce!"          |
+  |                                    |                  |
+  |  HTTP: "Map DCID=xyz as high importance"              |
+  +----------------------------------->|                  |
+  |  Ok                                |                  |
+  |<-----------------------------------+                  |
 ~~~~~
-{: align="center" title="Client re-transmtting lost nonce"}
+{: artwork-align="center" title="Client re-transmtting lost nonce"}
 
 ## Initial Metadata Exchange {#initial-metadata-exchange}
 
@@ -515,23 +516,24 @@ The communication from the client to the server are using a CIDFI-dedicated
 QUIC stream over the same QUIC connection as their primary communication.
 
 ~~~~~ aasvg
-                  CIDFI-aware       CIDFI-aware
-   client     Wi-Fi Access Point    edge router           server
-     |                  |                 |                  |
-     |  QUIC CIDFI stream: "Map DCID=xyz as high importance" |
-     |<------------------------------------------------------+
-     |  "Map DCID=xyz as                  |                  |
-     |  high importance"|                 |                  |
-     +----------------->|                 |                  |
-     |  "Map DCID=xyz as high importance" |                  |
-     +----------------------------------->|                  |
-     |  Ok              |                 |                  |
-     |<-----------------+                 |                  |
-     |  Ok              |                 |                  |
-     |<-----------------------------------+                  |
-     |  QUIC CIDFI stream: Ok             |                  |
-     +------------------------------------------------------>|
+               CIDFI-aware       CIDFI-aware
+client     Wi-Fi Access Point    edge router           server
+  |                  |                 |                  |
+  |  QUIC CIDFI stream: "Map DCID=xyz as high importance" |
+  |<------------------------------------------------------+
+  |  "Map DCID=xyz as                  |                  |
+  |  high importance"|                 |                  |
+  +----------------->|                 |                  |
+  |  "Map DCID=xyz as high importance" |                  |
+  +----------------------------------->|                  |
+  |  Ok              |                 |                  |
+  |<-----------------+                 |                  |
+  |  Ok              |                 |                  |
+  |<-----------------------------------+                  |
+  |  QUIC CIDFI stream: Ok             |                  |
+  +------------------------------------------------------>|
 ~~~~~
+{: artwork-align="center"}
 
 To each of the network elements authorized by the client, the client
 sends the mappings of the server's transmitted Destination CIDs to
@@ -546,18 +548,19 @@ the CIDFI-aware edge router informs the client of reduced bandwidth and the
 client informs the server using CIDFI.
 
 ~~~~~ aasvg
-                  CIDFI-aware       CIDFI-aware
-   client     Wi-Fi Access Point    edge router     server
-     |                  |                 |            |
-     |  "bandwidth now 1Mbps"             |            |
-     |<-----------------------------------+            |
-     |  QUIC CIDFI stream: "bandwidth now 1Mbps"       |
-     +------------------------------------------------>|
-     |  QUIC CIDFI stream: Ok             |            |
-     |<------------------------------------------------+
-     |  Ok              |                 |            |
-     +----------------------------------->|            |
+               CIDFI-aware       CIDFI-aware
+client     Wi-Fi Access Point    edge router     server
+  |                  |                 |            |
+  |  "bandwidth now 1Mbps"             |            |
+  |<-----------------------------------+            |
+  |  QUIC CIDFI stream: "bandwidth now 1Mbps"       |
+  +------------------------------------------------>|
+  |  QUIC CIDFI stream: Ok             |            |
+  |<------------------------------------------------+
+  |  Ok              |                 |            |
+  +----------------------------------->|            |
 ~~~~~
+{: artwork-align="center"}
 
 The communication from the client to the server are using a CIDFI-dedicated
 QUIC stream over the same QUIC connection as their primary communication.
@@ -919,6 +922,5 @@ get much exercise.
 Thanks to Dave Täht, Magnus Westerlund, Christian Huitema, Gorry Fairhurst,
 and Tom Herbert for hallway discussions and feedback at TSVWG that encouraged
 the authors to consider the approach described in this document.
-
 
 
