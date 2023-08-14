@@ -270,12 +270,6 @@ network elements ({{client-authorizes}}).
 
 ## Client Learns Local Network Supports CIDFI {#discovery}
 
-> ** Note: For this section, a different approach using probe packets
-  is described in {{probe}} but the authors are currently not pursuing
-  that technique because of additional traffic and the additional
-  delay to establish CIDFI on a new connection.  It is retained for
-  discussion.
-
 The client determines if the local network provides CIDFI service by
 issuing a query to the local DNS server for
 _cidfi-aware.cidfi.arpa. with the SVCB resource record type (64)
@@ -291,30 +285,31 @@ CIDFI and processing stops.
 The SVCB response from the previous step in {{discovery}} will contain one or more
 CIDFI-aware network elements.
 
-The client authorizes each of the CIDFI-aware network elements using its local
-policy.  This policy might prompt the user, allow certain names (e.g.,
-allow example.net if the user's ISP is configured as example.net), or
-similar.
+The client authorizes each of the CIDFI-aware network elements using
+its local policy.  This policy is implementation specific.  An example
+implementation might have the user authorize their ISP's CIDFI server
+(e.g., allow cidfi.example.net if the user's ISP is configured as
+example.net).
 
 After authorizing that subset of CIDFI-aware network elements, the
 client makes a new HTTPS connection to each of those CIDFI-aware
-network elements, validates their certificates, and obtains a CIDFI
-nonce from each network element used in {{participation}} to prove
-ownership of the UDP 4-tuple.
+network elements, performs PKIX validation of their certificates, and obtains
+the CIDFI nonce and CIDFI HMAC secret from each network element used later
+in {{ownership}} to prove the client owns its UDP 4-tuple.
 
 
 # Client Operation on Each Server Connection
 
-When a QUIC client connects to a QUIC server:
+When a QUIC client connects to a QUIC server, the client:
 
-  1. {{server-supports-cidfi}}, the client learns server supports CIDFI
-     and obtains its mapping of transmitted destination CID to metadata.
-  2. {{participation}}, the client contacts the network elements learned from {{discovery}} and requests
-     their participation.
-  3. {{initial-metadata-exchange}}, the client performs initial metadata exchange.
-  4. {{ongoing-metadata-exchange}}, As network conditions change or the server's transmitted Destination CID changes,
-     the client updates the network element or server.
-
+  1. learns the server supports CIDFI
+     and obtains its mapping of transmitted destinations CID to metadata.
+  2. proves ownership of its UDP 4-tuple to
+     the on-path network elements.
+  3. performs initial metadata exchange
+     with the CIDFI network element and server, and server and network element.
+  4. continually updates the server and the CIDFI network element whenever
+     new information is received from the CIDFI network element or server.
 
 These steps are described in more detail below.
 
@@ -323,9 +318,9 @@ functions in its direction.  This functionality will be expanded in
 later versions of this document.  For example, a mobile device
 connected to Wi-Fi with 5G backhaul might be running an interactive
 audio/video application and want to indicate to its internal Wi-Fi
-driver and to the 5G modem its mapping from QUIC Destination CID to
-per-packet metadata and the application can benefit from receiving
-network performance metrics.
+driver and to the 5G modem its mapping from its transmitted QUIC
+Destination CID to per-packet metadata and the application can benefit
+from receiving network performance metrics.
 
 
 
@@ -334,10 +329,10 @@ network performance metrics.
 On initial connection to a QUIC server, the client includes a new QUIC
 transport parameter CIDFI ({{iana-tp}}) which is remembered for 0-RTT.
 
-If the server does not indicate CIDFI support, processing stops.
+If the server does not indicate CIDFI support, CIDFI processing stops.
 
 If the server indicates CIDFI support, then the server creates a
-new Server-Initiated, Bidirectional stream which is dedicated to
+new Server-Initiated, Bidirectional QUIC stream which is dedicated to
 CIDFI communication.  This stream number is communicated in the
 CIDFI transport response during the QUIC handshake.  TODO: specify
 how CIDFI stream number is communicated to client.
@@ -345,20 +340,21 @@ how CIDFI stream number is communicated to client.
 The QUIC client and QUIC server exchange CIDFI information over
 this CIDFI-dedicated stream as described in {{initial-metadata-exchange}}.
 
-At this point the client is aware of the server's (short) Destination
-CID.
 
-## Client Sends Nonce on UDP 4-Tuple
+## Client Proves Ownership of its UDP 4-Tuple {#ownership}
 
 To ensure the client messages to the CIDFI-aware network element
 pertain only to the client's own UDP 4-tuple, the client sends the
-CIDFI nonce it obtained from {{client-authorizes}} over the QUIC UDP
-4-tuple.  The ability to transmit the nonce on the same UDP 4-tuple as
-the QUIC connection indicates ownership of that IP address and UDP
-port.  The nonce is encapsulated in a STUN CIDFI-NONCE message
-({{iana-stun}}) using the same UDP 4-tuple as the QUIC connection to
-the server.  If there are multiple CIDFI-aware network elements, the
-single STUN message contains a nonce from each of them.
+CIDFI nonce protected by the HMAC secret it obtained from
+{{client-authorizes}} over the QUIC UDP 4-tuple it is using with the
+QUIC server.  The ability to transmit the nonce on the same UDP
+4-tuple as the QUIC connection indicates ownership of that IP address
+and UDP port.  The nonce and HMAC are sent in a {{!STUN=RFC5389}} indication (STUN
+class of 0b01) containing one or more CIDFI-NONCE attributes
+({{iana-stun}}).  If there are multiple CIDFI-aware network elements,
+the single STUN indication contains a CIDFI-NONCE attribute from each of
+them.
+
 
 The figure below shows a summarized message flow obtaining
 the nonce from the CIDFI-aware router, send the nonce in the same
@@ -369,26 +365,26 @@ CIDFI-aware network element.
  QUIC                            CIDFI-aware            QUIC
 client                           edge router           server
   |                                    |                  |
-  |  HTTP: Enroll CIDFI router to partipate               |
+  |  HTTPS: Enroll CIDFI router to partipate              |
   +----------------------------------->|                  |
-  |  HTTP: Ok.  nonce=12345            |                  |
+  |  HTTPS: Ok.  nonce=12345           |                  |
   |<-----------------------------------+                  |
   |                                    |                  |
   :                                    :                  :
   |                                    |                  |
   |  QUIC Initial, transport parameter=CIDFI              |
   +------------------------------------------------------>|
-  |  STUN nonce=12345                  |                  |
+  |  STUN Indication, nonce=12345, hmac=e8FEc             |
   +------------------------------------------------------>|
   |                                    |              discarded
   |                                    |                  |
-  |                            "I saw my nonce!"          |
+  |                    "I saw my nonce, HMAC is valid"    |
   |                                    |                  |
-  |  HTTP: "Map DCID=xyz as high importance"              |
+  |  HTTPS: "Map DCID=xyz as high importance"             |
   +----------------------------------->|                  |
   |  QUIC Initial, transport parameter=CIDFI              |
   |<------------------------------------------------------+
-  |  HTTP: Ok                          |                  |
+  |  HTTPS: Ok                         |                  |
   |<-----------------------------------+                  |
 ~~~~~
 {: artwork-align="center"}
@@ -402,6 +398,15 @@ transmitting that victim's Nonce on the attacker's own UDP 4-tuple
 and learning or changing information about traffic within the
 victim's UDP 4-tuple.
 
+To prevent replay attacks, the Nonce is usable only once by a CIDFI
+network element and MUST NOT be used to authenticate a different UDP
+4-tuple.  Whenever the connection is migrated ({{Section 9 of QUIC}})
+the client additionally has to obtain a fresh Nonce and HMAC secret
+from its CIDFI network element.
+
+To reduce CIDFI set-up time, this STUN Indication MAY be sent at the
+same time as the QUIC Initial packet, especially if the client
+remembers the server supports CIDFI (0-RTT).
 
 ### STUN CIDFI-NONCE Attribute
 
@@ -412,23 +417,27 @@ The format of the STUN CIDFI-NONCE attribute is:
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
-|                  Nonce-1 (128 bits)                           |
+|                  Nonce (128 bits)                             |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-:                                                               :
-:                  Nonce-2 (128 bits)                           :
-:                                                               :
+|                                                               |
+|                  HMAC (256 bits)                              |
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~~
 {: artwork-align="center" #fig-stun-cidfi-nonce title="Format of CIDFI-NONCE Attribute"}
 
-The CIDFI nonce is 128 bits and multiple nonces can be transmitted in
-a single STUN Binding Indication packet {{Section 6.1 of !RFC8489}}.
-The STUN "Message Length" field indicates how many Nonces are
-contained within the STUN message.
+The CIDFI nonce is 128 bits.  The HMAC is computed using the Nonce and
+the HMAC secret obtained from the CIDFI network element in
+{{client-authorizes}} both concatinated with the fixed string "CIDFI"
+(without quotes),
+
+~~~~~
+  HMAC = SHA256( Nonce || hmac-secret || "CIDFI" )
+~~~~~
 
 
-## Client Requests CIDFI Network Element's Participation {#participation}
+## Initial Metadata Exchange {#initial-metadata-exchange}
 
 Using its HTTPS channel with each of the CIDFI network elements it
 previously authorized for CIDFI participation, the client signals the
@@ -460,48 +469,47 @@ similar technologies, and QUIC connection migration all complicate
 accurate signaling of the source IP address and source UDP port
 number.
 
-If the CIDFI-aware router receives the HTTP map request but has not
+If the CIDFI-aware router receives the HTTPS map request but has not
 yet seen the STUN nonce message it rejects the mapping request with a
 403 and provides a new nonce.  The new nonce avoids the problem of an
 attacker seeing the previous nonce and using that nonce on its own UDP
 4-tuple.  The client then sends a new STUN message with that new nonce
-value and send a new HTTP mapping request(s).  This interaction is
+value and send a new HTTPS mapping request(s).  This interaction is
 highlighted in the simplified message flow, below.
 
 ~~~~~ aasvg
                                  CIDFI-aware            QUIC
 client                           edge router           server
   |                                    |                  |
-  |  HTTP: Enroll CIDFI router to partipate               |
+  |  HTTPS: Enroll CIDFI router to partipate              |
   +----------------------------------->|                  |
-  |  HTTP: Ok.  nonce=12345            |                  |
+  |  HTTPS: Ok.  nonce=12345           |                  |
   |<-----------------------------------+                  |
   |                                    |                  |
   :                                    :                  :
   |                                    |                  |
   |  QUIC Initial, transport parameter=CIDFI              |
   +------------------------------------------------------>|
-  |  STUN nonce=12345                  |                  |
+  |  STUN Indication, nonce=12345, HMAC=8f93e             |
   +--------------------> X (lost)      |                  |
   |                                    |                  |
-  |  HTTP: "Map DCID=xyz as high importance"              |
+  |  HTTPS: "Map DCID=xyz as high importance"             |
   +----------------------------------->|                  |
-  |  HTTP: 403, new Nonce=5678         |                  |
+  |  HTTPS: 403, new Nonce=5678        |                  |
   |<-----------------------------------|                  |
-  |  STUN nonce=5678                   |                  |
+  |  STUN Indicate, nonce=5678, HMAC=aaf3c                |
   +------------------------------------------------------>|
   |                                    |              discarded
   |                                    |                  |
-  |                            "I saw my nonce!"          |
+  |                    "I saw my nonce, HMAC is valid"    |
   |                                    |                  |
-  |  HTTP: "Map DCID=xyz as high importance"              |
+  |  HTTPS: "Map DCID=xyz as high importance"             |
   +----------------------------------->|                  |
   |  Ok                                |                  |
   |<-----------------------------------+                  |
 ~~~~~
 {: artwork-align="center" title="Client re-transmtting lost nonce"}
 
-## Initial Metadata Exchange {#initial-metadata-exchange}
 
 There are two types of metadata exchanged, described in the following sub-sections.
 
@@ -580,7 +588,7 @@ transmitted QUIC Destination CID to the network elements.
 
 # Interaction with Load Balancers {#load-balancers}
 
-HTTP servers, including QUIC servers, are frequently behind load balancers.
+HTTPS servers, including QUIC servers, are frequently behind load balancers.
 
 With CIDFI, all the communication to the load-balanaced QUIC server are over the same UDP 4-tuple
 as the primary QUIC connection but in a different QUIC stream.  This means
@@ -611,7 +619,7 @@ CIDFI-aware network element to the server (generally network
 performance information) and from the server to the CIDFI-aware
 network element.
 
-> Note: we may want to use {{!CoAP=RFC7252}} for the client->network
+> Note: we may want to use {{!CBOR=RFC8949}} for the client->network
 communication and over the CIDFI-dedicated QUIC stream between the
 QUIC client and QUIC server.
 
@@ -809,16 +817,28 @@ several DCIDs for every packet importance.
 
 Communications are relayed through the client because only the
 client and server knows the identity of the server and can validate
-its certificate.
+its certificate.  The protocol in this specification does not disclose
+the server's identity to the CIDFI network element.
+
 
 For an attacker to succeed with the nonce challenge against a victim's
 UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE packet using
-the victim's source IP address.  Such spoofing of a victim's IP
-address is prevented on nearly every network deployment using
-{{?RFC2827}}, {{?RFC7513}}, {{?RFC6105}}, and/or {{?RFC6620}}.  If
-the attacker can observe the Nonce and transmit that same Nonce
-ahead of the victim's Nonce, the attacker does not obtain more
-information via CIDFI.
+the victim's source IP address and a valid HMAC.  A valid HMAC can
+only be obtained by the attacker making its own connection to the
+CIDFI server and spoofing the source IP address and UDP port of the
+victim.  Such spoofing of a victim's IP address is prevented by the
+network using network ingress filtering ({{?RFC2827}}, {{?RFC7513}},
+{{?RFC6105}}, and/or {{?RFC6620}}).  In the event network ingress
+filtering is not configured or configured improperly, the CIDFI
+network element can detect an attack if the client implements CIDFI.
+The CIDFI network element receive two HTTPS connections describing the
+same DCID (one connection from the attacker, another from the victim).
+The CIDFI network element will issue unique Nonces and HMACs to both
+the attacker and victim, and the attacker and victim will both send
+the STUN indication on that same UDP 4-tuple.  This should never
+normally occur and should generate an alarm on the CIDFI network
+element.  In this situation, it is recommended both attack and victim
+be denied CIDFI access.
 
 
 
@@ -857,61 +877,6 @@ in the "STUN Attributes" registry available at {{IANA-STUN}}.
 
 
 --- back
-
-
-
-# Probe-based Discovery {#probe}
-{:removeInRFC="true"}
-
-This section describes an alternative to {{discovery}} which uses
-probe packets rather than DNS SVCB.
-
-Client Sending Operation:
-: The client sends a STUN request packet on same
-5-tuple as its existing QUIC connection with the server.  This STUN
-request contains a new STUN attribute, CIDFI.
-
-: To avoid packet growth while traversing CIDFI-aware nodes, this packet
-originated from the client contains is 512 0x00 octets.  This is
-enough two full-sized (255-byte) fully-qualified domain name (FQDN)
-fields.  In practice, FQDNs have a shorter length (~50 bytes) so 10
-FQDNs could reasonably fit into this space.
-
-Network Element Processing:
-: Each CIDFI-aware node on the path increments the FQDN counter and
-overwrites the 0x00 octets with its FQDN, decrements its IPv4 TTL or
-IPv6 Hop Count, and sends the packet along towards its destination.
-
-Server Receipt Operation:
-: Upon receipt of the STUN Request containing CIDFI, the server generates
-a STUN response containing a copy of the received CIDFI.
-
-Client Receipt Operation:
-: The client validates the STUN Transaction-ID.  The FQDNs are handled
-in Step 3, below.
-
-The packet format would be a {{!RFC8489}} request packet containing
-a new STUN "CIDFI" attribute.  The STUN "CIDFI" attribute in the request would
-contain 512 null octets.  The 'counter' field allows network elements to
-increment that counter and, if fewer FQDNs are inside the packet, it indicates
-the packet was not big enough to contain all the desired FQDNs and a larger
-packet should be originated by the client.  However, this code path is unlikely to
-get much exercise.
-
-~~~~~
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|counter|0 0 0 0| FQDN-1 length |      FQDN-1 ...               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| FQDN-2 length |                  FQDN-2 ...                   |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~~
-{: artwork-align="center" #fig-cifi-stun-attribute title="CIDFI STUN Attribute"}
-
-
-
-
 
 
 
