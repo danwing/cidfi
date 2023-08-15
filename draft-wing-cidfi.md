@@ -766,7 +766,8 @@ This section discusses known issues that would benefit from wider discussion.
 
 ## PvD versus DNS SVCB
 
-Instead of DNS SVCB consider using Provisioning Domain {{?RFC8801}} instead.
+Instead of DNS SVCB consider using Provisioning Domain {{?RFC8801}}
+instead.  Provisioning Domains would bring IPv6 constraints.
 
 
 ## Client versus Server Signaling CID-to-importance Mapping
@@ -776,7 +777,7 @@ signaling CID-to-importance mapping or server signaling CID-to-importance
 mapping.
 
 
-## Overhead of QUIC Packet Examination
+## Overhead of QUIC DCID Packet Examination
 
 If CID-to-importance metadata was signaled by the server as described
 in {{server-to-network}}, the CIDFI-aware network elements have to
@@ -813,6 +814,7 @@ agree on the meaning of those QUIC CIDs.
 Find approaches to further reduce network communications to start CIDFI.
 
 
+
 ## Primary QUIC Channel CID Change {#primary-cid-change}:
 
 Because the CIDFI network element, QUIC server, and QUIC client all
@@ -821,9 +823,9 @@ when a new CIDFI network element is involved (e.g., due to client
 attaching to a different network), a new Destination CID SHOULD
 be used for the reasons discussed in {{Section 9.5 of QUIC}}}.
 
-Do we want/need CIDFI network element to change the Destination CID of
-its metadata communication in conjunction with the client changing its
-Destination CID?
+We need clear way to signal which DCIDs can be used for 'this'
+network attach and which DCIDs are for a migrated connection.  Probably
+belongs in the QUIC transport parameter signaling?
 
 
 
