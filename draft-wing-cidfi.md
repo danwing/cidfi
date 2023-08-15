@@ -262,11 +262,11 @@ networks' _cidfi-aware.cidfi.arpa responses into the response sent to
 its locally-connected clients.
 
 
-# Client Operation on Network Attach or Topology Change
+# Client Operation on Network Attach or Topology Change {#attach}
 
-On network attach or QUIC-detected topology change (see {{topology}}), the
-client learns if the network supports CIDFI ({{discovery}}) and authorzes those
-network elements ({{client-authorizes}}).
+On network attach or QUIC-detected topology change (see {{topology}}),
+the client learns if the network supports CIDFI ({{discovery}}) and
+authorizes those network elements ({{client-authorizes}}).
 
 ## Client Learns Local Network Supports CIDFI {#discovery}
 
@@ -293,12 +293,27 @@ example.net).
 
 After authorizing that subset of CIDFI-aware network elements, the
 client makes a new HTTPS connection to each of those CIDFI-aware
-network elements, performs PKIX validation of their certificates, and obtains
-the CIDFI nonce and CIDFI HMAC secret from each network element used later
-in {{ownership}} to prove the client owns its UDP 4-tuple.
+network elements and performs PKIX validation of their certificates.
+The client MAY have to authenticate itself to the CIDFI network
+element.
+
+The client then obtains the CIDFI nonce and CIDFI HMAC
+secret from each network element used later in {{ownership}} to prove
+the client owns its UDP 4-tuple.
+
+For discussion purposes, JSON is shown below to give a flavor of the
+data the client retrieves from the CIDFI network element.  The authors
+anticipate a more efficient encoding such as {{!CBOR=RFC8949}} or
+pick-your-favorite encoding and protocol:
+
+~~~~~
+  {"cidfi-path-authentication":[
+    {"nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
+     "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"}]}
+~~~~~
 
 
-# Client Operation on Each Server Connection
+# Client Operation on Each Connection to a QUIC Server
 
 When a QUIC client connects to a QUIC server, the client:
 
@@ -309,7 +324,7 @@ When a QUIC client connects to a QUIC server, the client:
   3. performs initial metadata exchange
      with the CIDFI network element and server, and server and network element.
   4. continually updates the server and the CIDFI network element whenever
-     new information is received from the CIDFI network element or server.
+     new information is received from the other party.
 
 These steps are described in more detail below.
 
@@ -347,19 +362,18 @@ To ensure the client messages to the CIDFI-aware network element
 pertain only to the client's own UDP 4-tuple, the client sends the
 CIDFI nonce protected by the HMAC secret it obtained from
 {{client-authorizes}} over the QUIC UDP 4-tuple it is using with the
-QUIC server.  The ability to transmit the nonce on the same UDP
+QUIC server.  The ability to transmit that packet on the same UDP
 4-tuple as the QUIC connection indicates ownership of that IP address
 and UDP port.  The nonce and HMAC are sent in a {{!STUN=RFC5389}} indication (STUN
 class of 0b01) containing one or more CIDFI-NONCE attributes
 ({{iana-stun}}).  If there are multiple CIDFI-aware network elements,
 the single STUN indication contains a CIDFI-NONCE attribute from each of
-them.
+them.  This message is discarded by the QUIC server.
 
 
 The figure below shows a summarized message flow obtaining
-the nonce from the CIDFI-aware router, send the nonce in the same
-UDP 4-tuple towards the QUIC server, and providing the mapping to the
-CIDFI-aware network element.
+the nonce and HMAC secret from the CIDFI-aware router then later
+sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server:
 
 ~~~~~ aasvg
  QUIC                            CIDFI-aware            QUIC
@@ -389,24 +403,22 @@ client                           edge router           server
 ~~~~~
 {: artwork-align="center"}
 
-Once the CIDFI-aware network element sees the nonce on a UDP 4-tuple
-it only informs the same CIDFI client to which it issued that nonce
-of activity on that 4-tuple and only allows CID mapping for that
-same UDP 4-tuple.  This restriction prevents an attacker (who
-sees that Nonce value being transmitted in the victim's STUN packet) from
-transmitting that victim's Nonce on the attacker's own UDP 4-tuple
-and learning or changing information about traffic within the
-victim's UDP 4-tuple.
+Because multiple QUIC clients will use the same incoming Destination
+CID on their own UDP 4-tuple, the STUN Indication message also allows
+the CIDFI network element to distinguish which UDP 4-tuple belongs to
+each CIDFI client.
 
-To prevent replay attacks, the Nonce is usable only once by a CIDFI
-network element and MUST NOT be used to authenticate a different UDP
-4-tuple.  Whenever the connection is migrated ({{Section 9 of QUIC}})
-the client additionally has to obtain a fresh Nonce and HMAC secret
-from its CIDFI network element.
+To reduce CIDFI set-up time the client STUN Indication MAY be sent at
+the same time as the QUIC Initial packet, which is encouraged
+if the client remembers the server supports CIDFI (0-RTT).
 
-To reduce CIDFI set-up time, this STUN Indication MAY be sent at the
-same time as the QUIC Initial packet, especially if the client
-remembers the server supports CIDFI (0-RTT).
+To prevent replay attacks, the Nonce is usable only for authenticating
+one UDP 4-tuple.  When the connection is migrated ({{Section 9 of
+QUIC}}) the CIDFI network element won't apply any CIDFI behavior to
+that newly-migrated connection.  The client will have to restart
+CIDFI procedures at the beginning ({{attach}}).
+
+
 
 ### STUN CIDFI-NONCE Attribute
 
@@ -417,23 +429,29 @@ The format of the STUN CIDFI-NONCE attribute is:
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
-|                  Nonce (128 bits)                             |
+|                       Nonce (128 bits)                        |
+|                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
-|                  HMAC (256 bits)                              |
+|                                                               |
+|                                                               |
+|                     HMAC-output (256 bits)                    |
+|                                                               |
+|                                                               |
+|                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~~
 {: artwork-align="center" #fig-stun-cidfi-nonce title="Format of CIDFI-NONCE Attribute"}
 
-The CIDFI nonce is 128 bits.  The HMAC is computed using the Nonce and
-the HMAC secret obtained from the CIDFI network element in
-{{client-authorizes}} both concatinated with the fixed string "CIDFI"
-(without quotes),
+The nonce is 128 bits obtained from the CIDFI network element.  The
+HMAC-output field is computed per {{!RFC5869}} using the HMAC secret
+from the CIDFI network element, the concatinated Nonce, and the fixed
+string "cidfi" (without quotes).
 
 ~~~~~
-  HMAC = SHA256( Nonce || hmac-secret || "CIDFI" )
+  HMAC-output = HMAC-SHA256( hmac-secret, nonce || "cidfi" )
 ~~~~~
 
 
