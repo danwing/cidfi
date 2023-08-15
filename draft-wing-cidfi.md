@@ -446,12 +446,13 @@ The format of the STUN CIDFI-NONCE attribute is:
 {: artwork-align="center" #fig-stun-cidfi-nonce title="Format of CIDFI-NONCE Attribute"}
 
 The nonce is 128 bits obtained from the CIDFI network element.  The
-HMAC-output field is computed per {{!RFC5869}} using the HMAC secret
-from the CIDFI network element, the concatinated Nonce, and the fixed
-string "cidfi" (without quotes).
+HMAC-output field is computed per {{!RFC5869}} using the CIDFI network
+element-provided HMAC secret, and the CIDFI network element-provided
+Nonce concatenated with the fixed string "cidfi" (without quotes),
+shown below with "|" denoting concatenation.
 
 ~~~~~
-  HMAC-output = HMAC-SHA256( hmac-secret, nonce || "cidfi" )
+  HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
 ~~~~~
 
 
