@@ -253,8 +253,14 @@ to the local ISP (exmaple.net) and the other belonging to the local
 Wi-Fi network (example.com),
 
 ~~~~~
-  _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 service-cidfi.example.net.
-  _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 wifi.example.com.
+_cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 service-cidfi.example.net. (
+    alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
+    cidfimetadata=/cidfi-metadata
+    )
+_cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 wifi.example.com. (
+    alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
+    cidfimetadata=/cidfi-metadata
+    )
 ~~~~~
 
 When multihoming, the multihome-capable CPE aggregates all upstream
