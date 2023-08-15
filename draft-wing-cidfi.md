@@ -1,6 +1,6 @@
 ---
-title: "QUIC CID Flow Indicator (CIDFI)"
-abbrev: "QUIC CIDFI"
+title: "CID Flow Indicator (CIDFI)"
+abbrev: "CIDFI"
 category: std
 
 
@@ -20,7 +20,10 @@ keyword:
  - 5G
  - Wi-Fi
  - WiFi
-
+ - DTLS Connection Identifier
+ - DTLS-SRTP
+ - QUIC Connection Identifier
+ - QUIC
 
 venue:
 #  group: "Transport Area Working Group"
@@ -58,7 +61,7 @@ author:
 
 normative:
   QUIC: RFC9000
-
+  DTLS-CID: RFC9146
 
 informative:
 
@@ -117,7 +120,7 @@ individual packets can improve the user experience especially on
 wireless networks which suffer bandwidth and delay variability.
 
 This document describes how clients and servers can cooperate with
-network elements so their QUIC streams can be augmented with
+network elements so their QUIC and DTLS streams can be augmented with
 information about network conditions and packet importance.
 
 --- middle
@@ -139,10 +142,11 @@ importance of the packet.  Metadata carried in each packet can influence
 that decision to improve the user experience.
 
 This document defines CIDFI (pronounced "sid fye") which is a system
-of several protocols that allow communicating about a {{QUIC}} connection
-from the network to the server and the server to the network.  The
-information exchanged allows the server to know about network conditions
-and allows the server to signal packet importance.
+of several protocols that allow communicating about a {{QUIC}}
+connection or a DTLS connection from the network to the server and the
+server to the network.  The information exchanged allows the server to
+know about network conditions and allows the server to signal packet
+importance.
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
@@ -174,15 +178,16 @@ domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 ~~~~~
 {: #fig-arch artwork-align="center" title="Network Diagram" :height=88}
 
-The CIDFI-aware QUIC client establishes a TLS connection with the
+The CIDFI-aware client establishes a TLS connection with the
 CIDFI-aware network elements (Wi-Fi access point, edge router, and RAN
 router in the above diagram).  Over this connection it receives
-network performance information and it sends mapping of QUIC
-Destination CIDs to packet importance.
+network performance information and it sends mapping of QUIC or DTLS Destination CIDs
+to packet importance.
 
-The design creates new state in the CIDFI-aware network elements,
-specifically for mapping from the QUIC Destination CID to the packet
-importance and for the TLS-encrypted communication from the client.
+The design creates new state in the CIDFI-aware network elements for
+mapping from the QUIC Destination CID or DTLS Destination CID to the
+packet importance, bandwidth information for that connection towards
+the client, and for the TLS-encrypted communication with the client.
 
 In {{network-to-server}} this document describes network-to-server signaling
 similar to the use-case described in {{Section 2 of ?I-D.joras-sadcdn}}, with metadata
@@ -192,8 +197,8 @@ In {{server-to-network}} this document describes server-to-network
 metadata signaling similar to the use-cases described in
 {{?I-D.reddy-tsvwg-explcit-signal}},
 {{?I-D.kaippallimalil-tsvwg-media-hdr-wireless}}, and {{Section 3 of
-I-D.joras-sadcdn}}.  The server-to-network mechanism can also
-benefit {{?I-D.ietf-avtcore-rtp-over-quic}}.
+I-D.joras-sadcdn}}.  The server-to-network metadata signaling can also
+benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
 
 
 # Conventions and Definitions
@@ -201,7 +206,7 @@ benefit {{?I-D.ietf-avtcore-rtp-over-quic}}.
 {::boilerplate bcp14-tagged}
 
 CID:
-: QUIC Connection Identifier
+: Connection Identifier used by {{QUIC}} or by {{DTLS-CID}}.
 
 
 # Design Goals
@@ -227,10 +232,10 @@ integrity protected by QUIC itself and cannot be modified by on-path
 network elements.  The network performance data is protected by TLS.
 
 Internet Survival:
-: The QUIC communications between the client and server are not changed
-so CIDFI is expected to work wherever QUIC works.  The elements involved
-are only the QUIC client, QUIC server, and the participating network
-elements.
+: The QUIC communications (and DTLS communications) between the client
+and server are not changed so CIDFI is expected to work wherever QUIC
+(or DTLS) work.  The elements involved are only the QUIC (or DTLS)
+client and server and with the participating CIDFI network elements.
 
 
 
@@ -270,7 +275,7 @@ its locally-connected clients.
 
 # Client Operation on Network Attach or Topology Change {#attach}
 
-On network attach or QUIC-detected topology change (see {{topology}}),
+On initial network attach or QUIC-detected topology change (see {{topology}}),
 the client learns if the network supports CIDFI ({{discovery}}) and
 authorizes those network elements ({{client-authorizes}}).
 
@@ -321,7 +326,7 @@ pick-your-favorite encoding and protocol:
 
 # Client Operation on Each Connection to a QUIC Server
 
-When a QUIC client connects to a QUIC server, the client:
+When a QUIC client (or {DTLS-CID}) client connects to a QUIC (or {DTLS-CID}) server, the client:
 
   1. learns the server supports CIDFI
      and obtains its mapping of transmitted destinations CID to metadata.
