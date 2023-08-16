@@ -194,11 +194,9 @@ similar to the use-case described in {{Section 2 of ?I-D.joras-sadcdn}}, with me
 relaying through the client.
 
 In {{server-to-network}} this document describes server-to-network
-metadata signaling similar to the use-cases described in
-{{?I-D.reddy-tsvwg-explcit-signal}},
-{{?I-D.kaippallimalil-tsvwg-media-hdr-wireless}}, and {{Section 3 of
-I-D.joras-sadcdn}}.  The server-to-network metadata signaling can also
-benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
+metadata signaling similar to the use-cases described in {{Section 3
+of I-D.joras-sadcdn}}.  The server-to-network metadata signaling can
+also benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
 
 
 # Conventions and Definitions
@@ -671,29 +669,22 @@ and DSCP code points.
 
 ### Mapping Metadata Parameters to DCIDs {#mapping-parameters}
 
-Several of the metadata parameters from {{Section 4.2 of
-I-D.kaippallimalil-tsvwg-media-hdr-wireless}} can be mapped to QUIC
-Destination CID:
+Several of metadata parameters can be mapped to Destination CID:
 
 Importance:
-: As described in {{Section 4.2.5 of I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
-
-Data burst:
-: As described in {{Section 4.2.6 of I-D.kaippallimalil-tsvwg-media-hdr-wireless}}.
+: Low/Medium/High importance, relative to other CIDs within this
+same UDP 4-tuple.
 
 Delay budget:
-: As described in {{Section 4.2.6 of
-I-D.kaippallimalil-tsvwg-media-hdr-wireless}}, counting from when the packet
-arrives at the CIDFI-aware network element to when it is transmitted.
-The client knows its own jitter (playout) buffer length and the client
-and server can calculate the one-way delay using timestamps.  With
-that information, the client can adjust the server's signaled delay
-budget with the client's own knowledge.  TODO: provide details.
-
-Some other metadata parameters from {{Section 4.2 of
-I-D.kaippallimalil-tsvwg-media-hdr-wireless}} cannot be successfully
-mapped into QUIC Destination ID such as timestamp, MDU
-Sequence, and Packet Counter.
+: Time in milliseconds until this packet is worthless to the receiver.
+This is counted from when the packet arrives at the CIDFI-aware
+network element to when it is transmitted; other delays may occur
+before or after that event occurs.  The receiver knows its own jitter
+(playout) buffer length and the client and server can calculate the
+one-way delay using timestamps.  With that information, the client can
+adjust the server's signaled delay budget with the client's own
+knowledge.  TODO: provide enough details to create interoperable
+implementations.
 
 Over the CIDFI-dedicated QUIC stream, the server sends mapping
 information to the client when then propagates that information
