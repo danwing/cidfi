@@ -143,10 +143,10 @@ that decision to improve the user experience.
 
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
-connection or a DTLS connection from the network to the server and the
-server to the network.  The information exchanged allows the server to
-know about network conditions and allows the server to signal packet
-importance.
+connection or a DTLS connection {{DTLS-CID}} from the network to the
+server and the server to the network.  The information exchanged
+allows the server to know about network conditions and allows the
+server to signal packet importance.
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
@@ -161,18 +161,18 @@ domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 +------+   +------+ | +------+            |          |
 |CIDFI-|   |CIDFI-| | |CIDFI-|            |          |
 |aware |   |aware | | |aware |  +------+  |          |
-|QUIC  +-B-+Wi-Fi +-B-+edge  +--+router+------+      |
-|client|   |access| | |router|  +------+  |   |      | +--------+
-+------+   |point | | +------+            |   |      | | CIDFI- |
+|client|-+-B-+Wi-Fi +-B-+edge  +--+router+------+      |
++------+   |access| | |router|  +------+  |   |      | +--------+
+           |point | | +------+            |   |      | | CIDFI- |
            +------+ |                     | +-+----+ | | aware  |
-                    |                     | |router+---+ QUIC   |
-+---------+         | +------+            | +-+----+ | | server |
-| CIDFI-  |         | |CIDFI-|            |   |      | +--------+
-| aware   |         | |aware |  +------+  |   |      |
-| QUIC    +-----B-----+RAN   +--+router+------+      |
-| client  |         | |router|  +------+  |          |
-|(handset)|         | +------+            |          |
-+---------+         |                     |          |
+                    |                     | |router+---+ QUIC or|
++---------+         | +------+            | +-+----+ | | DTLS   |
+| CIDFI-  |         | |CIDFI-|            |   |      | | server |
+| aware   |         | |aware |  +------+  |   |      | +--------+
+| client  +-----B-----+RAN   +--+router+------+      |
+|(handset)|         | |router|  +------+  |          |
++---------+         | +------+            |          |
+                    |                     |          |
                     |                     | transit  |  server
    user network     |    ISP network      | network  |  network
 ~~~~~
@@ -181,7 +181,7 @@ domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 The CIDFI-aware client establishes a TLS connection with the
 CIDFI-aware network elements (Wi-Fi access point, edge router, and RAN
 router in the above diagram).  Over this connection it receives
-network performance information and it sends mapping of QUIC or DTLS Destination CIDs
+network performance information and it sends mapping of (QUIC or DTLS) Destination CIDs
 to packet importance.
 
 The design creates new state in the CIDFI-aware network elements for
@@ -215,24 +215,25 @@ This section highlights the design goals of this specification.
 
 Client Authorization:
 : The client authorizes each CIDFI-aware network element to participate in CIDFI
-for each QUIC flow.
+for each QUIC flow or each DTLS flow.
 
 Same Server:
-: Communication about the network metadata arrives over the primary QUIC
-connection which ensures it arrives at the same QUIC server even through load
-balancers.
+: Communication about the network metadata arrives over the primary QUIC or
+DTLS connection which ensures it arrives at the same server even through
+local network translators (NAT) or server-side load balancers.
 
 Privacy:
 : The packet importance is only known by CIDFI-aware network
 elements.  The network performance data is protected by TLS.
 
 Integrity:
-: The packet importance is mapped to QUIC Destination CIDs which are
-integrity protected by QUIC itself and cannot be modified by on-path
-network elements.  The network performance data is protected by TLS.
+: The packet importance is mapped to Destination CIDs which are
+integrity protected by QUIC or DTLS itself and cannot be modified by on-path
+network elements.  The communication between client, server, and
+network element are protected by TLS.
 
 Internet Survival:
-: The QUIC communications (and DTLS communications) between the client
+: The QUIC communications and DTLS communications between the client
 and server are not changed so CIDFI is expected to work wherever QUIC
 (or DTLS) work.  The elements involved are only the QUIC (or DTLS)
 client and server and with the participating CIDFI network elements.
@@ -275,7 +276,7 @@ its locally-connected clients.
 
 # Client Operation on Network Attach or Topology Change {#attach}
 
-On initial network attach or QUIC-detected topology change (see {{topology}}),
+On initial network attach topology change (see {{topology}}),
 the client learns if the network supports CIDFI ({{discovery}}) and
 authorizes those network elements ({{client-authorizes}}).
 
@@ -314,8 +315,8 @@ the client owns its UDP 4-tuple.
 
 For discussion purposes, JSON is shown below to give a flavor of the
 data the client retrieves from the CIDFI network element.  The authors
-anticipate a more efficient encoding such as {{!CBOR=RFC8949}} or
-pick-your-favorite encoding and protocol:
+anticipate using a more efficient encoding such as {{!CBOR=RFC8949}}.
+
 
 ~~~~~
   {"cidfi-path-authentication":[
@@ -326,7 +327,7 @@ pick-your-favorite encoding and protocol:
 
 # Client Operation on Each Connection to a QUIC Server
 
-When a QUIC client (or {DTLS-CID}) client connects to a QUIC (or {DTLS-CID}) server, the client:
+When a QUIC client or {DTLS-CID} client connects to a QUIC or {DTLS-CID} server, the client:
 
   1. learns the server supports CIDFI
      and obtains its mapping of transmitted destinations CID to metadata.
@@ -631,15 +632,22 @@ CIDFI because TCP lacks QUIC's stream identification.
 
 # Topology Change {#topology}
 
-When topology changes (such as switching to a backup WAN connection,
-or such as switching from Wi-Fi to 5G), the QUIC server will consider
-this a connection migration and will issue a PATH_CHALLENGE.
+When topology changes the client will transmit from a new IP address
+-- such as switching to a backup WAN connection, or such as switching
+from Wi-Fi to 5G.  If using QUIC, QUIC server will consider this a
+connection migration and will issue a PATH_CHALLENGE.  If the client
+is aware of the topology change (such as attaching to a different
+network), the client would also change its QUIC Destination CID ({{Section
+9 of QUIC}}).
 
-If the CIDFI-aware client is otherwise unaware of a topology change
-and receives a PATH_CHALLENGE then the CIDFI-aware client SHOULD
+If the QUIC CIDFI-aware client is otherwise unaware of a topology change
+and receives a QUIC PATH_CHALLENGE then the CIDFI-aware client SHOULD
 re-discover its CIDFI network elements {{discovery}}.  If that
 set of network elements differs from the previous set, the client
 SHOULD continue with normal CIDFI processing.
+
+> todo: include discussion of {{DTLS-CID}} client and discussion
+of its ICE interaction, if any?
 
 
 # Details of Metadata Exchanged {#metadata-exchanged}
@@ -648,11 +656,6 @@ This section describes the metadata that can be exchanged from the
 CIDFI-aware network element to the server (generally network
 performance information) and from the server to the CIDFI-aware
 network element.
-
-> Note: we may want to use {{!CBOR=RFC8949}} for the client->network
-communication and over the CIDFI-dedicated QUIC stream between the
-QUIC client and QUIC server.
-
 
 
 ## Server to CIDFI-aware Network Element
@@ -698,9 +701,7 @@ to each of the CIDFI-aware network elements.
 
 For discussion purposes, JSON is shown below to give a flavor
 of the data exchanged.  The authors anticipate a more efficient
-encoding such as {{!CBOR=RFC8949}} or pick-your-favorite encoding
-and protocol:
-
+encoding such as {{!CBOR=RFC8949}}.
 
 ~~~~~
   {"metadata-parameters":[{"quicversion":1,
@@ -730,9 +731,8 @@ information to the client when then propagates that information
 to each of the CIDFI-aware network elements.
 
 For discussion purposes, JSON is shown below to give a flavor
-of the data exchanged.  The authors anticipate a more efficient
-encoding such as {{!CBOR=RFC8949}} or pick-your-favorite encoding
-and protocol:
+of the data exchanged.  The authors anticipate using a more efficient
+encoding such as {{!CBOR=RFC8949}}.
 
 ~~~~~
   {"dscp":[{"quicversion":1,
@@ -754,8 +754,8 @@ metadata.
 
 For discussion purposes, JSON is shown below to give a flavor of the
 data sent from the CIDFI-aware network element to the client.  The
-authors anticipate a more efficient encoding such as {{!CBOR=RFC8949}}
-or pick-your-favorite encoding and protocol:
+authors anticipate using a more efficient encoding such as {{!CBOR=RFC8949}}.
+
 
 ~~~~~
   {"dcid":123,
