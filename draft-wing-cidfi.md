@@ -302,7 +302,8 @@ The client authorizes each of the CNE using
 its local policy.  This policy is implementation specific.  An example
 implementation might have the user authorize their ISP's CIDFI server
 (e.g., allow cidfi.example.net if the user's ISP is configured as
-example.net).
+example.net).  Similarly, if none of the CNE are recognized the client
+might silently avoid using CIDFI on that network.
 
 After authorizing that subset of CNE, the
 client makes a new HTTPS connection to each of those CNE
@@ -762,10 +763,6 @@ QUIC stream associated with that same Connection ID.
 
 This section discusses known issues that would benefit from wider discussion.
 
-## PvD versus DNS SVCB
-
-Instead of DNS SVCB consider using Provisioning Domain {{?RFC8801}}
-instead.  Provisioning Domains would bring IPv6 constraints.
 
 
 ## Client versus Server Signaling CID-to-importance Mapping
