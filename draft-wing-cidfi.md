@@ -3,7 +3,6 @@ title: "CID Flow Indicator (CIDFI)"
 abbrev: "CIDFI"
 category: std
 
-
 docname: draft-wing-cidfi-latest
 submissiontype: IETF
 v: 3
