@@ -161,7 +161,7 @@ domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 +------+   +------+ | +------+            |          |
 |CIDFI-|   |CIDFI-| | |CIDFI-|            |          |
 |aware |   |aware | | |aware |  +------+  |          |
-|client|-+-B-+Wi-Fi +-B-+edge  +--+router+------+      |
+|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |
 +------+   |access| | |router|  +------+  |   |      | +--------+
            |point | | +------+            |   |      | | CIDFI- |
            +------+ |                     | +-+----+ | | aware  |
