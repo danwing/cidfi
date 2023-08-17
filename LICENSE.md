@@ -1,4 +1,4 @@
 # License
 
 See the
-[guidelines for contributions](https://github.com/danwing/tsvwg-cidfi/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/danwing/cidfi/blob/main/CONTRIBUTING.md).
