@@ -181,8 +181,8 @@ domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 The CIDFI-aware client establishes a TLS connection with the
 CIDFI-aware network elements (Wi-Fi access point, edge router, and RAN
 router in the above diagram).  Over this connection it receives
-network performance information and it sends mapping of (QUIC or DTLS) Destination CIDs
-to packet importance.
+network performance information and it sends mapping of (QUIC or DTLS)
+Destination CIDs to packet importance.
 
 The design creates new state in the CIDFI-aware network elements for
 mapping from the QUIC Destination CID or DTLS Destination CID to the
