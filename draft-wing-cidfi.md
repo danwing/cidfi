@@ -26,12 +26,12 @@ keyword:
  - QUIC
 
 venue:
-#  group: "Transport Area Working Group"
-#  type: "Working Group"
-#  mail: "tsvwg@ietf.org"
-#  arch: "https://mailarchive.ietf.org/arch/browse/tsvwg/"
+  group: "ART Area Working Group"
+  type: "Working Group"
+  mail: "art@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/art/"
   github: "danwing/cidfi"
-#  latest: "https://danwing.github.io/cidfi/draft-wing-cidfi.html"
+  latest: "https://danwing.github.io/cidfi/draft-wing-cidfi.html"
 
 stand_alone: yes
 pi: [toc, sortrefs, symrefs, strict, comments, docmapping]
