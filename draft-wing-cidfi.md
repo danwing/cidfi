@@ -378,7 +378,7 @@ CIDFI nonce protected by the HMAC secret it obtained from
 {{client-authorizes}} over the QUIC UDP 4-tuple it is using with the
 QUIC server.  The ability to transmit that packet on the same UDP
 4-tuple as the QUIC connection indicates ownership of that IP address
-and UDP port.  The nonce and HMAC are sent in a {{!STUN=RFC5389}} indication (STUN
+and UDP port.  The nonce and HMAC are sent in a {{!STUN=RFC8489}} indication (STUN
 class of 0b01) containing one or more CIDFI-NONCE attributes
 ({{iana-stun}}).  If there are multiple CNE
 the single STUN indication contains a CIDFI-NONCE attribute from each of
@@ -460,7 +460,7 @@ The format of the STUN CIDFI-NONCE attribute is:
 {: artwork-align="center" #fig-stun-cidfi-nonce title="Format of CIDFI-NONCE Attribute"}
 
 The nonce is 128 bits obtained from the CIDFI network element.  The
-HMAC-output field is computed per {{!RFC5869}} using the CIDFI network
+HMAC-output field is computed per {{?RFC5869}} using the CIDFI network
 element-provided HMAC secret, and the CIDFI network element-provided
 Nonce concatenated with the fixed string "cidfi" (without quotes),
 shown below with "|" denoting concatenation.
