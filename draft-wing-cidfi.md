@@ -26,7 +26,7 @@ keyword:
  - QUIC
 
 venue:
-  group: "ART Area Working Group"
+  group: "ART Area"
   type: "Working Group"
   mail: "art@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/art/"
