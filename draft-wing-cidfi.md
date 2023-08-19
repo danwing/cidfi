@@ -198,6 +198,8 @@ metadata signaling similar to the use-cases described in {{Section 3
 of I-D.joras-sadcdn}}.  The server-to-network metadata signaling can
 also benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
 
+A discussion of extending CIDFI to other protocols is in {{extending}}.
+
 
 # Conventions and Definitions
 
@@ -901,6 +903,72 @@ in the "STUN Attributes" registry available at {{IANA-STUN}}.
 --- back
 
 
+# Extending CIDFI to Other Protocols {#extending}
+
+CIDFI can be extended to other protocols including TCP, SCTP, RTP and SRTP,
+and bespoke UDP protocols.
+
+An extension to each protocol is described below which retains the
+ability of the client to prove its ownership of the 5-tuple to the CIDFI
+Network Element (CNE).
+
+## TCP
+
+To prove ownership of the TCP 4-tuple, TCP can utilize a new TCP
+option to carry the CNE's nonce and HMAC-output.  This TCP option can be carried
+in both the TCP SYN and in some subequent packets to avoid consuming the entire
+TCP option space (40 bytes).  Sub-options can be defined to carry pieces of
+the Nonce and HMAC output, with the first piece of the Nonce in the TCP SYN
+so the CIDFI network element can be triggered to begin looking for the subsequent
+TCP frames containing the rest of the CIDFI nonce and CIDFI HMAC-output.  For example,
+
+1. send TCP SYN + CIDFI option (including Nonce bits 0-63)
+2. if received TCP SYNACK does not indicate CIDFI support, stop sending CIDFI option
+3. send next TCP packet + CIDFI option (including Nonce bytes 64-128)
+4. send next TCP packet + CIDFI option (including HMAC-output bits 0-127)
+5. send next TCP packet + CIDFI option (including HMAC-output bytes 128-256)
+
+To shorten this further we might truncate the HMAC output and/or
+truncate the Nonce after security evaluation.
+
+## SCTP
+
+SCTP can use a technique similar to TCP, as has kinship to TCP with
+its connection establishment.
+
+If SCTP is run over UDP, the CIDFI Nonce and HMAC-output could be sent
+over a STUN Indication (rather than over SCTP).  As SCTP-over-UDP
+still has SCTP headers in a known location, the CIDFI-aware network
+element can examine the SCTP header of SCTP-over-UDP as easily as SCTP-over-IP,
+and the SCTP-over-UDP encapsulation can be expressed in the proof-of-socket
+ownership message (the STUN Indication).
+
+## RTP and SRTP
+
+The RTP Synchronization Source (SSRC) is in the clear for {{?RTP=RFC3550}}, {{?SRTP=RFC3711}},
+and {{?cryptex=RFC9335}}.  If the SSRC is signaled similarly to CID, RTP could also
+benefit from CIDFI.  CIDFI network elements could be told the mapping of SSRC values to
+importance and schedule those SSRCs accordingly.  However, SSRC is used in playout (jitter)
+buffers and a new SSRC seen by a receiver will cause confusion.  Thus, overloading SSRC
+to mean both 'packet importance' for CIDFI and 'synchronization source' will require
+engineering work on the RTP receiver to treat all the signaled SSRCs as one source for
+purposes of its playout buffer.
+
+RTP over QUIC {{?I-D.ietf-avtcore-rtp-over-quic}} is another approach which exposes
+QUIC headers to the network (which have CIDs) and does not overload the RTP SSRC.  The
+Media over QUIC (MOQ) working group includes RTP over QUIC as one of its use cases
+{{Section 3.1 of ?I-D.ietf-moq-requirements}}.
+
+
+## Bespoke UDP Application Protocols
+
+To work with CIDFI, other UDP application protocols would have to
+prove ownership of their UDP 4-tuple ({{ownership}}) and extend their
+protocol to include a connection identifier in the first several bits
+of each of their UDP packets.
+
+Alternatively, rather than modifying the application protocol it could be run
+over {{QUIC}} or {{DTLS-CID}}.
 
 
 # Acknowledgments
