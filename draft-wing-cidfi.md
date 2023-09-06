@@ -189,16 +189,16 @@ mapping from the QUIC Destination CID or DTLS Destination CID to the
 packet importance, bandwidth information for that connection towards
 the client, and for the TLS-encrypted communication with the client.
 
-In {{network-to-server}} this document describes network-to-server signaling
-similar to the use-case described in {{Section 2 of ?I-D.joras-sadcdn}}, with metadata
+{{network-to-server}} describes network-to-server signaling
+similar to the use case described in {{Section 2 of ?I-D.joras-sadcdn}}, with metadata
 relaying through the client.
 
-In {{server-to-network}} this document describes server-to-network
-metadata signaling similar to the use-cases described in {{Section 3
+{{server-to-network}} describes server-to-network
+metadata signaling similar to the use cases described in {{Section 3
 of I-D.joras-sadcdn}}.  The server-to-network metadata signaling can
 also benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
 
-A discussion of extending CIDFI to other protocols is in {{extending}}.
+A discussion of extending CIDFI to other protocols is provided in {{extending}}.
 
 
 # Conventions and Definitions
@@ -218,11 +218,11 @@ This section highlights the design goals of this specification.
 
 Client Authorization:
 : The client authorizes each CIDFI-aware network element (CNE) to participate in CIDFI
-for each QUIC flow or each DTLS flow.
+for each QUIC or DTLS flow.
 
 Same Server:
 : Communication about the network metadata arrives over the primary QUIC or
-DTLS connection which ensures it arrives at the same server even through
+DTLS connection which ensures it arrives at the same server instance even through
 local network translators (NAT) or server-side load balancers.
 
 Privacy:
@@ -231,14 +231,14 @@ elements (CNE).  The network performance data is protected by TLS.
 
 Integrity:
 : The packet importance is mapped to Destination CIDs which are
-integrity protected by QUIC or DTLS itself and cannot be modified by on-path
+integrity protected by QUIC (or DTLS) itself and cannot be modified by on-path
 network elements.  The communication between client, server, and
-network element are protected by TLS.
+network element is protected by TLS.
 
 Internet Survival:
-: The QUIC communications and DTLS communications between the client
+: The QUIC (or DTLS) communications between the client
 and server are not changed so CIDFI is expected to work wherever QUIC
-(or DTLS) work.  The elements involved are only the QUIC (or DTLS)
+(or DTLS) works.  The elements involved are only the QUIC (or DTLS)
 client and server and with the participating CIDFI network elements.
 
 
@@ -298,17 +298,17 @@ CIDFI and processing stops.
 ## Client Authorizes CIDFI Network Elements {#client-authorizes}
 
 The SVCB response from the previous step in {{discovery}} will contain one or more
-CNE.
+CNEs.
 
-The client authorizes each of the CNE using
+The client authorizes each of the CNEs using
 its local policy.  This policy is implementation specific.  An example
 implementation might have the user authorize their ISP's CIDFI server
 (e.g., allow cidfi.example.net if the user's ISP is configured as
-example.net).  Similarly, if none of the CNE are recognized the client
+example.net).  Similarly, if none of the CNEs are recognized by the client, the client
 might silently avoid using CIDFI on that network.
 
-After authorizing that subset of CNE, the
-client makes a new HTTPS connection to each of those CNE
+After authorizing that subset of CNEs, the
+client makes a new HTTPS connection to each of those CNEs
 and performs PKIX validation of their certificates.
 The client MAY have to authenticate itself to the CIDFI network
 element.
@@ -331,7 +331,7 @@ anticipate using a more efficient encoding such as {{!CBOR=RFC8949}}.
 
 # Client Operation on Each Connection to a QUIC Server
 
-When a QUIC client or {DTLS-CID} client connects to a QUIC or {DTLS-CID} server, the client:
+When a QUIC client (or {DTLS-CID}) client connects to a QUIC (or {DTLS-CID}) server, the client:
 
   1. learns the server supports CIDFI
      and obtains its mapping of transmitted destinations CID to metadata.
@@ -374,7 +374,7 @@ this CIDFI-dedicated stream as described in {{initial-metadata-exchange}}.
 
 ## Client Proves Ownership of its UDP 4-Tuple {#ownership}
 
-To ensure the client messages to the CNE
+To ensure that the client messages to the CNE
 pertain only to the client's own UDP 4-tuple, the client sends the
 CIDFI nonce protected by the HMAC secret it obtained from
 {{client-authorizes}} over the QUIC UDP 4-tuple it is using with the
@@ -424,7 +424,7 @@ CID on their own UDP 4-tuple, the STUN Indication message also allows
 the CIDFI network element to distinguish which UDP 4-tuple belongs to
 each CIDFI client.
 
-To reduce CIDFI set-up time the client STUN Indication MAY be sent at
+To reduce CIDFI setup time the client STUN Indication MAY be sent at
 the same time as the QUIC Initial packet, which is encouraged
 if the client remembers the server supports CIDFI (0-RTT).
 
@@ -584,8 +584,8 @@ packet metadata (see {#packet-metadata}).
 
 ### Network Element to Server {#network-to-server}
 
-The network element send network performance information to the server
-which is intended to influence the sender'ss traffic rate (such as
+The network element sends network performance information to the server
+which is intended to influence the sender's traffic rate (such as
 improving or reducing fidelity of the audio or video).  In the figure below
 the CNE informs the client of reduced bandwidth and the
 client informs the server using CIDFI.
@@ -605,7 +605,7 @@ client     Wi-Fi Access Point    edge router     server
 ~~~~~
 {: artwork-align="center"}
 
-The communication from the client to the server are using a CIDFI-dedicated
+The communication from the client to the server is using a CIDFI-dedicated
 QUIC stream over the same QUIC connection as their primary communication.
 
 The CNE can update the client with whenever
@@ -616,8 +616,8 @@ The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
 ## Ongoing Metadata Exchange {#ongoing-metadata-exchange}
 
-For the duration of the primary QUIC connection between the QUIC client and
-QUIC server, the client relays network element metadata changes to the server, and server's
+For the duration of the primary QUIC connection between the client and
+server, the client relays network element metadata changes to the server, and server's
 transmitted QUIC Destination CID to the network elements.
 
 
@@ -625,7 +625,7 @@ transmitted QUIC Destination CID to the network elements.
 
 HTTPS servers, including QUIC servers, are frequently behind load balancers.
 
-With CIDFI, all the communication to the load-balanaced QUIC server are over the same UDP 4-tuple
+With CIDFI, all the communications to the load-balanaced QUIC server are over the same UDP 4-tuple
 as the primary QUIC connection but in a different QUIC stream.  This means
 no changes are required to ECMP load balancers or to CID-aware load balancers
 when using a CIDFI-aware back-end QUIC server.
@@ -636,7 +636,7 @@ CIDFI because TCP lacks QUIC's stream identification.
 
 # Topology Change {#topology}
 
-When topology changes the client will transmit from a new IP address
+When the topology changes the client will transmit from a new IP address
 -- such as switching to a backup WAN connection, or such as switching
 from Wi-Fi to 5G.  If using QUIC, QUIC server will consider this a
 connection migration and will issue a PATH_CHALLENGE.  If the client
@@ -656,25 +656,25 @@ of its ICE interaction, if any?
 
 # Details of Metadata Exchanged {#metadata-exchanged}
 
-This section describes the metadata that can be exchanged from the
-CNE to the server (generally network
+This section describes the metadata that can be exchanged from a
+CNE to a server (generally network
 performance information) and from the server to the CNE.
 
 
 ## Server to CIDFI-aware Network Element
 
-Because there is no direct communications from the server to
-the network element the communications are relayed through the client.
+Because there is no direct communication from the server to
+the network element the communication is relayed through the client.
 
-The communication from server to network element do not occur directly,
+The communications from servers to network elements do not occur directly,
 but rather through the client.
 
 Two types of mapping metadata are described below: metadata parameters
-and DSCP code points.
+and DSCP values.
 
 ### Mapping Metadata Parameters to DCIDs {#mapping-parameters}
 
-Several of metadata parameters can be mapped to Destination CID:
+Several of metadata parameters can be mapped to Destination CIDs:
 
 Importance:
 : Low/Medium/High importance, relative to other CIDs within this
@@ -714,15 +714,15 @@ encoding such as {{!CBOR=RFC8949}}.
 A mapping from Destination CID to DiffServ code point
 {{!RFC2474}} leverages existing DiffServ handling that may already
 exist in the CIDFI network element.  If there are downstream network
-elements configured with the same DiffServ code point the CIDFI
+elements configured with the same DSCP the CIDFI
 network element could mark the packet with that code point as well.
 
-Signaling the DiffServ values for different QUIC Destination CID
-increases the edge network's confidence the sender's DiffServ intent
+Signaling the DSCP values for different QUIC Destination CIDs
+increases the edge network's confidence that the sender's DiffServ intent
 is preserved into the edge network, even if the DSCP bits were
 modified en route to the edge network (e.g., {{pathologies}}).
 
-Over the CIDFI-dedicated QUIC stream, the server sends mapping
+Over the CIDFI-dedicated QUIC stream, the server sends the mapping
 information to the client when then propagates that information
 to each of the CNEs.
 
