@@ -212,6 +212,12 @@ CNE:
 : CIDFI-aware Network Element, a network element that
 supports this CIDFI specification.  This is usually a router.
 
+## Notations
+
+For discussion purposes, JSON is used in the examples to give a flavor of the
+data that the client retrieves from a CNE.  The authors
+anticipate using a more efficient encoding such as {{!CBOR=RFC8949}}.
+
 # Design Goals
 
 This section highlights the design goals of this specification.
@@ -257,7 +263,7 @@ network elements (CNEs).  If upstream networks also support CIDFI (e.g., the
 ISP network) those SVCB records are aggregated into the local DNS
 server's response by the local network's recursive DNS resolvers.  For
 example, a query for _cidfi-aware.cidfi.arpa might return two answers
-for the two CNE on the local network, one belonging
+for the two CNEs on the local network, one belonging
 to the local ISP (exmaple.net) and the other belonging to the local
 Wi-Fi network (example.com),
 
@@ -276,7 +282,6 @@ When multihoming, the multihome-capable CPE aggregates all upstream
 networks' _cidfi-aware.cidfi.arpa responses into the response sent to
 its locally-connected clients.
 
-
 # Client Operation on Network Attach or Topology Change {#attach}
 
 On initial network attach topology change (see {{topology}}),
@@ -287,24 +292,31 @@ authorizes those network elements ({{client-authorizes}}).
 
 The client determines if the local network provides CIDFI service by
 issuing a query to the local DNS server for
-_cidfi-aware.cidfi.arpa. with the SVCB resource record type (64)
-{{I-D.ietf-dnsop-svcb-https}}.  If this succeeds, processing skips to
+"_cidfi-aware.cidfi.arpa." with the SVCB resource record type (64)
+{{I-D.ietf-dnsop-svcb-https}}.
+
+Alernatively, the client determines that a local network
+is CIDFI-capable if the client receives an explicit signal from the network, e.g., via a dedicated
+DHCP option or a 3GPP PCO (Protocol Configuration Option) Information Element. An example
+of explicit signal would be a DHCPv6 option or DHCPv4 sub-option that that is returned as
+part of {{?RFC7839}}.
+
+If the discovery succeeds, the client follows the processing in
 {{client-authorizes}}.
 
-If discovery failed it indicates the local network does not support
-CIDFI and processing stops.
-
+If discovery failed (i.e., the client concludes that the local network does not support
+CIDFI), the processing stops.
 
 ## Client Authorizes CIDFI Network Elements {#client-authorizes}
 
-The SVCB response from the previous step in {{discovery}} will contain one or more
+The response from the previous step in {{discovery}} will contain one or more
 CNEs.
 
 The client authorizes each of the CNEs using
-its local policy.  This policy is implementation specific.  An example
-implementation might have the user authorize their ISP's CIDFI server
-(e.g., allow cidfi.example.net if the user's ISP is configured as
-example.net).  Similarly, if none of the CNEs are recognized by the client, the client
+a local policy.  This policy is implementation specific.  An 
+implementation example might have the users authorize their ISP's CIDFI server
+(e.g., allow "cidfi.example.net" if a user's ISP is configured with
+"example.net").  Similarly, if none of the CNEs are recognized by the client, the client
 might silently avoid using CIDFI on that network.
 
 After authorizing that subset of CNEs, the
@@ -316,11 +328,6 @@ element.
 The client then obtains the CIDFI nonce and CIDFI HMAC
 secret from each network element used later in {{ownership}} to prove
 the client owns its UDP 4-tuple.
-
-For discussion purposes, JSON is shown below to give a flavor of the
-data the client retrieves from the CIDFI network element.  The authors
-anticipate using a more efficient encoding such as {{!CBOR=RFC8949}}.
-
 
 ~~~~~
   {"cidfi-path-authentication":[
@@ -695,9 +702,6 @@ Over the CIDFI-dedicated QUIC stream, the server sends mapping
 information to the client when then propagates that information
 to each of the CNEs.
 
-For discussion purposes, JSON is shown below to give a flavor
-of the data exchanged.  The authors anticipate a more efficient
-encoding such as {{!CBOR=RFC8949}}.
 
 ~~~~~
   {"metadata-parameters":[{"quicversion":1,
@@ -726,10 +730,6 @@ Over the CIDFI-dedicated QUIC stream, the server sends the mapping
 information to the client when then propagates that information
 to each of the CNEs.
 
-For discussion purposes, JSON is shown below to give a flavor
-of the data exchanged.  The authors anticipate using a more efficient
-encoding such as {{!CBOR=RFC8949}}.
-
 ~~~~~
   {"dscp":[{"quicversion":1,
     "dcidlength":3,
@@ -748,10 +748,6 @@ received Destination CIDs.  As bandwidth availability to that client
 changes, the CNE updates the client with new
 metadata.
 
-For discussion purposes, JSON is shown below to give a flavor of the
-data sent from the CNE to the client.  The
-authors anticipate using a more efficient encoding such as {{!CBOR=RFC8949}}.
-
 
 ~~~~~
   {"dcid":123,
@@ -765,14 +761,11 @@ QUIC stream associated with that same Connection ID.
 
 This section discusses known issues that would benefit from wider discussion.
 
-
-
 ## Client versus Server Signaling CID-to-importance Mapping
 
 Need to evaluate number of round trips (and other overhead) of client
 signaling CID-to-importance mapping or server signaling CID-to-importance
 mapping.
-
 
 ## Overhead of QUIC DCID Packet Examination
 
@@ -809,7 +802,6 @@ agree on the meaning of those QUIC CIDs.
 ## Improve CIDFI Initialization time
 
 Find approaches to further reduce network communications to start CIDFI.
-
 
 
 ## Primary QUIC Channel CID Change {#primary-cid-change}:
@@ -909,8 +901,7 @@ CIDFI can be extended to other protocols including TCP, SCTP, RTP and SRTP,
 and bespoke UDP protocols.
 
 An extension to each protocol is described below which retains the
-ability of the client to prove its ownership of the 5-tuple to the CIDFI
-Network Element (CNE).
+ability of the client to prove its ownership of the 5-tuple to a CNE.
 
 ## TCP
 
