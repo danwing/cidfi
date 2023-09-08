@@ -313,7 +313,7 @@ The response from the previous step in {{discovery}} will contain one or more
 CNEs.
 
 The client authorizes each of the CNEs using
-a local policy.  This policy is implementation specific.  An 
+a local policy.  This policy is implementation specific.  An
 implementation example might have the users authorize their ISP's CIDFI server
 (e.g., allow "cidfi.example.net" if a user's ISP is configured with
 "example.net").  Similarly, if none of the CNEs are recognized by the client, the client
@@ -786,7 +786,7 @@ and similar 5G optimizations.
 This impact needs further study.
 
 
-## Overhead of Mapping CID to packet metadata
+## Overhead of Mapping CIDs to Packet Metadata
 
 Network Elements have to maintain a mapping between each UDP 4-tuple
 and QUIC CID and its DSCP code point.  This also needs updating
@@ -799,7 +799,7 @@ agree on the meaning of those QUIC CIDs.
 
 
 
-## Improve CIDFI Initialization time
+## Improve CIDFI Initialization Time
 
 Find approaches to further reduce network communications to start CIDFI.
 
