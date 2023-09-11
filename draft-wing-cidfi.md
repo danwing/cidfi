@@ -295,7 +295,7 @@ issuing a query to the local DNS server for
 "_cidfi-aware.cidfi.arpa." with the SVCB resource record type (64)
 {{I-D.ietf-dnsop-svcb-https}}.
 
-Alernatively, the client determines that a local network
+Alternatively, the client determines that a local network
 is CIDFI-capable if the client receives an explicit signal from the network, e.g., via a dedicated
 DHCP option or a 3GPP PCO (Protocol Configuration Option) Information Element. An example
 of explicit signal would be a DHCPv6 option or DHCPv4 sub-option that that is returned as
