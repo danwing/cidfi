@@ -373,6 +373,17 @@ The client determines if the local network supports CIDFI by
 querying https://\<PvD-ID\>/.well-known/pvd as described in {{Section
 4.1 of !RFC8801}}.
 
+
+### Client Learns Using DNS or 3GPP PCO
+
+The client determines that a local network is CIDFI-capable if the
+client receives an explicit signal from the network, e.g., via a
+dedicated DHCP option or a 3GPP PCO (Protocol Configuration Option)
+Information Element. An example of explicit signal would be a DHCPv6
+option or DHCPv4 sub-option that that is returned as part of
+{{?RFC7839}}.
+
+
 ## Client Authorizes CIDFI Network Elements {#client-authorizes}
 
 The response from the previous step in {{discovery}} will contain one or more
