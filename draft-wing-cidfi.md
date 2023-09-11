@@ -924,15 +924,13 @@ truncate the Nonce after security evaluation.
 
 ## SCTP
 
-SCTP can use a technique similar to TCP, as has kinship to TCP with
-its connection establishment.
+If SCTP is sent directly over IP, proof of ownership of the
+SCTP 4-tuple can be achieved using an extension to its INIT
+packets, similar to what is described above for TCP SYN.
 
-If SCTP is run over UDP, the CIDFI Nonce and HMAC-output could be sent
-over a STUN Indication (rather than over SCTP).  As SCTP-over-UDP
-still has SCTP headers in a known location, the CIDFI-aware network
-element can examine the SCTP header of SCTP-over-UDP as easily as SCTP-over-IP,
-and the SCTP-over-UDP encapsulation can be expressed in the proof-of-socket
-ownership message (the STUN Indication).
+If SCTP is run over UDP, the same proof of ownership of the UDP
+4-tuple as described in {{ownership}} can be performed.
+
 
 ## RTP and SRTP
 
@@ -967,6 +965,6 @@ over {{QUIC}} or {{DTLS-CID}}.
 
 Thanks to Dave Täht, Magnus Westerlund, Christian Huitema, Gorry Fairhurst,
 and Tom Herbert for hallway discussions and feedback at TSVWG that encouraged
-the authors to consider the approach described in this document.
-
+the authors to consider the approach described in this document.  Thanks to
+Ben Schwartz for suggesting PvD as an alternative discovery mechanism.
 
