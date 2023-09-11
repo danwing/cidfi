@@ -373,12 +373,6 @@ The client determines if the local network supports CIDFI by
 querying https://\<PvD-ID\>/.well-known/pvd as described in {{Section
 4.1 of !RFC8801}}.
 
-If the discovery succeeds, the client follows the processing in
-{{client-authorizes}}.
-
-If discovery failed (i.e., the client concludes that the local network does not support
-CIDFI), the processing stops.
-
 ## Client Authorizes CIDFI Network Elements {#client-authorizes}
 
 The response from the previous step in {{discovery}} will contain one or more
