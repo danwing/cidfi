@@ -158,7 +158,7 @@ server to signal packet importance.
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
 bandwidth-constrained link between a smartphone handset and its Radio
-Access Newwork (RAN).  This diagram shows the same protocol and same mechanism
+Access Network (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
 domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 
@@ -281,7 +281,7 @@ ISP network) those SVCB records are aggregated into the local DNS
 server's response by the local network's recursive DNS resolvers.  For
 example, a query for _cidfi-aware.cidfi.arpa might return two answers
 for the two CNEs on the local network, one belonging
-to the local ISP (exmaple.net) and the other belonging to the local
+to the local ISP (example.net) and the other belonging to the local
 Wi-Fi network (example.com),
 
 ~~~~~
@@ -480,7 +480,7 @@ sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server:
  QUIC                            CIDFI-aware            QUIC
 client                           edge router           server
   |                                    |                  |
-  |  HTTPS: Enroll CIDFI router to partipate              |
+  |  HTTPS: Enroll CIDFI router to participate            |
   +----------------------------------->|                  |
   |  HTTPS: Ok.  nonce=12345           |                  |
   |<-----------------------------------+                  |
@@ -628,7 +628,7 @@ client                           edge router           server
   |  Ok                                |                  |
   |<-----------------------------------+                  |
 ~~~~~
-{: artwork-align="center" title="Client re-transmtting lost nonce"}
+{: artwork-align="center" title="Client re-transmitting lost nonce"}
 
 
 There are two types of metadata exchanged, described in the following sub-sections.
@@ -710,7 +710,7 @@ transmitted QUIC Destination CID to the network elements.
 
 HTTPS servers, including QUIC servers, are frequently behind load balancers.
 
-With CIDFI, all the communications to the load-balanaced QUIC server are over the same UDP 4-tuple
+With CIDFI, all the communications to the load-balanced QUIC server are over the same UDP 4-tuple
 as the primary QUIC connection but in a different QUIC stream.  This means
 no changes are required to ECMP load balancers or to CID-aware load balancers
 when using a CIDFI-aware back-end QUIC server.
@@ -1017,7 +1017,7 @@ ability of the client to prove its ownership of the 5-tuple to a CNE.
 
 To prove ownership of the TCP 4-tuple, TCP can utilize a new TCP
 option to carry the CNE's nonce and HMAC-output.  This TCP option can be carried
-in both the TCP SYN and in some subequent packets to avoid consuming the entire
+in both the TCP SYN and in some subsequent packets to avoid consuming the entire
 TCP option space (40 bytes).  Sub-options can be defined to carry pieces of
 the Nonce and HMAC output, with the first piece of the Nonce in the TCP SYN
 so the CIDFI network element can be triggered to begin looking for the subsequent
