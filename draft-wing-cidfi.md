@@ -345,7 +345,7 @@ authorizes those network elements ({{client-authorizes}}).
 
 ## Client Learns Local Network Supports CIDFI {#discovery}
 
-For this step, four mechanisms are described: DNS SVCB records, IPv6
+For this step, four mechanisms are identified: DNS SVCB records, IPv6
 Provisioning Domains (PvD), DHCP, or 3GPP PCO.  These are described
 below.
 
@@ -353,11 +353,13 @@ below.
 
 In all cases below,
 
-- if the discovery succeeds, the client follows the processing in
+- if the discovery succeeds (i.e., the client concludes that the local
+  and/or ISP network support CIDFI) client processing proceeds to
   {{client-authorizes}}.
 
 - if the discovery failed (i.e., the client concludes that the local
-  network does not support CIDFI), the processing stops.
+  network and ISP do not support CIDFI) client processing stops.
+
 
 
 ### Client Learns Using DNS SVCB
