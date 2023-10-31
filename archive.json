@@ -1,0 +1,579 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-09-14T01:09:11.261011+00:00",
+  "repo": "danwing/cidfi",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 2,
+      "id": "I_kwDOKCXv885tcyf0",
+      "title": "Client or Server CID",
+      "url": "https://github.com/danwing/cidfi/issues/2",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The text uses CID, while it would be more accurate in some parts of the text to call out whether this is SCID or DCID.",
+      "createdAt": "2023-08-04T07:59:17Z",
+      "updatedAt": "2023-08-04T07:59:17Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3,
+      "id": "I_kwDOKCXv885uOvB9",
+      "title": "Comments on the draft",
+      "url": "https://github.com/danwing/cidfi/issues/3",
+      "state": "OPEN",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "(1) Section 4 may also want to discuss a scenario where the client is aware of the network identity (e.g., \"example.net\").  In this case, the DNS query will be \"_cidfi-aware.example.net\". \r\n\r\n(2) I suggest removing Appendix A (it has privacy issues, revealing network identity to the server).\r\n\r\n(3)Section 5.2, the client could authorize the CIDFI network elements if it has sufficient reputation (e.g., it would work for Mobile Networks, Enterprise networks etc.). It would avoid end-user intervention in certain deployments.\r\n\r\n(4) Section 6.2, in the sequence diagram, replace \"HTTP\" with \"HTTPS\"\r\n\r\n(5) We should explain the Nonce mechanism prevents a passive attacker but not an active attacker. I mean an active attacker not interested in disrupting the QUIC connection but leveraging this mechanism to learn about the network characteristics.\r\n\r\n(6) Section 6.3> We should say PKIX validatation of CIDFI network elements. The client uses default system or application PKI trust anchors unless configured otherwise to use explicit trust anchors.\r\n\r\n(7) Any specific reason for choosing STUN request instead of STUN indications ?\r\n   We should go with STUN indications as response is not required. Further, STUN requests are re-transmitted by default.\r\n\r\n(8) Note: we may want to use [CoAP] for the client->network communication and over the CIDFI-dedicated QUIC stream between the QUIC client and QUIC server. \r\n\r\nComment> I think you mean use to \"to use [CBOR] for the client->network...\"\r\n\r\n(9)  I don't know if kaippallimalil-tsvwg-media-hdr-wireless will progress. Can we avoid the dependency on kaippallimalil-tsvwg-media-hdr-wireless ?\r\n",
+      "createdAt": "2023-08-14T09:10:08Z",
+      "updatedAt": "2023-08-14T09:10:08Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOKCXv885XK-lf",
+      "title": "some quick edits when reading the text",
+      "url": "https://github.com/danwing/cidfi/pull/1",
+      "state": "CLOSED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-08-04T07:52:34Z",
+      "updatedAt": "2023-08-15T16:10:27Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "de0f756fa56645af6f10f62faa460d142cf3512c",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-1",
+      "headRefOid": "c0b9ce3babbc85d8841b1f8b7981c9874ac94f02",
+      "closedAt": "2023-08-15T16:10:27Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885dLaTF",
+          "commit": {
+            "abbreviatedOid": "c0b9ce3"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-08-04T17:09:45Z",
+          "updatedAt": "2023-08-04T17:09:45Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOKCXv885X8exs",
+      "title": "Added CIDFI path URIs",
+      "url": "https://github.com/danwing/cidfi/pull/4",
+      "state": "CLOSED",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-08-15T06:21:30Z",
+      "updatedAt": "2023-08-15T16:14:36Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "8bd20745412b579a96fbe6c47b8cabf66828d707",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-1",
+      "headRefOid": "819823427f0070a05a0d468472d820b848ff8a41",
+      "closedAt": "2023-08-15T16:14:36Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "committed separately (this build failed because spaces at end-of-line).  Thanks!",
+          "createdAt": "2023-08-15T16:14:36Z",
+          "updatedAt": "2023-08-15T16:14:36Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOKCXv885YLFAm",
+      "title": "tweak readme",
+      "url": "https://github.com/danwing/cidfi/pull/5",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-08-17T15:58:05Z",
+      "updatedAt": "2023-08-17T15:59:03Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "b13a8e2aea054bceee894ab25424d386f0cf7640",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tweaks",
+      "headRefOid": "b1a89f63d7f82cb6974802cf61eba48c7efef60d",
+      "closedAt": "2023-08-17T15:59:03Z",
+      "mergedAt": "2023-08-17T15:59:03Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "1cadd1db131d0674b539749be7d0100e2f30edf6"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOKCXv885YLSqg",
+      "title": "fix first diagram",
+      "url": "https://github.com/danwing/cidfi/pull/6",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-08-17T16:41:22Z",
+      "updatedAt": "2023-08-18T20:01:32Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "1cadd1db131d0674b539749be7d0100e2f30edf6",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "fixdiagram",
+      "headRefOid": "94d16cc5a7e12079d377906f1417905dedd274b7",
+      "closedAt": "2023-08-17T16:41:31Z",
+      "mergedAt": "2023-08-17T16:41:31Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "a446df6470421bc070cecd10c754de2c26d8003a"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOKCXv885YLVoE",
+      "title": "force rebuild",
+      "url": "https://github.com/danwing/cidfi/pull/7",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-08-17T16:50:34Z",
+      "updatedAt": "2023-08-17T16:51:43Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "a446df6470421bc070cecd10c754de2c26d8003a",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "diagram",
+      "headRefOid": "5b9f15a38e4a0fe3873c6b98d8fb55c05b675088",
+      "closedAt": "2023-08-17T16:51:37Z",
+      "mergedAt": "2023-08-17T16:51:37Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "9455c43f0ba61da68363889695541120d3d080d0"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOKCXv885YLfqA",
+      "title": "Codeowner",
+      "url": "https://github.com/danwing/cidfi/pull/8",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-08-17T17:21:14Z",
+      "updatedAt": "2023-08-17T17:23:26Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "9455c43f0ba61da68363889695541120d3d080d0",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "codeowner",
+      "headRefOid": "8d552c781711b67f404c81cf499b08ccff4e08dd",
+      "closedAt": "2023-08-17T17:23:22Z",
+      "mergedAt": "2023-08-17T17:23:22Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "0b273399c6ff6d5f08feac9026ffb910a7a897c2"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOKCXv885YRrxP",
+      "title": "quiet idnits: update STUN reference to latest, demote HMAC reference \u2026",
+      "url": "https://github.com/danwing/cidfi/pull/9",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026to non-normative",
+      "createdAt": "2023-08-18T19:57:55Z",
+      "updatedAt": "2023-08-18T19:58:50Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "0b273399c6ff6d5f08feac9026ffb910a7a897c2",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "idnits",
+      "headRefOid": "fb06e21fe44748bf4a8e9068208f7fe8b49d27d4",
+      "closedAt": "2023-08-18T19:58:45Z",
+      "mergedAt": "2023-08-18T19:58:45Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "64c577dd9bcc7c49de0414e1f71e1a967701dea3"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOKCXv885YRys0",
+      "title": "remove redundancy in ART WG title",
+      "url": "https://github.com/danwing/cidfi/pull/10",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-08-18T20:31:55Z",
+      "updatedAt": "2023-08-18T20:40:31Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "64c577dd9bcc7c49de0414e1f71e1a967701dea3",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "wg_title",
+      "headRefOid": "96481e84fe9373f23444312b791795c69f406f51",
+      "closedAt": "2023-08-18T20:33:01Z",
+      "mergedAt": "2023-08-18T20:33:01Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "5b7c2183e680dc55d2e496b074ff96d81a8c6815"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOKCXv885YTrqn",
+      "title": "more protocols",
+      "url": "https://github.com/danwing/cidfi/pull/11",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "- remove redundancy in ART WG title\n- appendix discussion on TCP, SCTP, RTP, and other UDP protocols\n",
+      "createdAt": "2023-08-19T18:57:28Z",
+      "updatedAt": "2023-08-19T19:22:27Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "5b7c2183e680dc55d2e496b074ff96d81a8c6815",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "more_protocols",
+      "headRefOid": "991e8ef988d8ad05864f3e21821f3e2c12afcb18",
+      "closedAt": "2023-08-19T19:22:27Z",
+      "mergedAt": "2023-08-19T19:22:27Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "403e5376172f6f8aa82cac5245c8a660f35dddda"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOKCXv885ZWK5M",
+      "title": "some minor edits when reading to catch up with the new version",
+      "url": "https://github.com/danwing/cidfi/pull/12",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-09-01T14:41:33Z",
+      "updatedAt": "2023-09-06T02:34:56Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "403e5376172f6f8aa82cac5245c8a660f35dddda",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-edits",
+      "headRefOid": "54f7afae6e2a0663aba492e465f653eeb4898295",
+      "closedAt": "2023-09-06T02:34:40Z",
+      "mergedAt": "2023-09-06T02:34:40Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "02b5e311149078bc203f8d3a44ef4f995af9cb10"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885gGWYA",
+          "commit": {
+            "abbreviatedOid": "54f7afa"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "thanks!",
+          "createdAt": "2023-09-06T02:34:56Z",
+          "updatedAt": "2023-09-06T02:34:56Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "PR_kwDOKCXv885Z2LIi",
+      "title": "soften dependency on SVCB + edits",
+      "url": "https://github.com/danwing/cidfi/pull/13",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-09-08T07:15:14Z",
+      "updatedAt": "2023-09-08T15:38:01Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "02b5e311149078bc203f8d3a44ef4f995af9cb10",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-2",
+      "headRefOid": "c5fdf1ed5a8f06275a67648a2dbe72bbab92a4fd",
+      "closedAt": "2023-09-08T15:38:01Z",
+      "mergedAt": "2023-09-08T15:38:01Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "eaf541195208ff18b0d0adf8761cbf457506475e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885gbPED",
+          "commit": {
+            "abbreviatedOid": "c5fdf1e"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-09-08T15:37:19Z",
+          "updatedAt": "2023-09-08T15:37:19Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "id": "PR_kwDOKCXv885aDIH5",
+      "title": "PvD",
+      "url": "https://github.com/danwing/cidfi/pull/14",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "See how this feels.  Also as part of this change I brought DHCP and 3GPP PCO to be more equal to SVCB and PvD (but still left DHCP and 3GPP PCO thin for specification, as I think both are too straight forward to bother typing details at this point).",
+      "createdAt": "2023-09-11T17:57:40Z",
+      "updatedAt": "2023-09-13T00:54:38Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "062bbf4fab0ef0fdb5b7a0e1c9597c70da569b3a",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "pvd",
+      "headRefOid": "1c8b46f3b7e51850a1e1fcb3f6ab8ee339b43f18",
+      "closedAt": "2023-09-13T00:54:38Z",
+      "mergedAt": "2023-09-13T00:54:38Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "04341c3572f3671a806997b00e6983763075bc04"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885gpAIH",
+          "commit": {
+            "abbreviatedOid": "aa74b19"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-09-12T06:10:59Z",
+          "updatedAt": "2023-09-12T06:11:00Z",
+          "comments": [
+            {
+              "originalPosition": 94,
+              "body": "It is possible that the local network may not have CIDFI-aware network element but the ISP may have CIDFI-aware network element.  I suggest to replace \"the client concludes that the local network does not support CIDFI\" with \"the client concludes the local network and ISP do not support CIDIF\". ",
+              "createdAt": "2023-09-12T06:10:59Z",
+              "updatedAt": "2023-09-12T06:17:16Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885gpBrO",
+          "commit": {
+            "abbreviatedOid": "1c8b46f"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-09-12T06:16:27Z",
+          "updatedAt": "2023-09-12T06:17:56Z",
+          "comments": [
+            {
+              "originalPosition": 26,
+              "body": "I don't think standardizing 3GPP PCO is in the scope of IETF. Why do we have to discuss about \"3GPP PCO\" ? ",
+              "createdAt": "2023-09-12T06:16:27Z",
+              "updatedAt": "2023-09-12T06:17:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885grvVy",
+          "commit": {
+            "abbreviatedOid": "1c8b46f"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-09-12T12:01:23Z",
+          "updatedAt": "2023-09-12T12:01:23Z",
+          "comments": [
+            {
+              "originalPosition": 26,
+              "body": "Agree we don't need to specify the PCO IE in this draft as this is a 3GPP thing. \r\n\r\nThat's said, I think this is covered by \"or some of these\" in the text proposed by Dan. I think the current wording is OK here.",
+              "createdAt": "2023-09-12T12:01:23Z",
+              "updatedAt": "2023-09-12T12:01:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885grv__",
+          "commit": {
+            "abbreviatedOid": "1c8b46f"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Thanks for taking care of this. The mention of RFC7839 is sufficient at this stage for DHCP to avoid overloading the spec with discovery details. ",
+          "createdAt": "2023-09-12T12:02:58Z",
+          "updatedAt": "2023-09-12T15:04:04Z",
+          "comments": [
+            {
+              "originalPosition": 100,
+              "body": "```suggestion\r\nFor this step, four mechanisms are identified: DNS SVCB records, IPv6\r\n```",
+              "createdAt": "2023-09-12T12:06:10Z",
+              "updatedAt": "2023-09-12T15:04:04Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "id": "PR_kwDOKCXv885aLtuE",
+      "title": "nit cleanup",
+      "url": "https://github.com/danwing/cidfi/pull/15",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-09-13T00:56:57Z",
+      "updatedAt": "2023-09-13T00:57:51Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "04341c3572f3671a806997b00e6983763075bc04",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "pvd",
+      "headRefOid": "c2bba3d70e3794cefa3fad31bdb2f0c7111c1212",
+      "closedAt": "2023-09-13T00:57:51Z",
+      "mergedAt": "2023-09-13T00:57:51Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "98d0fae74dc2f0f5e6141d5428a337f83c5b8e1c"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
