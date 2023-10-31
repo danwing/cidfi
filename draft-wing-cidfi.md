@@ -39,7 +39,7 @@ pi: [toc, sortrefs, symrefs, strict, comments, docmapping]
 author:
  -
     fullname: Dan Wing
-    organization: Cloud Software Group, Inc.
+    organization: Cloud Software Group Holdings, Inc.
     abbrev: Cloud Software Group
     country: United States of America
     email: ["danwing@gmail.com"]
@@ -897,6 +897,17 @@ network attach and which DCIDs are for a migrated connection.  Probably
 belongs in the QUIC transport parameter signaling?
 
 
+# State Maintenance
+
+The CNE can safely remove state after UDP inactivity timeout {{Section
+4.3 of !RFC4787}}.  The CIDFI client MUST re-signal its CNE when it
+receives a QUIC path validation message, as that indicates a NAT
+rebinding occurred.  CNE state can also be cleared by signaling from
+the CIDFI client, such as when closing the application; however, this
+signal cannot be relied upon due to network disconnect, battery
+depletion, and suchlike.
+
+> probably want keepalives on client->CNE communication.  TODO.
 
 # Security Considerations
 
