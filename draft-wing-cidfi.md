@@ -514,7 +514,7 @@ a CNE to distinguish which UDP 4-tuple belongs to
 each CIDFI client.
 
 To reduce CIDFI setup time the client STUN Indication MAY be sent at
-the same time as the QUIC Initial packet {{Section 17.2.2 of QUIC}}, which is encouraged
+the same time as the QUIC Initial packet ({{Section 17.2.2 of QUIC}}), which is encouraged
 if the client remembers the server supports CIDFI (0-RTT).
 
 To prevent replay attacks, the Nonce is usable only for authenticating
