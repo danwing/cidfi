@@ -1045,11 +1045,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">CIDFI</td>
-<td class="right">October 2023</td>
+<td class="right">November 2023</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 3 May 2024</td>
+<td class="center">Expires 5 May 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-wing-cidfi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-10-31" class="published">31 October 2023</time>
+<time datetime="2023-11-02" class="published">2 November 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-05-03">3 May 2024</time></dd>
+<dd class="expires"><time datetime="2024-05-05">5 May 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1130,7 +1130,7 @@ information about network conditions and packet importance.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1799,8 +1799,7 @@ the on-path network elements.<a href="#section-6-2.2.1" class="pilcrow">¶</a></
 with the CIDFI network element and server, and server and network element.<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.4">
-          <p id="section-6-2.4.1">continually updates the server and the CIDFI network element whenever
-new information is received from the other party.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.4.1">continually update the CIDFI network element whenever new information is received from the server.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <p id="section-6-3">These steps are described in more detail below.<a href="#section-6-3" class="pilcrow">¶</a></p>
@@ -1933,17 +1932,22 @@ sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server:<a hr
             </svg><a href="#section-6.2-3.1" class="pilcrow">¶</a>
 </div>
 </div>
-<p id="section-6.2-4">Because multiple QUIC clients will use the same incoming Destination
+<p id="section-6.2-4">The short header's Destination Connection ID (DCID) can be 0 bytes or
+as short as 8 bits, so multiple QUIC clients are likely to use the
+same incoming Destination CID on their own UDP 4-tuple. The STUN
+Indication message allows the CIDFI network element to distinguish
+each QUIC client's UDP 4-tuple.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
+<p id="section-6.2-5">Because multiple QUIC clients will use the same incoming Destination
 CID on their own UDP 4-tuple, the STUN Indication message also allows
 the CIDFI network element to distinguish which UDP 4-tuple belongs to
-each CIDFI client.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
-<p id="section-6.2-5">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
+each CIDFI client.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
+<p id="section-6.2-6">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
 the same time as the QUIC Initial packet, which is encouraged
-if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-5" class="pilcrow">¶</a></p>
-<p id="section-6.2-6">To prevent replay attacks, the Nonce is usable only for authenticating
+if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-6" class="pilcrow">¶</a></p>
+<p id="section-6.2-7">To prevent replay attacks, the Nonce is usable only for authenticating
 one UDP 4-tuple.  When the connection is migrated (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the CIDFI network element won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
-CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 5</a>).<a href="#section-6.2-6" class="pilcrow">¶</a></p>
+CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 5</a>).<a href="#section-6.2-7" class="pilcrow">¶</a></p>
 <div id="stun-cidfi-nonce-attribute">
 <section id="section-6.2.1">
           <h4 id="name-stun-cidfi-nonce-attribute">
@@ -2608,6 +2612,21 @@ the STUN indication on that same UDP 4-tuple.  This should never
 normally occur and should generate an alarm on the CIDFI network
 element.  In this situation, it is recommended both attack and victim
 be denied CIDFI access.<a href="#section-12-3" class="pilcrow">¶</a></p>
+<p id="section-12-4">If attacker can see the victim's Discovery Packet and attacker can
+send that packet inside the attacker's 5-tuple and race it to the
+on-path CIDFI network element (which needs to see the Discovery
+Packet) the attacker can then 'steal' the victim's CIDFI control from
+the victim's 5-tuple and the victim's CIDFI signaling thereafter for
+that 5-tuple will influence the attacker's 5-tuple.  The attacker
+can't see that CIDFI signaling (because it still goes to the victim
+which relays the CIDFI signaling to the CIDFI network element) but
+with this attack the victim's CIDFI treatment is effectively disabled
+and is available to the attacker.  The attacker can send
+NEW_CONNECTION_ID frames to the server with the victim's (observed)
+Destination CID, effectively stealing the victim's CIDFI signaling for
+themselves.  To mitigate this replay attack shared networks need
+per-endpoint encryption (e.g., Wi-Fi WPA3, DOCSIS BPI+) or traffic
+separation (e.g., Ethernet switching rather than bridging).<a href="#section-12-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
