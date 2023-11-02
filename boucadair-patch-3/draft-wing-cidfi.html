@@ -1807,11 +1807,10 @@ the on-path CNEs.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.3">
           <p id="section-6-2.3.1">performs initial metadata exchange
-with the CNE(s) and server, and server and CNE(s).<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
+with the CIDFI network element and server, and server and network element.<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.4">
-          <p id="section-6-2.4.1">continually updates the server and the CNEs whenever
-new information is received from the other party.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.4.1">continually update the CIDFI network element whenever new information is received from the server.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <p id="section-6-3">These steps are described in more detail below.<a href="#section-6-3" class="pilcrow">¶</a></p>
@@ -1954,17 +1953,22 @@ sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server:<a hr
 <a href="#name-example-of-flow-exhange" class="selfRef">Example of Flow Exhange</a>
           </figcaption></figure>
 </div>
-<p id="section-6.2-4">Because multiple QUIC clients will use the same incoming Destination
+<p id="section-6.2-4">The short header's Destination Connection ID (DCID) can be 0 bytes or
+as short as 8 bits, so multiple QUIC clients are likely to use the
+same incoming Destination CID on their own UDP 4-tuple. The STUN
+Indication message allows the CIDFI network element to distinguish
+each QUIC client's UDP 4-tuple.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
+<p id="section-6.2-5">Because multiple QUIC clients will use the same incoming Destination
 CID on their own UDP 4-tuple, the STUN Indication message also allows
 a CNE to distinguish which UDP 4-tuple belongs to
-each CIDFI client.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
-<p id="section-6.2-5">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
+each CIDFI client.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
+<p id="section-6.2-6">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
 the same time as the QUIC Initial packet <span><a href="https://rfc-editor.org/rfc/rfc9000#section-17.2.2" class="relref">Section 17.2.2</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>, which is encouraged
-if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-5" class="pilcrow">¶</a></p>
-<p id="section-6.2-6">To prevent replay attacks, the Nonce is usable only for authenticating
+if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-6" class="pilcrow">¶</a></p>
+<p id="section-6.2-7">To prevent replay attacks, the Nonce is usable only for authenticating
 one UDP 4-tuple.  When the connection is migrated (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the CNE won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
-CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 5</a>).<a href="#section-6.2-6" class="pilcrow">¶</a></p>
+CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 5</a>).<a href="#section-6.2-7" class="pilcrow">¶</a></p>
 <div id="stun-cidfi-nonce-attribute">
 <section id="section-6.2.1">
           <h4 id="name-stun-cidfi-nonce-attribute">
@@ -2655,6 +2659,21 @@ the STUN indication on that same UDP 4-tuple.  This should never
 normally occur and should generate an alarm on the CIDFI network
 element.  In this situation, it is recommended both attack and victim
 be denied CIDFI access.<a href="#section-12-3" class="pilcrow">¶</a></p>
+<p id="section-12-4">If attacker can see the victim's Discovery Packet and attacker can
+send that packet inside the attacker's 5-tuple and race it to the
+on-path CIDFI network element (which needs to see the Discovery
+Packet) the attacker can then 'steal' the victim's CIDFI control from
+the victim's 5-tuple and the victim's CIDFI signaling thereafter for
+that 5-tuple will influence the attacker's 5-tuple.  The attacker
+can't see that CIDFI signaling (because it still goes to the victim
+which relays the CIDFI signaling to the CIDFI network element) but
+with this attack the victim's CIDFI treatment is effectively disabled
+and is available to the attacker.  The attacker can send
+NEW_CONNECTION_ID frames to the server with the victim's (observed)
+Destination CID, effectively stealing the victim's CIDFI signaling for
+themselves.  To mitigate this replay attack shared networks need
+per-endpoint encryption (e.g., Wi-Fi WPA3, DOCSIS BPI+) or traffic
+separation (e.g., Ethernet switching rather than bridging).<a href="#section-12-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
