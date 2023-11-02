@@ -1963,7 +1963,7 @@ CID on their own UDP 4-tuple, the STUN Indication message also allows
 a CNE to distinguish which UDP 4-tuple belongs to
 each CIDFI client.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
 <p id="section-6.2-6">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
-the same time as the QUIC Initial packet <span><a href="https://rfc-editor.org/rfc/rfc9000#section-17.2.2" class="relref">Section 17.2.2</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>, which is encouraged
+the same time as the QUIC Initial packet (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-17.2.2" class="relref">Section 17.2.2</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>), which is encouraged
 if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-6" class="pilcrow">¶</a></p>
 <p id="section-6.2-7">To prevent replay attacks, the Nonce is usable only for authenticating
 one UDP 4-tuple.  When the connection is migrated (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the CNE won't apply any CIDFI behavior to
