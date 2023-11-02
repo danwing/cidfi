@@ -1963,7 +1963,7 @@ CID on their own UDP 4-tuple, the STUN Indication message also allows
 a CNE to distinguish which UDP 4-tuple belongs to
 each CIDFI client.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
 <p id="section-6.2-6">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
-the same time as the QUIC Initial packet <span><a href="https://rfc-editor.org/rfc/rfc9000#section-17.2.2" class="relref">Section 17.2.2</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>, which is encouraged
+the same time as the QUIC Initial packet (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-17.2.2" class="relref">Section 17.2.2</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>), which is encouraged
 if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-6" class="pilcrow">¶</a></p>
 <p id="section-6.2-7">To prevent replay attacks, the Nonce is usable only for authenticating
 one UDP 4-tuple.  When the connection is migrated (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the CNE won't apply any CIDFI behavior to
@@ -2609,9 +2609,9 @@ belongs in the QUIC transport parameter signaling?<a href="#section-10.6-2" clas
       <h2 id="name-state-maintenance">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-state-maintenance" class="section-name selfRef">State Maintenance</a>
       </h2>
-<p id="section-11-1">The CNE can safely remove state after UDP inactivity timeout <span><a href="https://rfc-editor.org/rfc/rfc4787#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC4787" class="cite xref">RFC4787</a>]</span>.  The CIDFI client <span class="bcp14">MUST</span> re-signal its CNE when it
+<p id="section-11-1">A CNE can safely remove state after UDP inactivity timeout <span><a href="https://rfc-editor.org/rfc/rfc4787#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC4787" class="cite xref">RFC4787</a>]</span>.  The CIDFI client <span class="bcp14">MUST</span> re-signal its CNE(s) when it
 receives a QUIC path validation message, as that indicates a NAT
-rebinding occurred.  CNE state can also be cleared by signaling from
+rebinding occurred.  A CNE's state can also be cleared by signaling from
 the CIDFI client, such as when closing the application; however, this
 signal cannot be relied upon due to network disconnect, battery
 depletion, and suchlike.<a href="#section-11-1" class="pilcrow">¶</a></p>
