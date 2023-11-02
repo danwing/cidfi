@@ -426,8 +426,8 @@ When a QUIC client (or {DTLS-CID}) client connects to a QUIC (or {DTLS-CID}) ser
      the on-path network elements.
   3. performs initial metadata exchange
      with the CIDFI network element and server, and server and network element.
-  4. continually updates the server and the CIDFI network element whenever
-     new information is received from the other party.
+  4. continually update the CIDFI network element whenever new information is received from the server.
+
 
 These steps are described in more detail below.
 
@@ -505,6 +505,12 @@ client                           edge router           server
   |<-----------------------------------+                  |
 ~~~~~
 {: artwork-align="center"}
+
+The short header's Destination Connection ID (DCID) can be 0 bytes or
+as short as 8 bits, so multiple QUIC clients are likely to use the
+same incoming Destination CID on their own UDP 4-tuple. The STUN
+Indication message allows the CIDFI network element to distinguish
+each QUIC client's UDP 4-tuple.
 
 Because multiple QUIC clients will use the same incoming Destination
 CID on their own UDP 4-tuple, the STUN Indication message also allows
@@ -947,6 +953,21 @@ normally occur and should generate an alarm on the CIDFI network
 element.  In this situation, it is recommended both attack and victim
 be denied CIDFI access.
 
+If attacker can see the victim's Discovery Packet and attacker can
+send that packet inside the attacker's 5-tuple and race it to the
+on-path CIDFI network element (which needs to see the Discovery
+Packet) the attacker can then 'steal' the victim's CIDFI control from
+the victim's 5-tuple and the victim's CIDFI signaling thereafter for
+that 5-tuple will influence the attacker's 5-tuple.  The attacker
+can't see that CIDFI signaling (because it still goes to the victim
+which relays the CIDFI signaling to the CIDFI network element) but
+with this attack the victim's CIDFI treatment is effectively disabled
+and is available to the attacker.  The attacker can send
+NEW_CONNECTION_ID frames to the server with the victim's (observed)
+Destination CID, effectively stealing the victim's CIDFI signaling for
+themselves.  To mitigate this replay attack shared networks need
+per-endpoint encryption (e.g., Wi-Fi WPA3, DOCSIS BPI+) or traffic
+separation (e.g., Ethernet switching rather than bridging).
 
 
 
