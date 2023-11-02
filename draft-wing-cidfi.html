@@ -2609,9 +2609,9 @@ belongs in the QUIC transport parameter signaling?<a href="#section-10.6-2" clas
       <h2 id="name-state-maintenance">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-state-maintenance" class="section-name selfRef">State Maintenance</a>
       </h2>
-<p id="section-11-1">The CNE can safely remove state after UDP inactivity timeout <span><a href="https://rfc-editor.org/rfc/rfc4787#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC4787" class="cite xref">RFC4787</a>]</span>.  The CIDFI client <span class="bcp14">MUST</span> re-signal its CNE when it
+<p id="section-11-1">A CNE can safely remove state after UDP inactivity timeout <span><a href="https://rfc-editor.org/rfc/rfc4787#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC4787" class="cite xref">RFC4787</a>]</span>.  The CIDFI client <span class="bcp14">MUST</span> re-signal its CNE(s) when it
 receives a QUIC path validation message, as that indicates a NAT
-rebinding occurred.  CNE state can also be cleared by signaling from
+rebinding occurred.  A CNE's state can also be cleared by signaling from
 the CIDFI client, such as when closing the application; however, this
 signal cannot be relied upon due to network disconnect, battery
 depletion, and suchlike.<a href="#section-11-1" class="pilcrow">¶</a></p>
