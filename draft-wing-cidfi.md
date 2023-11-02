@@ -905,10 +905,10 @@ belongs in the QUIC transport parameter signaling?
 
 # State Maintenance
 
-The CNE can safely remove state after UDP inactivity timeout {{Section
-4.3 of !RFC4787}}.  The CIDFI client MUST re-signal its CNE when it
+A CNE can safely remove state after UDP inactivity timeout {{Section
+4.3 of !RFC4787}}.  The CIDFI client MUST re-signal its CNE(s) when it
 receives a QUIC path validation message, as that indicates a NAT
-rebinding occurred.  CNE state can also be cleared by signaling from
+rebinding occurred.  A CNE's state can also be cleared by signaling from
 the CIDFI client, such as when closing the application; however, this
 signal cannot be relied upon due to network disconnect, battery
 depletion, and suchlike.
