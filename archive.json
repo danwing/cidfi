@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-02T01:11:09.950203+00:00",
+  "timestamp": "2023-11-05T01:16:25.017613+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -580,24 +580,26 @@
       "id": "PR_kwDOKCXv885eQurX",
       "title": "add State Maintenance, mostly handwaving text.",
       "url": "https://github.com/danwing/cidfi/pull/16",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-10-31T17:49:24Z",
-      "updatedAt": "2023-11-01T05:43:15Z",
+      "updatedAt": "2023-11-02T17:21:27Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "c7a1798faf3aeea2a9bddfd80e1b1fa3584be30f",
       "headRepository": "danwing/cidfi",
       "headRefName": "state_maintenance",
       "headRefOid": "ae30700b3c17e4cb16a45a6b5a43a9d17a374b39",
-      "closedAt": null,
-      "mergedAt": null,
+      "closedAt": "2023-11-02T17:21:26Z",
+      "mergedAt": "2023-11-02T17:21:26Z",
       "mergedBy": null,
-      "mergeCommit": null,
+      "mergeCommit": {
+        "oid": "5fcfb245599e64491aa52f61a308c02d5c0dbd58"
+      },
       "comments": [],
       "reviews": [
         {
@@ -612,8 +614,138 @@
           "createdAt": "2023-11-01T05:43:15Z",
           "updatedAt": "2023-11-01T05:43:15Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885l9J1i",
+          "commit": {
+            "abbreviatedOid": "ae30700"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Minor edits as many CNEs may be involved.",
+          "createdAt": "2023-11-02T15:03:21Z",
+          "updatedAt": "2023-11-02T15:04:44Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "```suggestion\r\nA CNE can safely remove state after UDP inactivity timeout ({{Section\r\n```",
+              "createdAt": "2023-11-02T15:03:21Z",
+              "updatedAt": "2023-11-02T15:04:44Z"
+            },
+            {
+              "originalPosition": 16,
+              "body": "```suggestion\r\n4.3 of !RFC4787}}).  The CIDFI client MUST re-signal its CNE(s) when it\r\n```",
+              "createdAt": "2023-11-02T15:03:49Z",
+              "updatedAt": "2023-11-02T15:04:44Z"
+            },
+            {
+              "originalPosition": 18,
+              "body": "```suggestion\r\nrebinding occurred.  A CNE's state can also be cleared by signaling from\r\n```",
+              "createdAt": "2023-11-02T15:04:09Z",
+              "updatedAt": "2023-11-02T15:04:44Z"
+            }
+          ]
         }
       ]
+    },
+    {
+      "number": 17,
+      "id": "PR_kwDOKCXv885ecqEz",
+      "title": "Boucadair patch 3",
+      "url": "https://github.com/danwing/cidfi/pull/17",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-02T15:37:31Z",
+      "updatedAt": "2023-11-02T17:24:49Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "5fcfb245599e64491aa52f61a308c02d5c0dbd58",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-3",
+      "headRefOid": "8dca29fc437bd58ee4d98c287c0869e91d334703",
+      "closedAt": "2023-11-02T17:24:48Z",
+      "mergedAt": "2023-11-02T17:24:48Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "c55ebb7b1ae7e6cd2357d4a1993a614a0b60e6ce"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885l-fTH",
+          "commit": {
+            "abbreviatedOid": "65ce274"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-02T17:22:55Z",
+          "updatedAt": "2023-11-02T17:22:55Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOKCXv885edeO3",
+      "title": "incorporate Med's suggestion to more clearly allow multiple CNE devices",
+      "url": "https://github.com/danwing/cidfi/pull/18",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-02T17:36:40Z",
+      "updatedAt": "2023-11-02T17:36:53Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "c55ebb7b1ae7e6cd2357d4a1993a614a0b60e6ce",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "med_changes",
+      "headRefOid": "65b8bc38356f4beffac3c5799d1c98350090ee47",
+      "closedAt": "2023-11-02T17:36:53Z",
+      "mergedAt": "2023-11-02T17:36:53Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "a62882e0749279399981d027e6cb3f9e1d699be6"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDOKCXv885edgrW",
+      "title": "nit in citing a ref",
+      "url": "https://github.com/danwing/cidfi/pull/19",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-02T17:44:53Z",
+      "updatedAt": "2023-11-02T17:45:25Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "a62882e0749279399981d027e6cb3f9e1d699be6",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-3",
+      "headRefOid": "fb73bd4c0a314b4f160713f2fb0ace48040bd66e",
+      "closedAt": "2023-11-02T17:45:24Z",
+      "mergedAt": "2023-11-02T17:45:24Z",
+      "mergedBy": "boucadair",
+      "mergeCommit": {
+        "oid": "106a6c6b91dbb5493a998bfe6a1773f80efa0fe6"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
