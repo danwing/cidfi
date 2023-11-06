@@ -725,19 +725,18 @@ CIDFI because TCP lacks QUIC's stream identification.
 
 # Topology Change {#topology}
 
-When the topology changes the client will transmit from a new IP address
--- such as switching to a backup WAN connection, or such as switching
-from Wi-Fi to 5G.  If using QUIC, the server will consider this a
-connection migration and will issue a PATH_CHALLENGE.  If the client
-is aware of the topology change (such as attaching to a different
-network), the client would also change its QUIC Destination CID ({{Section
-9 of QUIC}}).
+When the topology changes the client will transmit from a new IP
+address -- such as switching to a backup WAN connection, or such as
+switching from Wi-Fi to 5G.  If using QUIC, the server will consider
+this a connection migration {{Section 9 of QUIC}} and will issue a
+PATH_CHALLENGE.  If the client is aware of the topology change (such
+as attaching to a different network), the client would also change its
+QUIC Destination CID ({{Section 9 of QUIC}}).
 
-If the QUIC CIDFI-aware client is otherwise unaware of a topology change
-and receives a QUIC PATH_CHALLENGE then the CIDFI-aware client SHOULD
-re-discover its CNEs {{discovery}}.  If that
-set of CNEs differs from the previous remembered set, the client
-SHOULD continue with normal CIDFI processing.
+When the CIDFI-aware client determines it has connected to a new
+network or has received a QUIC PATH_CHALLENGE the CIDFI-aware client
+MUST re-discover its CNEs {{discovery}} and continue with normal CIDFI
+processing with those CNEs.
 
 > todo: include discussion of {{DTLS-CID}} client and discussion
 of its ICE interaction, if any?
