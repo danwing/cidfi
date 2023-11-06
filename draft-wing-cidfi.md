@@ -569,7 +569,7 @@ Nonce concatenated with the fixed string "cidfi" (without quotes),
 shown below with "|" denoting concatenation.
 
 ~~~~~
-  HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi")
+  HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
 ~~~~~
 
 
