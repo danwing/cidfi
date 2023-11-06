@@ -1049,7 +1049,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 5 May 2024</td>
+<td class="center">Expires 9 May 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-wing-cidfi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-02" class="published">2 November 2023</time>
+<time datetime="2023-11-06" class="published">6 November 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-05-05">5 May 2024</time></dd>
+<dd class="expires"><time datetime="2024-05-09">9 May 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1130,7 +1130,7 @@ information about network conditions and packet importance.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1656,13 +1656,20 @@ CIDFI-aware network elements, service-cidfi and wi-fi.<a href="#section-4.2-2" c
 <figure id="figure-3">
           <div class="alignCenter art-text artwork" id="section-4.2-3.1">
 <pre>
-{"cidfi":[
-  {"cidfinode": "service-cidfi.example.net",
-   "cidfipathauth": "/path-auth-query {?cidfi}",
-   "cidfimetadata": "/cidfi-metadata"},
-  {"cidfinode": "wi-fi.example.net",
-   "cidfipathauth": "/path-auth-query {?cidfi}",
-   "cidfimetadata": "/cidfi-metadata"}]}
+{
+   "cidfi":[
+      {
+         "cidfinode":"service-cidfi.example.net",
+         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfimetadata":"/cidfi-metadata"
+      },
+      {
+         "cidfinode":"wi-fi.example.net",
+         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfimetadata":"/cidfi-metadata"
+      }
+   ]
+}
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
@@ -1777,9 +1784,14 @@ the client owns its UDP 4-tuple.<a href="#section-5.2-4" class="pilcrow">¶</a><
 <figure id="figure-4">
           <div class="alignCenter art-text artwork" id="section-5.2-5.1">
 <pre>
-  {"cidfi-path-authentication":[
-    {"nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
-     "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"}]}
+{
+   "cidfi-path-authentication":[
+      {
+         "nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
+         "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"
+      }
+   ]
+}
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
@@ -2043,7 +2055,7 @@ Nonce concatenated with the fixed string "cidfi" (without quotes),
 shown below with "|" denoting concatenation.<a href="#section-6.2.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.1-4">
 <pre>
-  HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
+  HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi")
 </pre><a href="#section-6.2.1-4" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2376,17 +2388,17 @@ CIDFI because TCP lacks QUIC's stream identification.<a href="#section-7-3" clas
       <h2 id="name-topology-change">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-topology-change" class="section-name selfRef">Topology Change</a>
       </h2>
-<p id="section-8-1">When the topology changes the client will transmit from a new IP address
--- such as switching to a backup WAN connection, or such as switching
-from Wi-Fi to 5G.  If using QUIC, the server will consider this a
-connection migration and will issue a PATH_CHALLENGE.  If the client
-is aware of the topology change (such as attaching to a different
-network), the client would also change its QUIC Destination CID (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">If the QUIC CIDFI-aware client is otherwise unaware of a topology change
-and receives a QUIC PATH_CHALLENGE then the CIDFI-aware client <span class="bcp14">SHOULD</span>
-re-discover its CNEs <a href="#discovery" class="auto internal xref">Section 5.1</a>.  If that
-set of CNEs differs from the previous remembered set, the client
-<span class="bcp14">SHOULD</span> continue with normal CIDFI processing.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-1">When the topology changes the client will transmit from a new IP
+address -- such as switching to a backup WAN connection, or such as
+switching from Wi-Fi to 5G.  If using QUIC, the server will consider
+this as a connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) and will issue a
+PATH_CHALLENGE.  If the client is aware of the topology change (such
+as attaching to a different network), the client would also change its
+QUIC Destination CID (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">When the CIDFI-aware client determines that it is connected to a new
+network or has received a QUIC PATH_CHALLENGE, the CIDFI-aware client
+<span class="bcp14">MUST</span> re-discover its CNEs (<a href="#discovery" class="auto internal xref">Section 5.1</a>) and continue with normal CIDFI
+processing with any discovered CNEs.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-8-3.1">
           <p id="section-8-3.1.1">todo: include discussion of <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span> client and discussion
@@ -2453,12 +2465,42 @@ to each of the CNEs. An example is shown in <a href="#fig-import" class="auto in
 <figure id="figure-10">
             <div class="alignLeft art-json art-text artwork" id="section-9.1.1-5.1">
 <pre>
-  {"metadata-parameters":[{"quicversion":1,
-    "dcidlength":3,
-       "map":[
-       {"import":17,"burst":83,"delaybudget":71,"dcids":[551,381]},
-       {"import":3,"burst":888,"delaybudget":180,"dcids":[89,983]},
-       {"import":7,"burst":37,"delaybudget":55,"dcids":[33]}]}]}
+{
+   "metadata-parameters":[
+      {
+         "quicversion":1,
+         "dcidlength":3,
+         "map":[
+            {
+               "import":17,
+               "burst":83,
+               "delaybudget":71,
+               "dcids":[
+                  551,
+                  381
+               ]
+            },
+            {
+               "import":3,
+               "burst":888,
+               "delaybudget":180,
+               "dcids":[
+                  89,
+                  983
+               ]
+            },
+            {
+               "import":7,
+               "burst":37,
+               "delaybudget":55,
+               "dcids":[
+                  33
+               ]
+            }
+         ]
+      }
+   ]
+}
 </pre>
 </div>
 <figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
@@ -2489,11 +2531,30 @@ to each of the CNEs.<a href="#section-9.1.2-3" class="pilcrow">¶</a></p>
 <figure id="figure-11">
             <div class="alignLeft art-json art-text artwork" id="section-9.1.2-5.1">
 <pre>
-  {"dscp":[{"quicversion":1,
-    "dcidlength":3,
-    "map":[
-      {"dscp":10,"dcids":[123,456]},
-      {"dscp":46,"dcids":[998,183]}]}]}
+{
+   "dscp":[
+      {
+         "quicversion":1,
+         "dcidlength":3,
+         "map":[
+            {
+               "dscp":10,
+               "dcids":[
+                  123,
+                  456
+               ]
+            },
+            {
+               "dscp":46,
+               "dcids":[
+                  998,
+                  183
+               ]
+            }
+         ]
+      }
+   ]
+}
 </pre>
 </div>
 <figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
@@ -2515,8 +2576,10 @@ changes, the CNE updates the client with new
 metadata.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-9.2-2">
 <pre>
-  {"dcid":123,
-   "bandwidth":"1Mbps"}
+{
+   "dcid":123,
+   "bandwidth":"1Mbps"
+}
 </pre><a href="#section-9.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-9.2-3">The client then sends that information to the server in the CIDFI-dedicated
