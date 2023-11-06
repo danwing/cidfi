@@ -310,13 +310,20 @@ The "application/pvd+json" returned looks like what is depicted in {{pvd-ex}} wh
 CIDFI-aware network elements, service-cidfi and wi-fi.
 
 ~~~~~
-{"cidfi":[
-  {"cidfinode": "service-cidfi.example.net",
-   "cidfipathauth": "/path-auth-query {?cidfi}",
-   "cidfimetadata": "/cidfi-metadata"},
-  {"cidfinode": "wi-fi.example.net",
-   "cidfipathauth": "/path-auth-query {?cidfi}",
-   "cidfimetadata": "/cidfi-metadata"}]}
+{
+   "cidfi":[
+      {
+         "cidfinode":"service-cidfi.example.net",
+         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfimetadata":"/cidfi-metadata"
+      },
+      {
+         "cidfinode":"wi-fi.example.net",
+         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfimetadata":"/cidfi-metadata"
+      }
+   ]
+}
 ~~~~~
 {: #pvd-ex artwork-align="center" title="Example of PvD Information"}
 
@@ -404,9 +411,14 @@ secret from each CNE used later in {{ownership}} to prove
 the client owns its UDP 4-tuple.
 
 ~~~~~
-  {"cidfi-path-authentication":[
-    {"nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
-     "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"}]}
+{
+   "cidfi-path-authentication":[
+      {
+         "nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
+         "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"
+      }
+   ]
+}
 ~~~~~
 {: #hmac-ex artwork-align="center" title="Example of CIDFI HMAC and Nonce"}
 
@@ -787,12 +799,42 @@ to each of the CNEs. An example is shown in {{fig-import}}.
 
 
 ~~~~~ json
-  {"metadata-parameters":[{"quicversion":1,
-    "dcidlength":3,
-       "map":[
-       {"import":17,"burst":83,"delaybudget":71,"dcids":[551,381]},
-       {"import":3,"burst":888,"delaybudget":180,"dcids":[89,983]},
-       {"import":7,"burst":37,"delaybudget":55,"dcids":[33]}]}]}
+{
+   "metadata-parameters":[
+      {
+         "quicversion":1,
+         "dcidlength":3,
+         "map":[
+            {
+               "import":17,
+               "burst":83,
+               "delaybudget":71,
+               "dcids":[
+                  551,
+                  381
+               ]
+            },
+            {
+               "import":3,
+               "burst":888,
+               "delaybudget":180,
+               "dcids":[
+                  89,
+                  983
+               ]
+            },
+            {
+               "import":7,
+               "burst":37,
+               "delaybudget":55,
+               "dcids":[
+                  33
+               ]
+            }
+         ]
+      }
+   ]
+}
 ~~~~~
 {: #fig-import artwork-align="left" title="Example JSON for Flow Importance"}
 
@@ -816,11 +858,30 @@ to each of the CNEs.
 An example is shown in {{fig-dscp-json}}.
 
 ~~~~~ json
-  {"dscp":[{"quicversion":1,
-    "dcidlength":3,
-    "map":[
-      {"dscp":10,"dcids":[123,456]},
-      {"dscp":46,"dcids":[998,183]}]}]}
+{
+   "dscp":[
+      {
+         "quicversion":1,
+         "dcidlength":3,
+         "map":[
+            {
+               "dscp":10,
+               "dcids":[
+                  123,
+                  456
+               ]
+            },
+            {
+               "dscp":46,
+               "dcids":[
+                  998,
+                  183
+               ]
+            }
+         ]
+      }
+   ]
+}
 ~~~~~
 {: #fig-dscp-json artwork-align="left" title="Example JSON for DSCP Mapping"}
 
@@ -835,8 +896,10 @@ metadata.
 
 
 ~~~~~
-  {"dcid":123,
-   "bandwidth":"1Mbps"}
+{
+   "dcid":123,
+   "bandwidth":"1Mbps"
+}
 ~~~~~
 
 The client then sends that information to the server in the CIDFI-dedicated
