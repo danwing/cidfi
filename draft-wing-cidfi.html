@@ -1656,13 +1656,20 @@ CIDFI-aware network elements, service-cidfi and wi-fi.<a href="#section-4.2-2" c
 <figure id="figure-3">
           <div class="alignCenter art-text artwork" id="section-4.2-3.1">
 <pre>
-{"cidfi":[
-  {"cidfinode": "service-cidfi.example.net",
-   "cidfipathauth": "/path-auth-query {?cidfi}",
-   "cidfimetadata": "/cidfi-metadata"},
-  {"cidfinode": "wi-fi.example.net",
-   "cidfipathauth": "/path-auth-query {?cidfi}",
-   "cidfimetadata": "/cidfi-metadata"}]}
+{
+   "cidfi":[
+      {
+         "cidfinode":"service-cidfi.example.net",
+         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfimetadata":"/cidfi-metadata"
+      },
+      {
+         "cidfinode":"wi-fi.example.net",
+         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfimetadata":"/cidfi-metadata"
+      }
+   ]
+}
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
@@ -1777,9 +1784,14 @@ the client owns its UDP 4-tuple.<a href="#section-5.2-4" class="pilcrow">¶</a><
 <figure id="figure-4">
           <div class="alignCenter art-text artwork" id="section-5.2-5.1">
 <pre>
-  {"cidfi-path-authentication":[
-    {"nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
-     "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"}]}
+{
+   "cidfi-path-authentication":[
+      {
+         "nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
+         "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"
+      }
+   ]
+}
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
@@ -2453,12 +2465,42 @@ to each of the CNEs. An example is shown in <a href="#fig-import" class="auto in
 <figure id="figure-10">
             <div class="alignLeft art-json art-text artwork" id="section-9.1.1-5.1">
 <pre>
-  {"metadata-parameters":[{"quicversion":1,
-    "dcidlength":3,
-       "map":[
-       {"import":17,"burst":83,"delaybudget":71,"dcids":[551,381]},
-       {"import":3,"burst":888,"delaybudget":180,"dcids":[89,983]},
-       {"import":7,"burst":37,"delaybudget":55,"dcids":[33]}]}]}
+{
+   "metadata-parameters":[
+      {
+         "quicversion":1,
+         "dcidlength":3,
+         "map":[
+            {
+               "import":17,
+               "burst":83,
+               "delaybudget":71,
+               "dcids":[
+                  551,
+                  381
+               ]
+            },
+            {
+               "import":3,
+               "burst":888,
+               "delaybudget":180,
+               "dcids":[
+                  89,
+                  983
+               ]
+            },
+            {
+               "import":7,
+               "burst":37,
+               "delaybudget":55,
+               "dcids":[
+                  33
+               ]
+            }
+         ]
+      }
+   ]
+}
 </pre>
 </div>
 <figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
@@ -2489,11 +2531,30 @@ to each of the CNEs.<a href="#section-9.1.2-3" class="pilcrow">¶</a></p>
 <figure id="figure-11">
             <div class="alignLeft art-json art-text artwork" id="section-9.1.2-5.1">
 <pre>
-  {"dscp":[{"quicversion":1,
-    "dcidlength":3,
-    "map":[
-      {"dscp":10,"dcids":[123,456]},
-      {"dscp":46,"dcids":[998,183]}]}]}
+{
+   "dscp":[
+      {
+         "quicversion":1,
+         "dcidlength":3,
+         "map":[
+            {
+               "dscp":10,
+               "dcids":[
+                  123,
+                  456
+               ]
+            },
+            {
+               "dscp":46,
+               "dcids":[
+                  998,
+                  183
+               ]
+            }
+         ]
+      }
+   ]
+}
 </pre>
 </div>
 <figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
@@ -2515,8 +2576,10 @@ changes, the CNE updates the client with new
 metadata.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-9.2-2">
 <pre>
-  {"dcid":123,
-   "bandwidth":"1Mbps"}
+{
+   "dcid":123,
+   "bandwidth":"1Mbps"
+}
 </pre><a href="#section-9.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-9.2-3">The client then sends that information to the server in the CIDFI-dedicated

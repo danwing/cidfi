@@ -306,13 +306,20 @@ Table of Contents
    Figure 3 when there are two CIDFI-aware network elements, service-
    cidfi and wi-fi.
 
-             {"cidfi":[
-               {"cidfinode": "service-cidfi.example.net",
-                "cidfipathauth": "/path-auth-query {?cidfi}",
-                "cidfimetadata": "/cidfi-metadata"},
-               {"cidfinode": "wi-fi.example.net",
-                "cidfipathauth": "/path-auth-query {?cidfi}",
-                "cidfimetadata": "/cidfi-metadata"}]}
+           {
+              "cidfi":[
+                 {
+                    "cidfinode":"service-cidfi.example.net",
+                    "cidfipathauth":"/path-auth-query {?cidfi}",
+                    "cidfimetadata":"/cidfi-metadata"
+                 },
+                 {
+                    "cidfinode":"wi-fi.example.net",
+                    "cidfipathauth":"/path-auth-query {?cidfi}",
+                    "cidfimetadata":"/cidfi-metadata"
+                 }
+              ]
+           }
 
                     Figure 3: Example of PvD Information
 
@@ -394,9 +401,14 @@ Table of Contents
    each CNE used later in Section 6.2 to prove the client owns its UDP
    4-tuple.
 
-     {"cidfi-path-authentication":[
-       {"nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
-        "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"}]}
+   {
+      "cidfi-path-authentication":[
+         {
+            "nonce":"ddqwohxGZysgy0BySNh7sNHV5IH9RbE7rqXmg9wb9Npo",
+            "hmac-secret":"jLNsCvuU59mt3F4/ePD9jbZ932TfsLSOP2Nx3XnUqc8v"
+         }
+      ]
+   }
 
                  Figure 4: Example of CIDFI HMAC and Nonce
 
@@ -762,12 +774,42 @@ Table of Contents
    information to the client when then propagates that information to
    each of the CNEs.  An example is shown in Figure 10.
 
-     {"metadata-parameters":[{"quicversion":1,
-       "dcidlength":3,
-          "map":[
-          {"import":17,"burst":83,"delaybudget":71,"dcids":[551,381]},
-          {"import":3,"burst":888,"delaybudget":180,"dcids":[89,983]},
-          {"import":7,"burst":37,"delaybudget":55,"dcids":[33]}]}]}
+   {
+      "metadata-parameters":[
+         {
+            "quicversion":1,
+            "dcidlength":3,
+            "map":[
+               {
+                  "import":17,
+                  "burst":83,
+                  "delaybudget":71,
+                  "dcids":[
+                     551,
+                     381
+                  ]
+               },
+               {
+                  "import":3,
+                  "burst":888,
+                  "delaybudget":180,
+                  "dcids":[
+                     89,
+                     983
+                  ]
+               },
+               {
+                  "import":7,
+                  "burst":37,
+                  "delaybudget":55,
+                  "dcids":[
+                     33
+                  ]
+               }
+            ]
+         }
+      ]
+   }
 
                 Figure 10: Example JSON for Flow Importance
 
@@ -790,11 +832,30 @@ Table of Contents
 
    An example is shown in Figure 11.
 
-     {"dscp":[{"quicversion":1,
-       "dcidlength":3,
-       "map":[
-         {"dscp":10,"dcids":[123,456]},
-         {"dscp":46,"dcids":[998,183]}]}]}
+   {
+      "dscp":[
+         {
+            "quicversion":1,
+            "dcidlength":3,
+            "map":[
+               {
+                  "dscp":10,
+                  "dcids":[
+                     123,
+                     456
+                  ]
+               },
+               {
+                  "dscp":46,
+                  "dcids":[
+                     998,
+                     183
+                  ]
+               }
+            ]
+         }
+      ]
+   }
 
                   Figure 11: Example JSON for DSCP Mapping
 
@@ -804,8 +865,10 @@ Table of Contents
    Destination CIDs.  As bandwidth availability to that client changes,
    the CNE updates the client with new metadata.
 
-     {"dcid":123,
-      "bandwidth":"1Mbps"}
+   {
+      "dcid":123,
+      "bandwidth":"1Mbps"
+   }
 
    The client then sends that information to the server in the CIDFI-
    dedicated QUIC stream associated with that same Connection ID.
