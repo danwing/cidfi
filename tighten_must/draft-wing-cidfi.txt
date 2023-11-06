@@ -715,9 +715,9 @@ Table of Contents
    its QUIC Destination CID (Section 9 of [QUIC]).
 
    When the CIDFI-aware client determines that it is connected to a new
-   network or has received a QUIC PATH_CHALLENGE the CIDFI-aware client
-   MUST re-discover its CNEs Section 5.1 and continue with normal CIDFI
-   processing with those CNEs.
+   network or has received a QUIC PATH_CHALLENGE, the CIDFI-aware client
+   MUST re-discover its CNEs (Section 5.1) and continue with normal
+   CIDFI processing with any discovered CNEs.
 
       todo: include discussion of [DTLS-CID] client and discussion of
       its ICE interaction, if any?
