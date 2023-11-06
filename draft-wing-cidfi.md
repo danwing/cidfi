@@ -735,7 +735,7 @@ QUIC Destination CID ({{Section 9 of QUIC}}).
 
 When the CIDFI-aware client determines that it is connected to a new
 network or has received a QUIC PATH_CHALLENGE, the CIDFI-aware client
-MUST re-discover its CNEs {{discovery}} and continue with normal CIDFI
+MUST re-discover its CNEs ({{discovery}}) and continue with normal CIDFI
 processing with those CNEs.
 
 > todo: include discussion of {{DTLS-CID}} client and discussion
