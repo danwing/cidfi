@@ -728,7 +728,7 @@ CIDFI because TCP lacks QUIC's stream identification.
 When the topology changes the client will transmit from a new IP
 address -- such as switching to a backup WAN connection, or such as
 switching from Wi-Fi to 5G.  If using QUIC, the server will consider
-this a connection migration {{Section 9 of QUIC}} and will issue a
+this as a connection migration ({{Section 9 of QUIC}}) and will issue a
 PATH_CHALLENGE.  If the client is aware of the topology change (such
 as attaching to a different network), the client would also change its
 QUIC Destination CID ({{Section 9 of QUIC}}).
