@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-05T01:16:25.017613+00:00",
+  "timestamp": "2023-11-07T01:13:13.009231+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -55,32 +55,48 @@
       "id": "I_kwDOKCXv885tcyf0",
       "title": "Client or Server CID",
       "url": "https://github.com/danwing/cidfi/issues/2",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "boucadair",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "The text uses CID, while it would be more accurate in some parts of the text to call out whether this is SCID or DCID.",
       "createdAt": "2023-08-04T07:59:17Z",
-      "updatedAt": "2023-08-04T07:59:17Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2023-11-06T19:38:12Z",
+      "closedAt": "2023-11-06T19:38:12Z",
+      "comments": [
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This is now covered in the text",
+          "createdAt": "2023-11-06T19:38:12Z",
+          "updatedAt": "2023-11-06T19:38:12Z"
+        }
+      ]
     },
     {
       "number": 3,
       "id": "I_kwDOKCXv885uOvB9",
       "title": "Comments on the draft",
       "url": "https://github.com/danwing/cidfi/issues/3",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tireddy2",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "(1) Section 4 may also want to discuss a scenario where the client is aware of the network identity (e.g., \"example.net\").  In this case, the DNS query will be \"_cidfi-aware.example.net\". \r\n\r\n(2) I suggest removing Appendix A (it has privacy issues, revealing network identity to the server).\r\n\r\n(3)Section 5.2, the client could authorize the CIDFI network elements if it has sufficient reputation (e.g., it would work for Mobile Networks, Enterprise networks etc.). It would avoid end-user intervention in certain deployments.\r\n\r\n(4) Section 6.2, in the sequence diagram, replace \"HTTP\" with \"HTTPS\"\r\n\r\n(5) We should explain the Nonce mechanism prevents a passive attacker but not an active attacker. I mean an active attacker not interested in disrupting the QUIC connection but leveraging this mechanism to learn about the network characteristics.\r\n\r\n(6) Section 6.3> We should say PKIX validatation of CIDFI network elements. The client uses default system or application PKI trust anchors unless configured otherwise to use explicit trust anchors.\r\n\r\n(7) Any specific reason for choosing STUN request instead of STUN indications ?\r\n   We should go with STUN indications as response is not required. Further, STUN requests are re-transmitted by default.\r\n\r\n(8) Note: we may want to use [CoAP] for the client->network communication and over the CIDFI-dedicated QUIC stream between the QUIC client and QUIC server. \r\n\r\nComment> I think you mean use to \"to use [CBOR] for the client->network...\"\r\n\r\n(9)  I don't know if kaippallimalil-tsvwg-media-hdr-wireless will progress. Can we avoid the dependency on kaippallimalil-tsvwg-media-hdr-wireless ?\r\n",
       "createdAt": "2023-08-14T09:10:08Z",
-      "updatedAt": "2023-08-14T09:10:08Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2023-11-06T19:38:42Z",
+      "closedAt": "2023-11-06T19:38:32Z",
+      "comments": [
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "outdated",
+          "createdAt": "2023-11-06T19:38:32Z",
+          "updatedAt": "2023-11-06T19:38:42Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -746,6 +762,141 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 20,
+      "id": "PR_kwDOKCXv885euuCM",
+      "title": "tighten MUST wording for network re-attach/PATH_CHALLENGE",
+      "url": "https://github.com/danwing/cidfi/pull/20",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-06T19:29:57Z",
+      "updatedAt": "2023-11-06T19:45:27Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "106a6c6b91dbb5493a998bfe6a1773f80efa0fe6",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tighten_must",
+      "headRefOid": "626a1f35de5be2c2d1da8f3c307c48504f0ea125",
+      "closedAt": "2023-11-06T19:45:27Z",
+      "mergedAt": "2023-11-06T19:45:27Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "6307d98c784eaf16cf599f370c191c866e2e721c"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885mSV-t",
+          "commit": {
+            "abbreviatedOid": "7885ec3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2023-11-06T19:32:41Z",
+          "updatedAt": "2023-11-06T19:37:09Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "```suggestion\r\nthis as a connection migration ({{Section 9 of QUIC}}) and will issue a\r\n```",
+              "createdAt": "2023-11-06T19:32:41Z",
+              "updatedAt": "2023-11-06T19:37:10Z"
+            },
+            {
+              "originalPosition": 25,
+              "body": "```suggestion\r\nWhen the CIDFI-aware client determines that it is connected to a new\r\n```",
+              "createdAt": "2023-11-06T19:34:39Z",
+              "updatedAt": "2023-11-06T19:37:10Z"
+            },
+            {
+              "originalPosition": 26,
+              "body": "```suggestion\r\nnetwork or has received a QUIC PATH_CHALLENGE, the CIDFI-aware client\r\n```",
+              "createdAt": "2023-11-06T19:35:03Z",
+              "updatedAt": "2023-11-06T19:37:10Z"
+            },
+            {
+              "originalPosition": 27,
+              "body": "```suggestion\r\nMUST re-discover its CNEs ({{discovery}}) and continue with normal CIDFI\r\n```",
+              "createdAt": "2023-11-06T19:35:56Z",
+              "updatedAt": "2023-11-06T19:37:10Z"
+            },
+            {
+              "originalPosition": 28,
+              "body": "```suggestion\r\nprocessing with any discovered CNEs.\r\n```",
+              "createdAt": "2023-11-06T19:37:03Z",
+              "updatedAt": "2023-11-06T19:37:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885mSchB",
+          "commit": {
+            "abbreviatedOid": "626a1f3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-06T19:45:16Z",
+          "updatedAt": "2023-11-06T19:45:16Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "id": "PR_kwDOKCXv885eu1LF",
+      "title": "expand JSON examples for better readability",
+      "url": "https://github.com/danwing/cidfi/pull/21",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-06T19:51:27Z",
+      "updatedAt": "2023-11-06T20:29:51Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "6307d98c784eaf16cf599f370c191c866e2e721c",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-3",
+      "headRefOid": "5098ef9079257cb613df176310f8a7f9796b45ca",
+      "closedAt": "2023-11-06T20:29:50Z",
+      "mergedAt": "2023-11-06T20:29:50Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "a6e8b0d4a2d2e8451a4539d4fef1f69e040c6075"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885mSfsH",
+          "commit": {
+            "abbreviatedOid": "a53d176"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-06T19:52:10Z",
+          "updatedAt": "2023-11-06T19:52:11Z",
+          "comments": [
+            {
+              "originalPosition": 51,
+              "body": "```suggestion\r\n  HMAC-output = HMAC-SHA256( hmac-secret, nonce | \"cidfi\" )\r\n```",
+              "createdAt": "2023-11-06T19:52:11Z",
+              "updatedAt": "2023-11-06T19:52:11Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
