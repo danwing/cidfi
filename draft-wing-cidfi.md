@@ -153,8 +153,8 @@ connection or a DTLS connection {{DTLS-CID}} from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
 server to signal packet importance.  When the server lacks CIDFI
-support the host-to-network and network-to-host signaling can operate
-and improve user experience but operates without per-packet prioritization.
+support the host-to-network and network-to-host signaling can still operate
+to improve user experience but operates without per-packet prioritization.
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
