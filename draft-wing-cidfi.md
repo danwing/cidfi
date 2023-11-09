@@ -721,7 +721,7 @@ The client uses that signal to now request higher-quality video from
 the server.
 
 Similarly, the CIDFI client may begin receiving traffic
-with different characteristics which SHOULD be signaled to the CIDFI
+with different characteristics which might be be signaled to the CIDFI
 Network Elements.
 
 For example, a client might be participating in an audio-only call
