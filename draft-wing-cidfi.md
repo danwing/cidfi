@@ -708,7 +708,7 @@ The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
 Due to environmental changes on wireless networks or other user's
 traffic patterns, a particular flow may be able to operate faster or
-might need to operate slower.  The affected CIDFI Network Element SHOULD signal
+might need to operate slower.  The relevant CNE SHOULD signal
 such conditions to the client ({{network-to-host}}), which can then
 relay that information to the server using either CIDFI or via its
 application.
