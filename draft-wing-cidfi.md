@@ -152,8 +152,9 @@ of several protocols that allow communicating about a {{QUIC}}
 connection or a DTLS connection {{DTLS-CID}} from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
-server to signal packet importance.  The system also functions when the
-server lacks CIDFI support, but at lower fidelity.
+server to signal packet importance.  When the server lacks CIDFI
+support the host-to-network and network-to-host signaling can operate
+and improve user experience but operates without per-packet prioritization.
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
@@ -736,7 +737,7 @@ The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
 Throughout the life of the connection host-to-network and network-to-host
 signaling is updated whenever charactertics change.
- 
+
 Typically, due to environmental changes on wireless networks or other user's
 traffic patterns, a particular flow may be able to operate faster or
 might need to operate slower.  The relevant CNE SHOULD signal
