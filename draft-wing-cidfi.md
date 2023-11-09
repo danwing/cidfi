@@ -427,16 +427,18 @@ the client owns its UDP 4-tuple.
 
 When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server, the client:
 
-  1. learns the server supports CIDFI
-     and obtains its mapping of transmitted Destination CIDs to metadata.
+  1. learns if the server supports CIDFI
+     and obtains its mapping of transmitted Destination CIDs to metadata, described
+     in {{server-supports-cidfi}}.
   2. proves ownership of its UDP 4-tuple to
-     the on-path CNEs.
+     the on-path CNEs, described in {{ownership}}.
   3. performs initial metadata exchange
-     with the CIDFI network element and server, and server and network element.
-  4. continually update the CIDFI network element whenever new information is received from the server.
+     with the CIDFI network element and server, and server and network element,
+     described in {{initial-metadata-exchange}}.
+  4. for the duration of the connection, receives network-to-host and performs
+     host-to-network updates as network conditions or network requirements change,
+     described in {{ongoing}}.
 
-
-These steps are described in more detail below.
 
 > Note: the client is also a sender, and can also perform all these
 functions in its direction.  This functionality will be expanded in
@@ -454,7 +456,15 @@ from receiving network performance metrics.
 On initial connection to a QUIC server, the client includes a new QUIC
 transport parameter CIDFI ({{iana-tp}}) which is remembered for 0-RTT.
 
-If the server does not indicate CIDFI support, CIDFI processing stops.
+If the server does not indicate CIDFI support, the client can still
+perform CIDFI -- but does not expect different CIDs to indicate
+different packet metadata.  The client can still signal its CNE about
+the flow, because the client knows some characteristics of the flow it
+is receiving.  For example, if the client requested streaming video of
+a certain bandwidth from the server or participated in a WebRTC
+offer/answer exchange, the client knows some metadata about the
+incoming flow without the server supporting CIDFI.  Processing
+continues with the next step.
 
 If the server indicates CIDFI support, then the server creates a
 new Server-Initiated, Bidirectional QUIC stream which is dedicated to
@@ -466,6 +476,7 @@ CIDFI transport response during the QUIC handshake.
 The QUIC client and server exchange CIDFI information over
 this CIDFI-dedicated stream as described in {{initial-metadata-exchange}}.
 
+Processing continues with the next step.
 
 ## Client Proves Ownership of its UDP 4-Tuple {#ownership}
 
@@ -535,7 +546,7 @@ QUIC}}) the CNE won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
 CIDFI procedures at the beginning ({{attach}}).
 
-
+Processing continues with the next step.
 
 ### STUN CIDFI-NONCE Attribute
 
@@ -647,6 +658,10 @@ client                           edge router           server
 {: #ex-lost-nonce artwork-align="center" title="Example of a Client Re-transmitting Lost Nonce"}
 
 
+After the initial metadata is exchanged, processing continues with
+ongoing host-to-network and network-to-host updates as described in
+{{ongoing}}.
+
 There are two types of metadata exchanged, described in the following sub-sections.
 
 ### Host to Network Signaling {#host-to-network}
@@ -718,6 +733,9 @@ The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
 # Ongoing Signaling {#ongoing}
 
+Throughout the life of the connection host-to-network and network-to-host
+signaling is updated whenever charactertics change.
+ 
 Typically, due to environmental changes on wireless networks or other user's
 traffic patterns, a particular flow may be able to operate faster or
 might need to operate slower.  The relevant CNE SHOULD signal
@@ -743,7 +761,7 @@ packets.
 
 # Interaction with Load Balancers {#load-balancers}
 
-HTTPS servers, including QUIC servers, are frequently behind load balancers.
+QUIC servers are frequently behind CID-aware load balancers {{!I-D.ietf-quic-load-balancers}}.
 
 With CIDFI, all the communications to the load-balanced QUIC server are over the same UDP 4-tuple
 as the primary QUIC connection but in a different QUIC stream.  This means
