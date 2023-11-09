@@ -151,7 +151,10 @@ Table of Contents
    connection or a DTLS connection [DTLS-CID] from the network to the
    server and the server to the network.  The information exchanged
    allows the server to know about network conditions and allows the
-   server to signal packet importance.
+   server to signal packet importance.  When the server lacks CIDFI
+   support the host-to-network and network-to-host signaling can operate
+   and improve user experience but operates without per-packet
+   prioritization.
 
    Figure 1 provides a sample network diagram of a CIDFI system showing
    two bandwidth-constrained networks (or links) depicted by "B" and
@@ -417,18 +420,20 @@ Table of Contents
    When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-
    CID) server, the client:
 
-   1.  learns the server supports CIDFI and obtains its mapping of
-       transmitted Destination CIDs to metadata.
+   1.  learns if the server supports CIDFI and obtains its mapping of
+       transmitted Destination CIDs to metadata, described in
+       Section 6.1.
 
-   2.  proves ownership of its UDP 4-tuple to the on-path CNEs.
+   2.  proves ownership of its UDP 4-tuple to the on-path CNEs,
+       described in Section 6.2.
 
    3.  performs initial metadata exchange with the CIDFI network element
-       and server, and server and network element.
+       and server, and server and network element, described in
+       Section 6.3.
 
-   4.  continually update the CIDFI network element whenever new
-       information is received from the server.
-
-   These steps are described in more detail below.
+   4.  for the duration of the connection, receives network-to-host and
+       performs host-to-network updates as network conditions or network
+       requirements change, described in Section 7.
 
       Note: the client is also a sender, and can also perform all these
       functions in its direction.  This functionality will be expanded
@@ -446,8 +451,15 @@ Table of Contents
    QUIC transport parameter CIDFI (Section 14.1) which is remembered for
    0-RTT.
 
-   If the server does not indicate CIDFI support, CIDFI processing
-   stops.
+   If the server does not indicate CIDFI support, the client can still
+   perform CIDFI -- but does not expect different CIDs to indicate
+   different packet metadata.  The client can still signal its CNE about
+   the flow, because the client knows some characteristics of the flow
+   it is receiving.  For example, if the client requested streaming
+   video of a certain bandwidth from the server or participated in a
+   WebRTC offer/answer exchange, the client knows some metadata about
+   the incoming flow without the server supporting CIDFI.  Processing
+   continues with the next step.
 
    If the server indicates CIDFI support, then the server creates a new
    Server-Initiated, Bidirectional QUIC stream which is dedicated to
@@ -458,6 +470,8 @@ Table of Contents
 
    The QUIC client and server exchange CIDFI information over this
    CIDFI-dedicated stream as described in Section 6.3.
+
+   Processing continues with the next step.
 
 6.2.  Client Proves Ownership of its UDP 4-Tuple
 
@@ -523,6 +537,8 @@ Table of Contents
    (Section 9 of [QUIC]) the CNE won't apply any CIDFI behavior to that
    newly-migrated connection.  The client will have to restart CIDFI
    procedures at the beginning (Section 5).
+
+   Processing continues with the next step.
 
 6.2.1.  STUN CIDFI-NONCE Attribute
 
@@ -627,6 +643,10 @@ Table of Contents
 
           Figure 7: Example of a Client Re-transmitting Lost Nonce
 
+   After the initial metadata is exchanged, processing continues with
+   ongoing host-to-network and network-to-host updates as described in
+   Section 7.
+
    There are two types of metadata exchanged, described in the following
    sub-sections.
 
@@ -698,6 +718,9 @@ Table of Contents
 
 7.  Ongoing Signaling
 
+   Throughout the life of the connection host-to-network and network-to-
+   host signaling is updated whenever charactertics change.
+
    Typically, due to environmental changes on wireless networks or other
    user's traffic patterns, a particular flow may be able to operate
    faster or might need to operate slower.  The relevant CNE SHOULD
@@ -722,8 +745,8 @@ Table of Contents
 
 8.  Interaction with Load Balancers
 
-   HTTPS servers, including QUIC servers, are frequently behind load
-   balancers.
+   QUIC servers are frequently behind CID-aware load balancers
+   [I-D.ietf-quic-load-balancers].
 
    With CIDFI, all the communications to the load-balanced QUIC server
    are over the same UDP 4-tuple as the primary QUIC connection but in a
@@ -1098,6 +1121,13 @@ Table of Contents
               Draft, draft-ietf-dnsop-svcb-https-12, 11 March 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-
               svcb-https-12>.
+
+   [I-D.ietf-quic-load-balancers]
+              Duke, M., Banks, N., and C. Huitema, "QUIC-LB: Generating
+              Routable QUIC Connection IDs", Work in Progress, Internet-
+              Draft, draft-ietf-quic-load-balancers-17, 15 August 2023,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
+              load-balancers-17>.
 
    [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,

@@ -1376,7 +1376,9 @@ of several protocols that allow communicating about a <span>[<a href="#QUIC" cla
 connection or a DTLS connection <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span> from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
-server to signal packet importance.<a href="#section-1-3" class="pilcrow">¶</a></p>
+server to signal packet importance.  When the server lacks CIDFI
+support the host-to-network and network-to-host signaling can operate
+and improve user experience but operates without per-packet prioritization.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4"><a href="#fig-arch" class="auto internal xref">Figure 1</a> provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
@@ -1810,32 +1812,35 @@ the client owns its UDP 4-tuple.<a href="#section-5.2-4" class="pilcrow">¶</a><
 <p id="section-6-1">When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server, the client:<a href="#section-6-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-6-2">
 <li id="section-6-2.1">
-          <p id="section-6-2.1.1">learns the server supports CIDFI
-and obtains its mapping of transmitted Destination CIDs to metadata.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.1.1">learns if the server supports CIDFI
+and obtains its mapping of transmitted Destination CIDs to metadata, described
+in <a href="#server-supports-cidfi" class="auto internal xref">Section 6.1</a>.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.2">
           <p id="section-6-2.2.1">proves ownership of its UDP 4-tuple to
-the on-path CNEs.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+the on-path CNEs, described in <a href="#ownership" class="auto internal xref">Section 6.2</a>.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.3">
           <p id="section-6-2.3.1">performs initial metadata exchange
-with the CIDFI network element and server, and server and network element.<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
+with the CIDFI network element and server, and server and network element,
+described in <a href="#initial-metadata-exchange" class="auto internal xref">Section 6.3</a>.<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.4">
-          <p id="section-6-2.4.1">continually update the CIDFI network element whenever new information is received from the server.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.4.1">for the duration of the connection, receives network-to-host and performs
+host-to-network updates as network conditions or network requirements change,
+described in <a href="#ongoing" class="auto internal xref">Section 7</a>.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-6-3">These steps are described in more detail below.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-6-4.1">
-          <p id="section-6-4.1.1">Note: the client is also a sender, and can also perform all these
+<li class="normal ulEmpty" id="section-6-3.1">
+          <p id="section-6-3.1.1">Note: the client is also a sender, and can also perform all these
 functions in its direction.  This functionality will be expanded in
 later versions of this document.  For example, a mobile device
 connected to Wi-Fi with 5G backhaul might be running an interactive
 audio/video application and want to indicate to its internal Wi-Fi
 driver and to the 5G modem its mapping from its transmitted QUIC
 Destination CID to per-packet metadata and the application can benefit
-from receiving network performance metrics.<a href="#section-6-4.1.1" class="pilcrow">¶</a></p>
+from receiving network performance metrics.<a href="#section-6-3.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="server-supports-cidfi">
@@ -1845,7 +1850,15 @@ from receiving network performance metrics.<a href="#section-6-4.1.1" class="pil
         </h3>
 <p id="section-6.1-1">On initial connection to a QUIC server, the client includes a new QUIC
 transport parameter CIDFI (<a href="#iana-tp" class="auto internal xref">Section 14.1</a>) which is remembered for 0-RTT.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">If the server does not indicate CIDFI support, CIDFI processing stops.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">If the server does not indicate CIDFI support, the client can still
+perform CIDFI -- but does not expect different CIDs to indicate
+different packet metadata.  The client can still signal its CNE about
+the flow, because the client knows some characteristics of the flow it
+is receiving.  For example, if the client requested streaming video of
+a certain bandwidth from the server or participated in a WebRTC
+offer/answer exchange, the client knows some metadata about the
+incoming flow without the server supporting CIDFI.  Processing
+continues with the next step.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">If the server indicates CIDFI support, then the server creates a
 new Server-Initiated, Bidirectional QUIC stream which is dedicated to
 CIDFI communication.  This stream number is communicated in the
@@ -1857,6 +1870,7 @@ CIDFI transport response during the QUIC handshake.<a href="#section-6.1-3" clas
         </ul>
 <p id="section-6.1-5">The QUIC client and server exchange CIDFI information over
 this CIDFI-dedicated stream as described in <a href="#initial-metadata-exchange" class="auto internal xref">Section 6.3</a>.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+<p id="section-6.1-6">Processing continues with the next step.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ownership">
@@ -1981,6 +1995,7 @@ if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-
 one UDP 4-tuple.  When the connection is migrated (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the CNE won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
 CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 5</a>).<a href="#section-6.2-7" class="pilcrow">¶</a></p>
+<p id="section-6.2-8">Processing continues with the next step.<a href="#section-6.2-8" class="pilcrow">¶</a></p>
 <div id="stun-cidfi-nonce-attribute">
 <section id="section-6.2.1">
           <h4 id="name-stun-cidfi-nonce-attribute">
@@ -2202,7 +2217,10 @@ highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="au
 <a href="#name-example-of-a-client-re-tran" class="selfRef">Example of a Client Re-transmitting Lost Nonce</a>
           </figcaption></figure>
 </div>
-<p id="section-6.3-7">There are two types of metadata exchanged, described in the following sub-sections.<a href="#section-6.3-7" class="pilcrow">¶</a></p>
+<p id="section-6.3-7">After the initial metadata is exchanged, processing continues with
+ongoing host-to-network and network-to-host updates as described in
+<a href="#ongoing" class="auto internal xref">Section 7</a>.<a href="#section-6.3-7" class="pilcrow">¶</a></p>
+<p id="section-6.3-8">There are two types of metadata exchanged, described in the following sub-sections.<a href="#section-6.3-8" class="pilcrow">¶</a></p>
 <div id="host-to-network">
 <section id="section-6.3.1">
           <h4 id="name-host-to-network-signaling">
@@ -2364,25 +2382,27 @@ update more frequently than once every second.<a href="#section-6.3.2-4" class="
       <h2 id="name-ongoing-signaling">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-ongoing-signaling" class="section-name selfRef">Ongoing Signaling</a>
       </h2>
-<p id="section-7-1">Typically, due to environmental changes on wireless networks or other user's
+<p id="section-7-1">Throughout the life of the connection host-to-network and network-to-host
+signaling is updated whenever charactertics change.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Typically, due to environmental changes on wireless networks or other user's
 traffic patterns, a particular flow may be able to operate faster or
 might need to operate slower.  The relevant CNE <span class="bcp14">SHOULD</span> signal
 such conditions to the client (<a href="#network-to-host" class="auto internal xref">Section 6.3.2</a>), which can then
 relay that information to the server using either CIDFI or via its
-application.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">For example, a  streaming video client might be retrieving low quality
+application.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">For example, a  streaming video client might be retrieving low quality
 video because one of their invoked CNEs indicated constrained
 bandwidth.  Later, after moving closer to an antenna, more bandwidth is
 available which is signaled by the CNE to the client.
 The client uses that signal to now request higher-quality video from
-the server.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">Similarly, the CIDFI client may begin receiving traffic
+the server.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">Similarly, the CIDFI client may begin receiving traffic
 with different characteristics which might be be signaled to the CIDFI
-Network Elements.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">For example, a client might be participating in an audio-only call
+Network Elements.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">For example, a client might be participating in an audio-only call
 which is modified to audio and video, requiring additional bandwidth
 and likely new CIDs to differentiate the video packets from the audio
-packets.<a href="#section-7-4" class="pilcrow">¶</a></p>
+packets.<a href="#section-7-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="load-balancers">
@@ -2390,7 +2410,7 @@ packets.<a href="#section-7-4" class="pilcrow">¶</a></p>
       <h2 id="name-interaction-with-load-balan">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-interaction-with-load-balan" class="section-name selfRef">Interaction with Load Balancers</a>
       </h2>
-<p id="section-8-1">HTTPS servers, including QUIC servers, are frequently behind load balancers.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">QUIC servers are frequently behind CID-aware load balancers <span>[<a href="#I-D.ietf-quic-load-balancers" class="cite xref">I-D.ietf-quic-load-balancers</a>]</span>.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <p id="section-8-2">With CIDFI, all the communications to the load-balanced QUIC server are over the same UDP 4-tuple
 as the primary QUIC connection but in a different QUIC stream.  This means
 no changes are required to ECMP load balancers or to CID-aware load balancers
@@ -2884,6 +2904,10 @@ example: "/metadata"
 <dt id="I-D.ietf-dnsop-svcb-https">[I-D.ietf-dnsop-svcb-https]</dt>
         <dd>
 <span class="refAuthor">Schwartz, B. M.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service Binding and Parameter Specification via the DNS (SVCB and HTTPS Resource Records)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-svcb-https-12</span>, <time datetime="2023-03-11" class="refDate">11 March 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-quic-load-balancers">[I-D.ietf-quic-load-balancers]</dt>
+        <dd>
+<span class="refAuthor">Duke, M.</span>, <span class="refAuthor">Banks, N.</span>, and <span class="refAuthor">C. Huitema</span>, <span class="refTitle">"QUIC-LB: Generating Routable QUIC Connection IDs"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-load-balancers-17</span>, <time datetime="2023-08-15" class="refDate">15 August 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-quic-load-balancers-17">https://datatracker.ietf.org/doc/html/draft-ietf-quic-load-balancers-17</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="QUIC">[QUIC]</dt>
         <dd>
