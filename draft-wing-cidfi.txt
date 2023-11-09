@@ -417,7 +417,7 @@ Table of Contents
    When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-
    CID) server, the client:
 
-   1.  learns the server supports CIDFI and obtains its mapping of
+   1.  learns if the server supports CIDFI and obtains its mapping of
        transmitted Destination CIDs to metadata.
 
    2.  proves ownership of its UDP 4-tuple to the on-path CNEs.
@@ -425,8 +425,9 @@ Table of Contents
    3.  performs initial metadata exchange with the CIDFI network element
        and server, and server and network element.
 
-   4.  continually update the CIDFI network element whenever new
-       information is received from the server.
+   Thereafter, ongoing host-to-network and network-to-host signaling
+   occurs as network characteristics change or network requirements
+   change, as discussed in Section 7.
 
    These steps are described in more detail below.
 
@@ -446,8 +447,15 @@ Table of Contents
    QUIC transport parameter CIDFI (Section 14.1) which is remembered for
    0-RTT.
 
-   If the server does not indicate CIDFI support, CIDFI processing
-   stops.
+   If the server does not indicate CIDFI support, the client can still
+   perform CIDFI -- but does not expect different CIDs to indicate
+   different packet metadata.  The client can still signal its CNE about
+   the flow, because the client knows some characteristics of the flow
+   it is receiving.  For example, if the client requested streaming
+   video of a certain bandwidth from the server or participated in a
+   WebRTC offer/answer exchange, the client knows some metadata about
+   the incoming flow without the server supporting CIDFI.  Processing
+   continues with the next step.
 
    If the server indicates CIDFI support, then the server creates a new
    Server-Initiated, Bidirectional QUIC stream which is dedicated to
@@ -457,7 +465,8 @@ Table of Contents
       TODO: Specify how CIDFI stream number is communicated to client.
 
    The QUIC client and server exchange CIDFI information over this
-   CIDFI-dedicated stream as described in Section 6.3.
+   CIDFI-dedicated stream as described in Section 6.3.  Processing
+   continues with the next step.
 
 6.2.  Client Proves Ownership of its UDP 4-Tuple
 
@@ -523,6 +532,8 @@ Table of Contents
    (Section 9 of [QUIC]) the CNE won't apply any CIDFI behavior to that
    newly-migrated connection.  The client will have to restart CIDFI
    procedures at the beginning (Section 5).
+
+   Processing continues with the next step.
 
 6.2.1.  STUN CIDFI-NONCE Attribute
 
@@ -697,6 +708,9 @@ Table of Contents
    The metadata exchanged over this channel is described in Section 10.
 
 7.  Ongoing Signaling
+
+   Throughout the life of the connection host-to-network and network-to-
+   host signaling is updated whenever charactertics change.
 
    Typically, due to environmental changes on wireless networks or other
    user's traffic patterns, a particular flow may be able to operate
