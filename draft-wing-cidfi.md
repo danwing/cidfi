@@ -706,7 +706,7 @@ The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
 # Ongoing Signaling {#ongoing}
 
-Due to environmental changes on wireless networks or other user's
+Typically, due to environmental changes on wireless networks or other user's
 traffic patterns, a particular flow may be able to operate faster or
 might need to operate slower.  The relevant CNE SHOULD signal
 such conditions to the client ({{network-to-host}}), which can then
