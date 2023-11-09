@@ -195,13 +195,13 @@ mapping from the QUIC Destination CID or DTLS Destination CID to the
 packet importance, bandwidth information for that connection towards
 the client, and for the TLS-encrypted communication with the client.
 
-{{network-to-server}} describes network-to-server signaling
+{{network-to-host}} describes network-to-host signaling
 similar to the use case described in {{Section 2 of ?I-D.joras-sadcdn}}, with metadata
 relaying through the client.
 
-{{server-to-network}} describes server-to-network
+{{host-to-network}} describes host-to-network
 metadata signaling similar to the use cases described in {{Section 3
-of I-D.joras-sadcdn}}.  The server-to-network metadata signaling can
+of I-D.joras-sadcdn}}.  The host-to-network metadata signaling can
 also benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
 
 A discussion of extending CIDFI to other protocols is provided in {{extending}}.
@@ -637,7 +637,7 @@ client                           edge router           server
 
 There are two types of metadata exchanged, described in the following sub-sections.
 
-### Server to Network Elements {#server-to-network}
+### Host to Network Signaling {#host-to-network}
 
 The server communicates to CNEs via the client which then
 communicates with the CNE(s).  While this adds
@@ -669,9 +669,9 @@ client     Wi-Fi Access Point    edge router           server
 
 To each of the network elements authorized by the client, the client
 sends the mappings of the server's transmitted Destination CIDs to
-packet metadata (see {#packet-metadata}).
+packet metadata (see {{metadata-exchanged}}).
 
-### Network Element to Server {#network-to-server}
+### Network to Host Signaling {#network-to-host}
 
 The CNE sends network performance information to the server
 which is intended to influence the sender's traffic rate (such as
@@ -703,12 +703,31 @@ update more frequently than once every second.
 
 The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
-## Ongoing Metadata Exchange {#ongoing-metadata-exchange}
 
-For the duration of the primary QUIC connection between the client and
-server, the client relays CNEs metadata changes to the server, and server's
-transmitted QUIC Destination CID to the CNEs.
+# Ongoing Signaling {#ongoing}
 
+Due to environmental changes on wireless networks or other user's
+traffic patterns, a particular flow may be able to operate faster or
+might need to operate slower.  The affected CIDFI Network Element SHOULD signal
+such conditions to the client ({{network-to-host}}), which can then
+relay that information to the server using either CIDFI or via its
+application.
+
+For example, a client streaming video might be retrieving low quality
+video because one of their CIDFI network elements indicated constrained
+bandwidth.  Later, after moving closer to an antenna, more bandwidth is
+available which is signaled by the CIDFI network element to the client.
+The client uses that signal to now request higher-quality video from
+the server.
+
+Similarly, the CIDFI client may begin receiving traffic
+with different characteristics which SHOULD be signaled to the CIDFI
+Network Elements.
+
+For example, a client might be participating in an audio-only call
+which is modified to audio and video, requiring additional bandwidth
+and likely new CIDs to differentiate the video packets from the audio
+packets.
 
 # Interaction with Load Balancers {#load-balancers}
 
@@ -855,7 +874,7 @@ mapping.
 ## Overhead of QUIC DCID Packet Examination
 
 If CID-to-importance metadata was signaled by the server as described
-in {{server-to-network}}, the CNE have to
+in {{host-to-network}}, the CNE have to
 examine the UDP payload of each packet for a matching Destination CID
 for the lifetime of the connection.  This is somewhat assuaged by
 the STUN nonce transmitted which may well be an easier signal to
@@ -889,7 +908,7 @@ agree on the meaning of those QUIC CIDs.
 Find approaches to further reduce network communications to start CIDFI.
 
 
-## Primary QUIC Channel CID Change {#primary-cid-change}:
+## Primary QUIC Channel CID Change {#primary-cid-change}
 
 Because the CIDFI network element, QUIC server, and QUIC client all
 cooperate to share the primary QUIC connection's Destination CID,
