@@ -686,11 +686,12 @@ Table of Contents
 
 7.  Ongoing Signaling
 
-   Due to environmental changes on wireless networks or other user's
-   traffic patterns, a particular flow may be able to operate faster or
-   might need to operate slower.  The relevant CNE SHOULD signal such
-   conditions to the client (Section 6.3.2), which can then relay that
-   information to the server using either CIDFI or via its application.
+   Typically, due to environmental changes on wireless networks or other
+   user's traffic patterns, a particular flow may be able to operate
+   faster or might need to operate slower.  The relevant CNE SHOULD
+   signal such conditions to the client (Section 6.3.2), which can then
+   relay that information to the server using either CIDFI or via its
+   application.
 
    For example, a streaming video client might be retrieving low quality
    video because one of their invoked CNEs indicated constrained
@@ -699,7 +700,7 @@ Table of Contents
    uses that signal to now request higher-quality video from the server.
 
    Similarly, the CIDFI client may begin receiving traffic with
-   different characteristics which SHOULD be signaled to the CIDFI
+   different characteristics which might be be signaled to the CIDFI
    Network Elements.
 
    For example, a client might be participating in an audio-only call
