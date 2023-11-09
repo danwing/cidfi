@@ -714,7 +714,7 @@ relay that information to the server using either CIDFI or via its
 application.
 
 For example, a  streaming video client might be retrieving low quality
-video because one of their CIDFI network elements indicated constrained
+video because one of their invoked CNEs indicated constrained
 bandwidth.  Later, after moving closer to an antenna, more bandwidth is
 available which is signaled by the CIDFI network element to the client.
 The client uses that signal to now request higher-quality video from
