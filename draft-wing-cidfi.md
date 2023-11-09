@@ -716,7 +716,7 @@ application.
 For example, a  streaming video client might be retrieving low quality
 video because one of their invoked CNEs indicated constrained
 bandwidth.  Later, after moving closer to an antenna, more bandwidth is
-available which is signaled by the CIDFI network element to the client.
+available which is signaled by the CNE to the client.
 The client uses that signal to now request higher-quality video from
 the server.
 
