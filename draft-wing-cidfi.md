@@ -713,7 +713,7 @@ such conditions to the client ({{network-to-host}}), which can then
 relay that information to the server using either CIDFI or via its
 application.
 
-For example, a client streaming video might be retrieving low quality
+For example, a  streaming video client might be retrieving low quality
 video because one of their CIDFI network elements indicated constrained
 bandwidth.  Later, after moving closer to an antenna, more bandwidth is
 available which is signaled by the CIDFI network element to the client.
