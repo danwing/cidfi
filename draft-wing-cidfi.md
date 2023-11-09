@@ -427,16 +427,14 @@ the client owns its UDP 4-tuple.
 
 When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server, the client:
 
-  1. learns if the server supports CIDFI
+  1. learns the server supports CIDFI
      and obtains its mapping of transmitted Destination CIDs to metadata.
   2. proves ownership of its UDP 4-tuple to
      the on-path CNEs.
   3. performs initial metadata exchange
      with the CIDFI network element and server, and server and network element.
+  4. continually update the CIDFI network element whenever new information is received from the server.
 
-Thereafter, ongoing host-to-network and network-to-host signaling occurs as
-network characteristics change or network requirements change, as discussed
-in {{ongoing}}.
 
 These steps are described in more detail below.
 
@@ -456,15 +454,7 @@ from receiving network performance metrics.
 On initial connection to a QUIC server, the client includes a new QUIC
 transport parameter CIDFI ({{iana-tp}}) which is remembered for 0-RTT.
 
-If the server does not indicate CIDFI support, the client can still
-perform CIDFI -- but does not expect different CIDs to indicate
-different packet metadata.  The client can still signal its CNE about
-the flow, because the client knows some characteristics of the flow it
-is receiving.  For example, if the client requested streaming video of
-a certain bandwidth from the server or participated in a WebRTC
-offer/answer exchange, the client knows some metadata about the
-incoming flow without the server supporting CIDFI.  Processing
-continues with the next step.
+If the server does not indicate CIDFI support, CIDFI processing stops.
 
 If the server indicates CIDFI support, then the server creates a
 new Server-Initiated, Bidirectional QUIC stream which is dedicated to
@@ -475,7 +465,6 @@ CIDFI transport response during the QUIC handshake.
 
 The QUIC client and server exchange CIDFI information over
 this CIDFI-dedicated stream as described in {{initial-metadata-exchange}}.
-Processing continues with the next step.
 
 
 ## Client Proves Ownership of its UDP 4-Tuple {#ownership}
@@ -546,7 +535,6 @@ QUIC}}) the CNE won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
 CIDFI procedures at the beginning ({{attach}}).
 
-Processing continues with the next step.
 
 
 ### STUN CIDFI-NONCE Attribute
@@ -729,9 +717,6 @@ The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 
 
 # Ongoing Signaling {#ongoing}
-
-Throughout the life of the connection host-to-network and network-to-host
-signaling is updated whenever charactertics change.
 
 Typically, due to environmental changes on wireless networks or other user's
 traffic patterns, a particular flow may be able to operate faster or
