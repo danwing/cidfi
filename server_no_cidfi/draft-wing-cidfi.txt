@@ -152,8 +152,8 @@ Table of Contents
    server and the server to the network.  The information exchanged
    allows the server to know about network conditions and allows the
    server to signal packet importance.  When the server lacks CIDFI
-   support the host-to-network and network-to-host signaling can operate
-   and improve user experience but operates without per-packet
+   support the host-to-network and network-to-host signaling can still
+   operate to improve user experience but operates without per-packet
    prioritization.
 
    Figure 1 provides a sample network diagram of a CIDFI system showing
