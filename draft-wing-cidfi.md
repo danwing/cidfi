@@ -468,7 +468,7 @@ differentiated behavior.  The client can still signal its CNE about
 the flow, because the client knows some characteristics of the flow it
 is receiving.  For example, if the client requested streaming video of
 a certain bandwidth from the server or participated in a WebRTC
-offer/answer exchange, the client knows some metadata about the
+offer/answer exchange, the client knows some connectivity expectation about the
 incoming flow without the server supporting CIDFI.  Processing
 continues with the next step.
 
