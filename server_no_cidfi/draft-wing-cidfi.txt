@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 12 May 2024                                               Nokia
+Expires: 13 May 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         9 November 2023
+                                                        10 November 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 May 2024.
+   This Internet-Draft will expire on 13 May 2024.
 
 Copyright Notice
 
@@ -151,10 +151,13 @@ Table of Contents
    connection or a DTLS connection [DTLS-CID] from the network to the
    server and the server to the network.  The information exchanged
    allows the server to know about network conditions and allows the
-   server to signal packet importance.  When the server lacks CIDFI
-   support the host-to-network and network-to-host signaling can still
-   operate to improve user experience but operates without per-packet
-   prioritization.
+   server to signal per-packet importance within a stream by using a CID
+   mapped to the packet metadata such as 'high priority' or 'low delay
+   budget'.  If the server lacks CIDFI support the host-to-network and
+   network-to-host signaling can still operate to improve user
+   experience but operates without per-packet importance while still
+   allowing things like 'bandwidth' or 'low delay budget' to be signaled
+   using CIDFI.
 
    Figure 1 provides a sample network diagram of a CIDFI system showing
    two bandwidth-constrained networks (or links) depicted by "B" and
@@ -583,8 +586,11 @@ Table of Contents
 
    The primary purpose of a second Connection ID is connection migration
    (Section 9 of [QUIC]).  With CIDFI, additional Connection IDs are
-   necessary to: * maintain CIDFI operation when topology remains the
-   same.  * use Destination Connection ID to indicate packet importance
+   necessary to:
+
+   *  maintain CIDFI operation when topology remains the same.
+
+   *  use Destination Connection ID to indicate packet importance
 
    To maintain CIDFI operation when topology remains the same, the CIDFI
    client signals the CNEs of that 'next' Destination CID.  When QUIC

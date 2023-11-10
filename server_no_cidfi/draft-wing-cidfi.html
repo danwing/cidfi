@@ -1049,7 +1049,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 12 May 2024</td>
+<td class="center">Expires 13 May 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-wing-cidfi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-09" class="published">9 November 2023</time>
+<time datetime="2023-11-10" class="published">10 November 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-05-12">12 May 2024</time></dd>
+<dd class="expires"><time datetime="2024-05-13">13 May 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1130,7 +1130,7 @@ information about network conditions and packet importance.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1376,9 +1376,13 @@ of several protocols that allow communicating about a <span>[<a href="#QUIC" cla
 connection or a DTLS connection <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span> from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
-server to signal packet importance.  When the server lacks CIDFI
+server to signal per-packet importance within a stream by using a
+CID mapped to the packet metadata such as 'high priority' or 'low
+delay budget'.  If the server lacks CIDFI
 support the host-to-network and network-to-host signaling can still operate
-to improve user experience but operates without per-packet prioritization.<a href="#section-1-3" class="pilcrow">¶</a></p>
+to improve user experience but operates without per-packet importance while
+still allowing things like 'bandwidth' or 'low delay budget' to be signaled
+using CIDFI.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4"><a href="#fig-arch" class="auto internal xref">Figure 1</a> provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
@@ -2090,10 +2094,16 @@ of the QUIC CIDFI transport parameter is remembered for 0-RTT, the
 client can immediately send the nonce.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
 <p id="section-6.3-2">The primary purpose of a second Connection ID is connection migration
 (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).  With CIDFI, additional Connection IDs are
-necessary to:
-  * maintain CIDFI operation when topology remains the same.
-  * use Destination Connection ID to indicate packet importance<a href="#section-6.3-2" class="pilcrow">¶</a></p>
-<p id="section-6.3-3">To maintain CIDFI operation when topology remains the same, the
+necessary to:<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.3-3.1">
+            <p id="section-6.3-3.1.1">maintain CIDFI operation when topology remains the same.<a href="#section-6.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-3.2">
+            <p id="section-6.3-3.2.1">use Destination Connection ID to indicate packet importance<a href="#section-6.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.3-4">To maintain CIDFI operation when topology remains the same, the
 CIDFI client signals the CNEs of that 'next'
 Destination CID.  When QUIC detects a topology change, however, that
 Destination CID <span class="bcp14">MUST NOT</span> be used by the peer, otherwise it links
@@ -2101,24 +2111,24 @@ the communication on the old topology to the new topology (<span><a href="https:
 Thus, an additional Connection ID is purposefully not communicated
 from the CIDFI client to its CNEs, so that
 Connection ID can be immediately used by the peer during connection
-migration when the topology changes.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
-<p id="section-6.3-4">Note that the source IP address and source UDP port number are not signaled
+migration when the topology changes.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
+<p id="section-6.3-5">Note that the source IP address and source UDP port number are not signaled
 by design.  This is because NATs (<span>[<a href="#NAPT" class="cite xref">NAPT</a>]</span>,
 <span>[<a href="#NAT" class="cite xref">NAT</a>]</span>), multiple NATs on the path, IPv6/IPv4 translation,
 similar technologies, and QUIC connection migration all complicate
 accurate signaling of the source IP address and source UDP port
-number.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
-<p id="section-6.3-5">If the CNE receives the HTTPS map request but has not
+number.<a href="#section-6.3-5" class="pilcrow">¶</a></p>
+<p id="section-6.3-6">If the CNE receives the HTTPS map request but has not
 yet seen the STUN nonce message it rejects the mapping request with a
 403 and provides a new nonce.  The new nonce avoids the problem of an
 attacker seeing the previous nonce and using that nonce on its own UDP
 4-tuple.  The client then sends a new STUN message with that new nonce
 value and send a new HTTPS mapping request(s).  This interaction is
-highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="auto internal xref">Figure 7</a>.<a href="#section-6.3-5" class="pilcrow">¶</a></p>
+highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="auto internal xref">Figure 7</a>.<a href="#section-6.3-6" class="pilcrow">¶</a></p>
 <span id="name-example-of-a-client-re-tran"></span><div id="ex-lost-nonce">
 <figure id="figure-7">
-          <div id="section-6.3-6.1">
-            <div class="alignCenter art-svg artwork" id="section-6.3-6.1.1">
+          <div id="section-6.3-7.1">
+            <div class="alignCenter art-svg artwork" id="section-6.3-7.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="496" width="512" viewBox="0 0 512 496" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 24,64 L 24,144" fill="none" stroke="black"></path>
                 <path d="M 24,176 L 24,480" fill="none" stroke="black"></path>
@@ -2210,17 +2220,17 @@ highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="au
                   <text x="320" y="436">importance"</text>
                   <text x="52" y="468">Ok</text>
                 </g>
-              </svg><a href="#section-6.3-6.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-6.3-7.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
 <a href="#name-example-of-a-client-re-tran" class="selfRef">Example of a Client Re-transmitting Lost Nonce</a>
           </figcaption></figure>
 </div>
-<p id="section-6.3-7">After the initial metadata is exchanged, processing continues with
+<p id="section-6.3-8">After the initial metadata is exchanged, processing continues with
 ongoing host-to-network and network-to-host updates as described in
-<a href="#ongoing" class="auto internal xref">Section 7</a>.<a href="#section-6.3-7" class="pilcrow">¶</a></p>
-<p id="section-6.3-8">There are two types of metadata exchanged, described in the following sub-sections.<a href="#section-6.3-8" class="pilcrow">¶</a></p>
+<a href="#ongoing" class="auto internal xref">Section 7</a>.<a href="#section-6.3-8" class="pilcrow">¶</a></p>
+<p id="section-6.3-9">There are two types of metadata exchanged, described in the following sub-sections.<a href="#section-6.3-9" class="pilcrow">¶</a></p>
 <div id="host-to-network">
 <section id="section-6.3.1">
           <h4 id="name-host-to-network-signaling">
