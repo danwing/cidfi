@@ -768,7 +768,7 @@ packets.
 
 # Interaction with Load Balancers {#load-balancers}
 
-QUIC servers are frequently behind CID-aware load balancers {{!I-D.ietf-quic-load-balancers}}.
+QUIC servers are frequently behind CID-aware load balancers {{?I-D.ietf-quic-load-balancers}}.
 
 With CIDFI, all the communications to the load-balanced QUIC server are over the same UDP 4-tuple
 as the primary QUIC connection but in a different QUIC stream.  This means
