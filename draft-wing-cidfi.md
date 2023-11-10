@@ -152,9 +152,13 @@ of several protocols that allow communicating about a {{QUIC}}
 connection or a DTLS connection {{DTLS-CID}} from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
-server to signal packet importance.  When the server lacks CIDFI
+server to signal per-packet importance within a stream by using a
+CID mapped to the packet metadata such as 'high priority' or 'low
+delay budget'.  If the server lacks CIDFI
 support the host-to-network and network-to-host signaling can still operate
-to improve user experience but operates without per-packet prioritization.
+to improve user experience but operates without per-packet importance while
+still allowing things like 'bandwidth' or 'low delay budget' to be signaled
+using CIDFI.
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
@@ -598,6 +602,7 @@ client can immediately send the nonce.
 The primary purpose of a second Connection ID is connection migration
 ({{Section 9 of QUIC}}).  With CIDFI, additional Connection IDs are
 necessary to:
+
   * maintain CIDFI operation when topology remains the same.
   * use Destination Connection ID to indicate packet importance
 
