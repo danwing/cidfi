@@ -464,7 +464,7 @@ transport parameter CIDFI ({{iana-tp}}) which is remembered for 0-RTT.
 
 If the server does not indicate CIDFI support, the client can still
 perform CIDFI -- but does not expect different CIDs to indicate
-different packet metadata.  The client can still signal its CNE about
+differentiated behavior.  The client can still signal its CNE about
 the flow, because the client knows some characteristics of the flow it
 is receiving.  For example, if the client requested streaming video of
 a certain bandwidth from the server or participated in a WebRTC
