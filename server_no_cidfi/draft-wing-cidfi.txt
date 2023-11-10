@@ -1128,13 +1128,6 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-
               svcb-https-12>.
 
-   [I-D.ietf-quic-load-balancers]
-              Duke, M., Banks, N., and C. Huitema, "QUIC-LB: Generating
-              Routable QUIC Connection IDs", Work in Progress, Internet-
-              Draft, draft-ietf-quic-load-balancers-17, 15 August 2023,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
-              load-balancers-17>.
-
    [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,
               DOI 10.17487/RFC9000, May 2021,
@@ -1206,6 +1199,13 @@ Table of Contents
               requirements-02, 29 September 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
               requirements-02>.
+
+   [I-D.ietf-quic-load-balancers]
+              Duke, M., Banks, N., and C. Huitema, "QUIC-LB: Generating
+              Routable QUIC Connection IDs", Work in Progress, Internet-
+              Draft, draft-ietf-quic-load-balancers-17, 15 August 2023,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
+              load-balancers-17>.
 
    [I-D.joras-sadcdn]
               Joras, M., "Securing Ancillary Data for Communicating with
