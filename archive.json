@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-09T01:13:24.001035+00:00",
+  "timestamp": "2023-11-12T01:17:12.428821+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -893,6 +893,156 @@
               "body": "```suggestion\r\n  HMAC-output = HMAC-SHA256( hmac-secret, nonce | \"cidfi\" )\r\n```",
               "createdAt": "2023-11-06T19:52:11Z",
               "updatedAt": "2023-11-06T19:52:11Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 22,
+      "id": "PR_kwDOKCXv885fDuIN",
+      "title": "more clearly explain ongoing signaling, and use 'network to host' and\u2026",
+      "url": "https://github.com/danwing/cidfi/pull/22",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026 'host to network' language",
+      "createdAt": "2023-11-09T17:07:52Z",
+      "updatedAt": "2023-11-09T21:49:52Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "a6e8b0d4a2d2e8451a4539d4fef1f69e040c6075",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "ongoing",
+      "headRefOid": "47c657855b83c7235e2d828a5fc10b91be87d330",
+      "closedAt": "2023-11-09T21:49:51Z",
+      "mergedAt": "2023-11-09T21:49:51Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "84d30b9a16816008ab5d8c69792354efb285869c"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885mtaMt",
+          "commit": {
+            "abbreviatedOid": "bc0717a"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2023-11-09T17:51:48Z",
+          "updatedAt": "2023-11-09T17:57:58Z",
+          "comments": [
+            {
+              "originalPosition": 56,
+              "body": "```suggestion\r\nFor example, a streaming video client might be retrieving low quality\r\n```",
+              "createdAt": "2023-11-09T17:51:48Z",
+              "updatedAt": "2023-11-09T19:42:15Z"
+            },
+            {
+              "originalPosition": 51,
+              "body": "```suggestion\r\nmight need to operate slower.  The relevant CNE SHOULD signal\r\n```",
+              "createdAt": "2023-11-09T17:52:37Z",
+              "updatedAt": "2023-11-09T17:57:58Z"
+            },
+            {
+              "originalPosition": 57,
+              "body": "```suggestion\r\nvideo because one of their invoked CNEs indicated constrained\r\n```",
+              "createdAt": "2023-11-09T17:53:08Z",
+              "updatedAt": "2023-11-09T17:57:58Z"
+            },
+            {
+              "originalPosition": 59,
+              "body": "```suggestion\r\navailable which is signaled by the CNE to the client.\r\n```",
+              "createdAt": "2023-11-09T17:53:55Z",
+              "updatedAt": "2023-11-09T17:57:58Z"
+            },
+            {
+              "originalPosition": 64,
+              "body": "```suggestion\r\nwith different characteristics which might be be signaled to the CIDFI\r\n```",
+              "createdAt": "2023-11-09T17:55:37Z",
+              "updatedAt": "2023-11-09T17:57:58Z"
+            },
+            {
+              "originalPosition": 64,
+              "body": "This is actually up to the application client whether to ask for differentiated behaviors for these streams or not.",
+              "createdAt": "2023-11-09T17:56:10Z",
+              "updatedAt": "2023-11-09T18:03:15Z"
+            },
+            {
+              "originalPosition": 49,
+              "body": "```suggestion\r\nTypically, due to environmental changes on wireless networks or other user's\r\n```",
+              "createdAt": "2023-11-09T17:56:50Z",
+              "updatedAt": "2023-11-09T17:57:58Z"
+            },
+            {
+              "originalPosition": 49,
+              "body": "To make sure these are only examples",
+              "createdAt": "2023-11-09T17:57:10Z",
+              "updatedAt": "2023-11-09T17:57:58Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 23,
+      "id": "PR_kwDOKCXv885fFQ5j",
+      "title": "No CIDFI, No Cry",
+      "url": "https://github.com/danwing/cidfi/pull/23",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Like Bob Marley sang.\r\n\r\nThis was Tiru's observation, now brought to the text of the I-D.",
+      "createdAt": "2023-11-09T22:34:26Z",
+      "updatedAt": "2023-11-10T17:14:04Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "891d4b5d570b5082f2f7d4762447dd14ee3c43e0",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "server_no_cidfi",
+      "headRefOid": "1c31d99bb95a51c9b14a391f9d7d75bcc404db42",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885mxF5G",
+          "commit": {
+            "abbreviatedOid": "c327298"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "Thanks, Dan",
+          "createdAt": "2023-11-10T06:59:15Z",
+          "updatedAt": "2023-11-10T07:03:52Z",
+          "comments": [
+            {
+              "originalPosition": 98,
+              "body": "```suggestion\r\nQUIC servers are frequently behind CID-aware load balancers {{?I-D.ietf-quic-load-balancers}}.\r\n```",
+              "createdAt": "2023-11-10T06:59:15Z",
+              "updatedAt": "2023-11-10T07:03:53Z"
+            },
+            {
+              "originalPosition": 45,
+              "body": "```suggestion\r\ndifferentiated behavior.  The client can still signal its CNE about\r\n```",
+              "createdAt": "2023-11-10T07:02:07Z",
+              "updatedAt": "2023-11-10T07:03:53Z"
+            },
+            {
+              "originalPosition": 49,
+              "body": "```suggestion\r\noffer/answer exchange, the client knows some connectivity expectation about the\r\n```",
+              "createdAt": "2023-11-10T07:03:14Z",
+              "updatedAt": "2023-11-10T07:03:53Z"
             }
           ]
         }
