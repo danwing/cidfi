@@ -121,13 +121,16 @@ informative:
 
 --- abstract
 
-Conveying metadata about network conditions and metadata about
-individual packets can improve the user experience especially on
-wireless networks which suffer bandwidth and delay variability.
+Host to Network signaling and Network to Host signaling can improve
+the user experience to meet network's constraints and to provide
+differentiated service to individual packets.
 
-This document describes how clients and servers can cooperate with
+This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
-information about network conditions and packet importance.
+information about network conditions and packet importance.  With
+optional server support individual packets can receive differentiated
+service.
+
 
 --- middle
 
@@ -147,18 +150,22 @@ to drop or prioritize is improved if the network element knows the
 importance of the packet.  Metadata carried in each packet can influence
 that decision to improve the user experience.
 
-This document defines CIDFI (pronounced "sid fye") which is a system
-of several protocols that allow communicating about a {{QUIC}}
-connection or a DTLS connection {{DTLS-CID}} from the network to the
-server and the server to the network.  The information exchanged
-allows the server to know about network conditions and allows the
-server to signal per-packet importance within a stream by using a
-CID mapped to the packet metadata such as 'high priority' or 'low
-delay budget'.  If the server lacks CIDFI
-support the host-to-network and network-to-host signaling can still operate
-to improve user experience but operates without per-packet importance while
-still allowing things like 'bandwidth' or 'low delay budget' to be signaled
-using CIDFI.
+This document defines CIDFI (pronounced "sid fye") which provides
+host-to-network (h2n) and network-to-host (n2h) signaling.  CIDFI
+always requires two components:  a CIDFI-aware client with a QUIC or
+DTLS stack client QUIC and at least one CIDFI-aware network element
+(CNE).  The client sends metadata about incoming CIDs to the CNE (h2n
+signaling) and the CNE sends metadata about its view of the network
+(n2h signaling).  The CNE-aware client can inform the server of
+network constraints it learned via n2h signaling such as by changing
+codecs (e.g., using offer/answer {{?RFC3264}}) or requesting a lower-
+quality streaming video.
+
+Optionally, a CNE-aware server can be deployed which then allows
+differentiating classes of packets within a flow.  Those
+differentiated packets can be client-to-server or server-to-client.
+This allows more precise packet forwarding treatment in the CNE, such
+as prioritizing audio over video.
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
@@ -193,13 +200,13 @@ domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 The CIDFI-aware client establishes a TLS connection with the
 CIDFI-aware network elements (Wi-Fi access point, edge router, and RAN
 router in the above diagram).  Over this connection it receives
-network performance information and it sends mapping of (QUIC or DTLS)
-Destination CIDs to packet importance.
+network performance information (n2h) and it sends mapping of (QUIC or DTLS)
+Destination CIDs to packet importance (h2n).
 
 The design creates new state in the CIDFI-aware network elements for
-mapping from the QUIC Destination CID or DTLS Destination CID to the
-packet importance, bandwidth information for that connection towards
-the client, and for the TLS-encrypted communication with the client.
+mapping from Destination CID to the packet metadata and maintaining
+triggers to update the client if the network characteristics change,
+and to maintain a TLS channel with the client.
 
 {{network-to-host}} describes network-to-host signaling
 similar to the use case described in {{Section 2 of ?I-D.joras-sadcdn}}, with metadata
@@ -210,7 +217,19 @@ metadata signaling similar to the use cases described in {{Section 3
 of I-D.joras-sadcdn}}.  The host-to-network metadata signaling can
 also benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
 
-A discussion of extending CIDFI to other protocols is provided in {{extending}}.
+CIDFI brings benefits to QUIC and DTLS because those protocols are of
+primary interest.  QUIC is quickly replacing HTTPS-over-TCP on many
+websites and content delivery networks because of its advantages to
+both end users and servers, supplanting TCP.  Applications can take
+advantage of QUIC's unreliability to help networks provide reasonable
+service to clients on constrained links, especially as the user
+transitions from a high quality wireless reception to lower quality
+reception (e.g., entering a building).  DTLS is used by WebRTC and
+SIP for establishing interactive real-time audio, video, and screen
+sharing, which benefit from knowing network characteristics (n2h
+signaling) and benefit from prioritizing audio over video (h2n
+signaling).  That said, CIDFI can be extended to other protocols
+as discussed in {{extending}}.
 
 
 # Conventions and Definitions
