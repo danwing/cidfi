@@ -142,11 +142,12 @@ Table of Contents
    changes fidelity of the content (e.g., improves video quality which
    consumes more bandwidth which then gets dropped by the network).
 
-   Due to network constraints a network element will need to drop or
-   even prioritize a packet ahead of other packets.  The decision of
-   which packet to drop or prioritize is improved if the network element
-   knows the importance of the packet.  Metadata carried in each packet
-   can influence that decision to improve the user experience.
+   Due to network constraints a network element will need to discard a
+   packet or prioritize a packet ahead of other packets within a single
+   UDP 4-tuple.  The network element cannot make an informed decision of
+   which packet to discard or pirioritize without knowing the relative
+   importance of the packet.  Metadata carried in each packet can inform
+   the network element to improve the user experience.
 
    This document defines CIDFI (pronounced "sid fye") which provides
    host-to-network (h2n) and network-to-host (n2h) signaling.  CIDFI
@@ -162,8 +163,9 @@ Table of Contents
    Optionally, a CNE-aware server can be deployed which then allows
    differentiating classes of packets within a flow.  Those
    differentiated packets can be client-to-server or server-to-client.
-   This allows more precise packet forwarding treatment in the CNE, such
-   as prioritizing audio over video.
+   By including a CNE-aware server in the system the CNE can provide
+   precise packet treatment within a UDP 4-tuple, such as prioritizing
+   audio over video.
 
    Figure 1 provides a sample network diagram of a CIDFI system showing
    two bandwidth-constrained networks (or links) depicted by "B" and
