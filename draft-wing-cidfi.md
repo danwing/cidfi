@@ -258,16 +258,20 @@ This section highlights the design goals of this specification.
 
 Client Authorization:
 : The client authorizes each CIDFI-aware network element (CNE) to participate in CIDFI
-for each QUIC or DTLS flow.
+for each QUIC (or DTLS) flow.
 
 Same Server:
-: Communication about the network metadata arrives over the primary QUIC or
-DTLS connection which ensures it arrives at the same server instance even in the presence of
-network translators (NAT) or server-side load balancers.
+: When the server also participates in CIDFI, the same QUIC connection is used for CIDFI
+communication with that server,
+which ensures it arrives at the same server instance even in the presence of
+network translators (NAT) or server-side ECMP load balancers or server-side CID-aware
+load balancers {{?I-D.ietf-quic-load-balancers}}.
 
 Privacy:
-: The packet importance is only known by CIDFI-aware network
-elements (CNEs).  The network performance data is protected by TLS.
+: The host-to-network signaling of the mapping from packet metadata to CID is only sent to CIDFI-aware network
+elements (CNEs) and is protected by TLS.  The network-to-host signaling of network metadata is protected by TLS.  For
+CIDFI to operate, the CNE never needs the server's identity, and the CNE is never provided decryption keys for
+the QUIC communication between the client and server.
 
 Integrity:
 : The packet importance is mapped to Destination CIDs which are
@@ -281,6 +285,10 @@ and servers are not changed so CIDFI is expected to work wherever QUIC
 (or DTLS) works.  The elements involved are only the QUIC (or DTLS)
 client and server and with the participating CIDFI-aware network elements.
 
+CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
+translation (NAT64).  Packet metadata is communicated over a
+TLS-encrypted channel from the CIDFI client to its CIDFI-aware network elements,
+and mapped to integrity-protected QUIC (or DTLS) Connection Identifiers.
 
 
 # Network Preparation
