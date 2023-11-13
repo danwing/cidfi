@@ -1581,20 +1581,24 @@ anticipate using a more efficient encoding such as <span>[<a href="#CBOR" class=
         <dt id="section-3-2.1">Client Authorization:</dt>
         <dd style="margin-left: 1.5em" id="section-3-2.2">
           <p id="section-3-2.2.1">The client authorizes each CIDFI-aware network element (CNE) to participate in CIDFI
-for each QUIC or DTLS flow.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+for each QUIC (or DTLS) flow.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-2.3">Same Server:</dt>
         <dd style="margin-left: 1.5em" id="section-3-2.4">
-          <p id="section-3-2.4.1">Communication about the network metadata arrives over the primary QUIC or
-DTLS connection which ensures it arrives at the same server instance even in the presence of
-network translators (NAT) or server-side load balancers.<a href="#section-3-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.4.1">When the server also participates in CIDFI, the same QUIC connection is used for CIDFI
+communication with that server,
+which ensures it arrives at the same server instance even in the presence of
+network translators (NAT) or server-side ECMP load balancers or server-side CID-aware
+load balancers <span>[<a href="#I-D.ietf-quic-load-balancers" class="cite xref">I-D.ietf-quic-load-balancers</a>]</span>.<a href="#section-3-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-2.5">Privacy:</dt>
         <dd style="margin-left: 1.5em" id="section-3-2.6">
-          <p id="section-3-2.6.1">The packet importance is only known by CIDFI-aware network
-elements (CNEs).  The network performance data is protected by TLS.<a href="#section-3-2.6.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.6.1">The host-to-network signaling of the mapping from packet metadata to CID is only sent to CIDFI-aware network
+elements (CNEs) and is protected by TLS.  The network-to-host signaling of network metadata is protected by TLS.  For
+CIDFI to operate, the CNE never needs the server's identity, and the CNE is never provided decryption keys for
+the QUIC communication between the client and server.<a href="#section-3-2.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-2.7">Integrity:</dt>
@@ -1614,6 +1618,10 @@ client and server and with the participating CIDFI-aware network elements.<a hre
 </dd>
       <dd class="break"></dd>
 </dl>
+<p id="section-3-3">CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
+translation (NAT64).  Packet metadata is communicated over a
+TLS-encrypted channel from the CIDFI client to its CIDFI-aware network elements,
+and mapped to integrity-protected QUIC (or DTLS) Connection Identifiers.<a href="#section-3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="network-preparation">
