@@ -155,7 +155,7 @@ to improve the user experience.
 This document defines CIDFI (pronounced "sid fye") which provides
 host-to-network (h2n) and network-to-host (n2h) signaling.  CIDFI
 always requires two components:  a CIDFI-aware client with a QUIC or
-DTLS stack client QUIC and at least one CIDFI-aware network element
+DTLS client stack and at least one CIDFI-aware Network Element
 (CNE).  The client sends metadata about incoming CIDs to the CNE (h2n
 signaling) and the CNE sends metadata about its view of the network
 (n2h signaling).  The CNE-aware client can inform the server of
