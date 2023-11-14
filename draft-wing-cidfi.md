@@ -142,23 +142,39 @@ content (e.g., improves video quality which consumes more bandwidth which
 then gets dropped by the network).
 
 Due to network constraints a network element will need to drop or even
-prioritize a packet ahead of other packets.  The decision of which packet
+prioritize a packet ahead of other packets. The decision of which packet
 to drop or prioritize is improved if the network element knows the
 importance of the packet.  Metadata carried in each packet can influence
 that decision to improve the user experience.
+
+There are also exceptional cases (crisis) where "normal" network resources
+cannot be used at maximum and, thus, a network would seek to reduce or offload
+some of the traffic during these events. Network-to-host signals are useful
+to put in place adequate traffic distribution policies (e.g., prefer the use of alternate paths,
+offload a network).
 
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
 connection or a DTLS connection {{DTLS-CID}} from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
-server to signal per-packet importance within a stream by using a
-CID mapped to the packet metadata such as 'high priority' or 'low
-delay budget'.  If the server lacks CIDFI
-support the host-to-network and network-to-host signaling can still operate
-to improve user experience but operates without per-packet importance while
-still allowing things like 'bandwidth' or 'low delay budget' to be signaled
-using CIDFI.
+server to signal packet importance. The following main steps are involved in CIDFI; some of them are optional:
+
+* CIDFI-awareness discovery between a host and a network.
+* Establishment of a secure association with all or a subset of CIDFI-aware
+  networks.
+* Negotiation of CIDFI support with remote servers.
+* CIDFI-aware networks sharing of changes of network conditions.
+* CIDFI-aware clients sharing of metadata with CIDFI-aware networks as hints
+  to help processing flows.
+* CIDFI-aware clients sharing of metadata with CIDFI-aware server to adapt
+  to local network conditions.
+
+CIDFI does not require that all these steps are enabled. Incremental
+deployments may envisaged (e.g., network and client support, network, client,
+and server support)
+
+
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
