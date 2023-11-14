@@ -122,7 +122,7 @@ informative:
 --- abstract
 
 Host-to-network signaling and network-to-host signaling can improve
-the user experience to meet network's constraints and to provide
+the user experience to adapt to network's constraints and share expected application needs, and thus to provide
 differentiated service to individual packets.
 
 This document describes how clients can communicate with their nearby
