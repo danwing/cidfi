@@ -1011,7 +1011,7 @@ several DCIDs for every packet importance.
 
 The server's identity is not disclosed to the CIDFI Network Elements,
 thus maintaining the end user's privacy.  Communications are relayed through the client because only the
-client and server knows the identity of the server and can validate
+client knows the identity of the server and can validate
 its certificate.
 
 For an attacker to succeed with the nonce challenge against a victim's
