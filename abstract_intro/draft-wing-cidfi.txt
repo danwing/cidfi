@@ -17,14 +17,15 @@ Expires: 17 May 2024                                               Nokia
 Abstract
 
    Host-to-network signaling and network-to-host signaling can improve
-   the user experience to meet network's constraints and to provide
-   differentiated service to individual packets.
+   the user experience to adapt to network's constraints and share
+   expected application needs, and thus to provide differentiated
+   service to individual packets.
 
    This document describes how clients can communicate with their nearby
    network elements so their QUIC and DTLS streams can be augmented with
    information about network conditions and packet importance.  With
    optional server support individual packets can receive differentiated
-   service.
+   service.  The proposed approach covers both directions of a flow.
 
 About This Document
 
