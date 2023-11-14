@@ -148,7 +148,7 @@ Due to network constraints a network element will need to discard a packet
 or prioritize a packet ahead of other packets within a single UDP 4-tuple.  The network element
 cannot make an informed decision of which packet to discard or pirioritize without
 knowing the relative
-importance of the packet.  Metadata carried in each packet can inform the
+importance of the packet.  Metadata carried in each packet (or a subset) can inform the
 network element
 to improve the user experience.
 
