@@ -1862,7 +1862,7 @@ described in <a href="#initial-metadata-exchange" class="auto internal xref">Sec
         <li id="section-6-2.4">
           <p id="section-6-2.4.1">for the duration of the connection, receives network-to-host and performs
 host-to-network updates as network conditions or network requirements change,
-described in <a href="#ongoing" class="auto internal xref">Section 7</a>.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
+described in <a href="#ongoing" class="auto internal xref">Section 7</a>. Some policies are provided to CNEs to control which network changes can triggers updating clients.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <ul class="normal ulEmpty">
@@ -1886,7 +1886,7 @@ from receiving network performance metrics.<a href="#section-6-3.1.1" class="pil
 transport parameter CIDFI (<a href="#iana-tp" class="auto internal xref">Section 14.1</a>) which is remembered for 0-RTT.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.1-2">If the server does not indicate CIDFI support, the client can still
 perform CIDFI -- but does not expect different CIDs to indicate
-differentiated behavior.  The client can still signal its CNE about
+differentiated behavior.  The client can still signal its CNE(s) about
 the flow, because the client knows some characteristics of the flow it
 is receiving.  For example, if the client requested streaming video of
 a certain bandwidth from the server or participated in a WebRTC

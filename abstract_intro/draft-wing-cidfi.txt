@@ -470,7 +470,9 @@ Table of Contents
 
    4.  for the duration of the connection, receives network-to-host and
        performs host-to-network updates as network conditions or network
-       requirements change, described in Section 7.
+       requirements change, described in Section 7.  Some policies are
+       provided to CNEs to control which network changes can triggers
+       updating clients.
 
       Note: the client is also a sender, and can also perform all these
       functions in its direction.  This functionality will be expanded
@@ -490,9 +492,9 @@ Table of Contents
 
    If the server does not indicate CIDFI support, the client can still
    perform CIDFI -- but does not expect different CIDs to indicate
-   differentiated behavior.  The client can still signal its CNE about
-   the flow, because the client knows some characteristics of the flow
-   it is receiving.  For example, if the client requested streaming
+   differentiated behavior.  The client can still signal its CNE(s)
+   about the flow, because the client knows some characteristics of the
+   flow it is receiving.  For example, if the client requested streaming
    video of a certain bandwidth from the server or participated in a
    WebRTC offer/answer exchange, the client knows some connectivity
    expectation about the incoming flow without the server supporting
