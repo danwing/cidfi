@@ -1053,10 +1053,11 @@ Table of Contents
    reduce the CPU effort on the CNEs.  A mitigation is using several
    DCIDs for every packet importance.
 
-   Communications are relayed through the client because only the client
-   and server knows the identity of the server and can validate its
-   certificate.  The protocol in this specification does not disclose
-   the server's identity to the CIDFI network element.
+   Other than what can be inferred from a destination IP address, the
+   server's identity is not disclosed to the CIDFI Network Elements,
+   thus maintaining the end user's privacy.  Communications are relayed
+   through the client because only the client knows the identity of the
+   server and can validate its certificate.
 
    For an attacker to succeed with the nonce challenge against a
    victim's UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE
