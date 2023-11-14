@@ -145,10 +145,16 @@ content (e.g., improves video quality which consumes more bandwidth which
 then gets dropped by the network).
 
 Due to network constraints a network element will need to drop or even
-prioritize a packet ahead of other packets.  The decision of which packet
+prioritize a packet ahead of other packets. The decision of which packet
 to drop or prioritize is improved if the network element knows the
 importance of the packet.  Metadata carried in each packet can influence
 that decision to improve the user experience.
+
+There are also exceptional cases (crisis) where "normal" network resources
+cannot be used at maximum and, thus, a network would seek to reduce or offload
+some of the traffic during these events. Network-to-host signals are useful
+to put in place adequate traffic distribution policies (e.g., prefer the use of alternate paths,
+offload a network).
 
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
