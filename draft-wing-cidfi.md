@@ -152,7 +152,22 @@ of several protocols that allow communicating about a {{QUIC}}
 connection or a DTLS connection {{DTLS-CID}} from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
-server to signal packet importance.
+server to signal packet importance. The following main steps are involved in CIDFI; some of them are optional:
+
+* CIDFI-awareness discovery between a host and a network.
+* Establishment of a secure association with all or a subset of CIDFI-aware
+  networks.
+* Negotiation of CIDFI support with remote servers.
+* CIDFI-aware networks sharing of changes of network conditions.
+* CIDFI-aware clients sharing of metadata with CIDFI-aware networks as hints
+  to help processing flows.
+* CIDFI-aware clients sharing of metadata with CIDFI-aware server to adapt
+  to local network conditions.
+
+CIDFI does not require that all these steps are enabled. Incremental
+deployments may envisaged (e.g., network and client support, network, client,
+and server support)
+
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
