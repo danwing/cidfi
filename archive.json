@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-12T01:17:12.428821+00:00",
+  "timestamp": "2023-11-14T01:12:27.996639+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -1001,7 +1001,7 @@
       "labels": [],
       "body": "Like Bob Marley sang.\r\n\r\nThis was Tiru's observation, now brought to the text of the I-D.",
       "createdAt": "2023-11-09T22:34:26Z",
-      "updatedAt": "2023-11-10T17:14:04Z",
+      "updatedAt": "2023-11-13T19:37:54Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "891d4b5d570b5082f2f7d4762447dd14ee3c43e0",
@@ -1045,8 +1045,73 @@
               "updatedAt": "2023-11-10T07:03:53Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885nAPhX",
+          "commit": {
+            "abbreviatedOid": "1c31d99"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "looks great",
+          "createdAt": "2023-11-13T19:37:54Z",
+          "updatedAt": "2023-11-13T19:37:54Z",
+          "comments": []
         }
       ]
+    },
+    {
+      "number": 24,
+      "id": "PR_kwDOKCXv885fUj8D",
+      "title": "rewrite abstract and introduction",
+      "url": "https://github.com/danwing/cidfi/pull/24",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Further clarify server is optional, and say network-to-host and host-to-network more times.  :-)",
+      "createdAt": "2023-11-13T16:53:29Z",
+      "updatedAt": "2023-11-13T20:57:21Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "891d4b5d570b5082f2f7d4762447dd14ee3c43e0",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "abstract_intro",
+      "headRefOid": "afd9a853a50e4e5fe81e34592459ada0f61e1316",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 25,
+      "id": "PR_kwDOKCXv885fU8Mx",
+      "title": "more explicitly say privacy is maintained in Security Considerations",
+      "url": "https://github.com/danwing/cidfi/pull/25",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-13T17:55:31Z",
+      "updatedAt": "2023-11-13T17:55:32Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "891d4b5d570b5082f2f7d4762447dd14ee3c43e0",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "privacy",
+      "headRefOid": "545bf1557ba888c42f7b2e186b157e8837362a77",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
