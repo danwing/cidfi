@@ -771,7 +771,7 @@ The metadata exchanged over this channel is described in {{metadata-exchanged}}.
 # Ongoing Signaling {#ongoing}
 
 Throughout the life of the connection host-to-network and network-to-host
-signaling is updated whenever charactertics change.
+signaling is updated whenever characteristics change. Still, some policies are provided to control when these updates are triggers. Such policies are meant to preserve the connection stability.
 
 Typically, due to environmental changes on wireless networks or other user's
 traffic patterns, a particular flow may be able to operate faster or
