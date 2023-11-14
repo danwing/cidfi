@@ -473,7 +473,7 @@ When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server,
      described in {{initial-metadata-exchange}}.
   4. for the duration of the connection, receives network-to-host and performs
      host-to-network updates as network conditions or network requirements change,
-     described in {{ongoing}}.
+     described in {{ongoing}}. Some policies are provided to CNEs to control which network changes can triggers updating clients.
 
 
 > Note: the client is also a sender, and can also perform all these
