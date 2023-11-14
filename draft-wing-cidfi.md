@@ -270,7 +270,7 @@ load balancers {{?I-D.ietf-quic-load-balancers}}.
 Privacy:
 : The host-to-network signaling of the mapping from packet metadata to CID is only sent to CIDFI-aware network
 elements (CNEs) and is protected by TLS.  The network-to-host signaling of network metadata is protected by TLS.  For
-CIDFI to operate, the CNE never needs the server's identity, and the CNE is never provided decryption keys for
+CIDFI to operate, a CNE never needs the server's identity, and a CNE is never provided decryption keys for
 the QUIC communication between the client and server.
 
 Integrity:
