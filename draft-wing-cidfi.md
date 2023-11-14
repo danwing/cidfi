@@ -1009,7 +1009,7 @@ the packet importance.  This was a design trade-off to reduce the
 CPU effort on the CNEs.  A mitigation is using
 several DCIDs for every packet importance.
 
-The server's identity is not disclosed to the CIDFI Network Elements,
+Other than what can be inferred from a destination IP address, the server's identity is not disclosed to the CIDFI Network Elements,
 thus maintaining the end user's privacy.  Communications are relayed through the client because only the
 client knows the identity of the server and can validate
 its certificate.
