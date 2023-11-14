@@ -1367,27 +1367,58 @@ available bandwidth, especially if the sender changes fidelity of the
 content (e.g., improves video quality which consumes more bandwidth which
 then gets dropped by the network).<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Due to network constraints a network element will need to drop or even
-prioritize a packet ahead of other packets.  The decision of which packet
+prioritize a packet ahead of other packets. The decision of which packet
 to drop or prioritize is improved if the network element knows the
 importance of the packet.  Metadata carried in each packet can influence
 that decision to improve the user experience.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">This document defines CIDFI (pronounced "sid fye") which is a system
+<p id="section-1-3">There are also exceptional cases (crisis) where "normal" network resources
+cannot be used at maximum and, thus, a network would seek to reduce or offload
+some of the traffic during these events. Network-to-host signals are useful
+to put in place adequate traffic distribution policies (e.g., prefer the use of alternate paths,
+offload a network).<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a <span>[<a href="#QUIC" class="cite xref">QUIC</a>]</span>
 connection or a DTLS connection <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span> from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
-server to signal packet importance.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4"><a href="#fig-arch" class="auto internal xref">Figure 1</a> provides a sample network diagram of a CIDFI system showing two
+server to signal packet importance. The following main steps are involved in CIDFI; some of them are optional:<a href="#section-1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-5.1">
+          <p id="section-1-5.1.1">CIDFI-awareness discovery between a host and a network.<a href="#section-1-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.2">
+          <p id="section-1-5.2.1">Establishment of a secure association with all or a subset of CIDFI-aware
+networks.<a href="#section-1-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.3">
+          <p id="section-1-5.3.1">Negotiation of CIDFI support with remote servers.<a href="#section-1-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.4">
+          <p id="section-1-5.4.1">CIDFI-aware networks sharing of changes of network conditions.<a href="#section-1-5.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.5">
+          <p id="section-1-5.5.1">CIDFI-aware clients sharing of metadata with CIDFI-aware networks as hints
+to help processing flows.<a href="#section-1-5.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.6">
+          <p id="section-1-5.6.1">CIDFI-aware clients sharing of metadata with CIDFI-aware server to adapt
+to local network conditions.<a href="#section-1-5.6.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-1-6">CIDFI does not require that all these steps are enabled. Incremental
+deployments may envisaged (e.g., network and client support, network, client,
+and server support)<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7"><a href="#fig-arch" class="auto internal xref">Figure 1</a> provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
 bandwidth-constrained link between a smartphone handset and its Radio
 Access Network (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
-domains such as Wi-Fi, an ISP edge router, and a 5G RAN.<a href="#section-1-4" class="pilcrow">¶</a></p>
+domains such as Wi-Fi, an ISP edge router, and a 5G RAN.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <span id="name-network-diagram"></span><div id="fig-arch">
 <figure id="figure-1">
-        <div id="section-1-5.1">
-          <div class="alignCenter art-svg artwork" id="section-1-5.1.1">
+        <div id="section-1-8.1">
+          <div class="alignCenter art-svg artwork" id="section-1-8.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="320" width="528" viewBox="0 0 528 320" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,48 L 8,112" fill="none" stroke="black"></path>
               <path d="M 8,176 L 8,256" fill="none" stroke="black"></path>
@@ -1484,29 +1515,29 @@ domains such as Wi-Fi, an ISP edge router, and a 5G RAN.<a href="#section-1-4" c
                 <text x="384" y="308">network</text>
                 <text x="480" y="308">network</text>
               </g>
-            </svg><a href="#section-1-5.1.1" class="pilcrow">¶</a>
+            </svg><a href="#section-1-8.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
 <a href="#name-network-diagram" class="selfRef">Network Diagram</a>
         </figcaption></figure>
 </div>
-<p id="section-1-6">The CIDFI-aware client establishes a TLS connection with the
+<p id="section-1-9">The CIDFI-aware client establishes a TLS connection with the
 CIDFI-aware network elements (Wi-Fi access point, edge router, and RAN
 router in the above diagram).  Over this connection it receives
 network performance information and it sends mapping of (QUIC or DTLS)
-Destination CIDs to packet importance.<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7">The design creates new state in the CIDFI-aware network elements for
+Destination CIDs to packet importance.<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-10">The design creates new state in the CIDFI-aware network elements for
 mapping from the QUIC Destination CID or DTLS Destination CID to the
 packet importance, bandwidth information for that connection towards
-the client, and for the TLS-encrypted communication with the client.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8"><a href="#network-to-host" class="auto internal xref">Section 6.3.2</a> describes network-to-host signaling
+the client, and for the TLS-encrypted communication with the client.<a href="#section-1-10" class="pilcrow">¶</a></p>
+<p id="section-1-11"><a href="#network-to-host" class="auto internal xref">Section 6.3.2</a> describes network-to-host signaling
 similar to the use case described in <span><a href="https://datatracker.ietf.org/doc/html/draft-joras-sadcdn-01#section-2" class="relref">Section 2</a> of [<a href="#I-D.joras-sadcdn" class="cite xref">I-D.joras-sadcdn</a>]</span>, with metadata
-relaying through the client.<a href="#section-1-8" class="pilcrow">¶</a></p>
-<p id="section-1-9"><a href="#host-to-network" class="auto internal xref">Section 6.3.1</a> describes host-to-network
+relaying through the client.<a href="#section-1-11" class="pilcrow">¶</a></p>
+<p id="section-1-12"><a href="#host-to-network" class="auto internal xref">Section 6.3.1</a> describes host-to-network
 metadata signaling similar to the use cases described in <span><a href="https://datatracker.ietf.org/doc/html/draft-joras-sadcdn-01#section-3" class="relref">Section 3</a> of [<a href="#I-D.joras-sadcdn" class="cite xref">I-D.joras-sadcdn</a>]</span>.  The host-to-network metadata signaling can
-also benefit <span>[<a href="#I-D.ietf-avtcore-rtp-over-quic" class="cite xref">I-D.ietf-avtcore-rtp-over-quic</a>]</span> and <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span>.<a href="#section-1-9" class="pilcrow">¶</a></p>
-<p id="section-1-10">A discussion of extending CIDFI to other protocols is provided in <a href="#extending" class="auto internal xref">Appendix A</a>.<a href="#section-1-10" class="pilcrow">¶</a></p>
+also benefit <span>[<a href="#I-D.ietf-avtcore-rtp-over-quic" class="cite xref">I-D.ietf-avtcore-rtp-over-quic</a>]</span> and <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span>.<a href="#section-1-12" class="pilcrow">¶</a></p>
+<p id="section-1-13">A discussion of extending CIDFI to other protocols is provided in <a href="#extending" class="auto internal xref">Appendix A</a>.<a href="#section-1-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -2716,7 +2747,7 @@ effect of using fixed identifier (DCIDs) rather than encrypting
 the packet importance.  This was a design trade-off to reduce the
 CPU effort on the CNEs.  A mitigation is using
 several DCIDs for every packet importance.<a href="#section-13-1" class="pilcrow">¶</a></p>
-<p id="section-13-2">The server's identity is not disclosed to the CIDFI Network Elements,
+<p id="section-13-2">Other than what can be inferred from a destination IP address, the server's identity is not disclosed to the CIDFI Network Elements,
 thus maintaining the end user's privacy.  Communications are relayed through the client because only the
 client knows the identity of the server and can validate
 its certificate.<a href="#section-13-2" class="pilcrow">¶</a></p>
