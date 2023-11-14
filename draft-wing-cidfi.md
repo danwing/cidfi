@@ -144,31 +144,33 @@ available bandwidth, especially if the sender changes fidelity of the
 content (e.g., improves video quality which consumes more bandwidth which
 then gets dropped by the network).
 
-Due to network constraints a network element will need to discard a packet
-or prioritize a packet ahead of other packets within a single UDP 4-tuple.  The network element
-cannot make an informed decision of which packet to discard or pirioritize without
-knowing the relative
-importance of the packet.  Metadata carried in each packet (or a subset) can inform the
-network element
-to improve the user experience.
+Due to network constraints a network element will need to drop or even
+prioritize a packet ahead of other packets.  The decision of which packet
+to drop or prioritize is improved if the network element knows the
+importance of the packet.  Metadata carried in each packet can influence
+that decision to improve the user experience.
 
-This document defines CIDFI (pronounced "sid fye") which provides
-host-to-network (h2n) and network-to-host (n2h) signaling.  CIDFI
-always requires two components:  a CIDFI-aware client with a QUIC or
-DTLS client stack and at least one CIDFI-aware Network Element
-(CNE).  The client sends metadata about incoming CIDs to the CNE (h2n
-signaling) and the CNE sends metadata about its view of the network
-(n2h signaling).  The CNE-aware client can inform the server of
-network constraints it learned via n2h signaling such as by changing
-codecs (e.g., using offer/answer {{?RFC3264}}) or requesting a lower-
-quality streaming video.
+This document defines CIDFI (pronounced "sid fye") which is a system
+of several protocols that allow communicating about a {{QUIC}}
+connection or a DTLS connection {{DTLS-CID}} from the network to the
+server and the server to the network.  The information exchanged
+allows the server to know about network conditions and allows the
+server to signal packet importance. The following main steps are involved in CIDFI; some of them are optional:
 
-Optionally, a CNE-aware server can be deployed which then allows
-differentiating classes of packets within a flow.  Those
-differentiated packets can be client-to-server or server-to-client.
-By including a CNE-aware server in the system the CNE can provide
-precise packet treatment within a UDP 4-tuple, such as prioritizing audio
-over video.
+* CIDFI-awareness discovery between a host and a network.
+* Establishment of a secure association with all or a subset of CIDFI-aware
+  networks.
+* Negotiation of CIDFI support with remote servers.
+* CIDFI-aware networks sharing of changes of network conditions.
+* CIDFI-aware clients sharing of metadata with CIDFI-aware networks as hints
+  to help processing flows.
+* CIDFI-aware clients sharing of metadata with CIDFI-aware server to adapt
+  to local network conditions.
+
+CIDFI does not require that all these steps are enabled. Incremental
+deployments may envisaged (e.g., network and client support, network, client,
+and server support)
+
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
