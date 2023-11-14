@@ -129,7 +129,7 @@ This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
 information about network conditions and packet importance.  With
 optional server support individual packets can receive differentiated
-service.
+service. The proposed approach covers both directions of a flow.
 
 
 --- middle
