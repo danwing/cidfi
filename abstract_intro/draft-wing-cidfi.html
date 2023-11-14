@@ -16,7 +16,7 @@ differentiated service to individual packets.
 network elements so their QUIC and DTLS streams can be augmented with
 information about network conditions and packet importance.  With
 optional server support individual packets can receive differentiated
-service. 
+service. The proposed approach covers both directions of a flow. 
     " name="description">
 <meta content="xml2rfc 3.18.2" name="generator">
 <meta content="user experience" name="keyword">
@@ -1097,7 +1097,7 @@ differentiated service to individual packets.<a href="#section-abstract-1" class
 network elements so their QUIC and DTLS streams can be augmented with
 information about network conditions and packet importance.  With
 optional server support individual packets can receive differentiated
-service.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+service. The proposed approach covers both directions of a flow.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1374,13 +1374,13 @@ then gets dropped by the network).<a href="#section-1-1" class="pilcrow">¶</a><
 or prioritize a packet ahead of other packets within a single UDP 4-tuple.  The network element
 cannot make an informed decision of which packet to discard or pirioritize without
 knowing the relative
-importance of the packet.  Metadata carried in each packet can inform the
+importance of the packet.  Metadata carried in each packet (or a subset) can inform the
 network element
 to improve the user experience.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">This document defines CIDFI (pronounced "sid fye") which provides
 host-to-network (h2n) and network-to-host (n2h) signaling.  CIDFI
 always requires two components:  a CIDFI-aware client with a QUIC or
-DTLS stack client QUIC and at least one CIDFI-aware network element
+DTLS client stack and at least one CIDFI-aware Network Element
 (CNE).  The client sends metadata about incoming CIDs to the CNE (h2n
 signaling) and the CNE sends metadata about its view of the network
 (n2h signaling).  The CNE-aware client can inform the server of

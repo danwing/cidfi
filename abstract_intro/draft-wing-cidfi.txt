@@ -25,7 +25,7 @@ Abstract
    network elements so their QUIC and DTLS streams can be augmented with
    information about network conditions and packet importance.  With
    optional server support individual packets can receive differentiated
-   service.
+   service.  The proposed approach covers both directions of a flow.
 
 About This Document
 
@@ -147,14 +147,15 @@ Table of Contents
    packet or prioritize a packet ahead of other packets within a single
    UDP 4-tuple.  The network element cannot make an informed decision of
    which packet to discard or pirioritize without knowing the relative
-   importance of the packet.  Metadata carried in each packet can inform
-   the network element to improve the user experience.
+   importance of the packet.  Metadata carried in each packet (or a
+   subset) can inform the network element to improve the user
+   experience.
 
    This document defines CIDFI (pronounced "sid fye") which provides
    host-to-network (h2n) and network-to-host (n2h) signaling.  CIDFI
    always requires two components: a CIDFI-aware client with a QUIC or
-   DTLS stack client QUIC and at least one CIDFI-aware network element
-   (CNE).  The client sends metadata about incoming CIDs to the CNE (h2n
+   DTLS client stack and at least one CIDFI-aware Network Element (CNE).
+   The client sends metadata about incoming CIDs to the CNE (h2n
    signaling) and the CNE sends metadata about its view of the network
    (n2h signaling).  The CNE-aware client can inform the server of
    network constraints it learned via n2h signaling such as by changing
