@@ -121,7 +121,7 @@ informative:
 
 --- abstract
 
-Host to Network signaling and Network to Host signaling can improve
+Host-to-network signaling and network-to-host signaling can improve
 the user experience to meet network's constraints and to provide
 differentiated service to individual packets.
 
