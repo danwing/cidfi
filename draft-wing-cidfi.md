@@ -145,10 +145,11 @@ content (e.g., improves video quality which consumes more bandwidth which
 then gets dropped by the network).
 
 Due to network constraints a network element will need to drop or even
-prioritize a packet ahead of other packets of the same flow. The decision of which packet
+prioritize a packet ahead of other packets within the same UDP 4-tuple. The decision of which packet
 to drop or prioritize is improved if the network element knows the
-importance of the packet.  Metadata carried in each packet can influence
-that decision to improve the user experience.
+importance of the packet.  By mapping packet metadata to a network-visible
+field in each packet, the network element is better informed and better able
+to improve the user experience.
 
 There are also exceptional cases (crisis) where "normal" network resources
 cannot be used at maximum and, thus, a network would seek to reduce or offload
