@@ -186,25 +186,34 @@ Access Network (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
 domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 
+For the sake of illustration, {{fig-arch}} simplifies the representation
+of the various involved network segments. It also assumes that multiple
+server instances are enabled in the server network but the document
+does not make any assumption about the internal structure of the service
+nor how a flow is processed by or steered to a service instance. However,
+CIDFI includes provisions to ensure that the service instance that is
+selected to service a client request is the same instance that will
+receive CIDFI metadata for that client.
+
 ~~~~~ aasvg
                     |                     |          |
 +------+   +------+ | +------+            |          |
 |CIDFI-|   |CIDFI-| | |CIDFI-|            |          |
-|aware |   |aware | | |aware |  +------+  |          |
-|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |
-+------+   |access| | |router|  +------+  |   |      | +--------+
-           |point | | +------+            |   |      | | CIDFI- |
-           +------+ |                     | +-+----+ | | aware  |
-                    |                     | |router+---+ QUIC or|
-+---------+         | +------+            | +-+----+ | | DTLS   |
-| CIDFI-  |         | |CIDFI-|            |   |      | | server |
+|aware |   |aware | | |aware |  +------+  |          |   +----------+
+|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |  +---------+ |
++------+   |access| | |router|  +------+  |   |      | +--------+ | |
+           |point | | +------+            |   |      | | CIDFI- | | |
+           +------+ |                     | +-+----+ | | aware  | | |
+                    |                     | |router+---+ QUIC or| | |
++---------+         | +------+            | +-+----+ | | DTLS   | |-+
+| CIDFI-  |         | |CIDFI-|            |   |      | | server |-+
 | aware   |         | |aware |  +------+  |   |      | +--------+
 | client  +-----B-----+RAN   +--+router+------+      |
 |(handset)|         | |router|  +------+  |          |
 +---------+         | +------+            |          |
                     |                     |          |
-                    |                     | transit  |  server
-   user network     |    ISP network      | network  |  network
+                    |                     | Transit  |  Server
+   User Network     |    ISP Network      | Network  |  Network
 ~~~~~
 {: #fig-arch artwork-align="center" title="Network Diagram" :height=88}
 
