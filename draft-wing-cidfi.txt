@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 17 May 2024                                               Nokia
+Expires: 18 May 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                        14 November 2023
+                                                        15 November 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 May 2024.
+   This Internet-Draft will expire on 18 May 2024.
 
 Copyright Notice
 
@@ -311,9 +311,9 @@ Table of Contents
    The network is configured to advertise its support for CIDFI.
 
    For this step, four mechanisms are described in this document: DNS
-   SVCB records [I-D.ietf-dnsop-svcb-https], IPv6 Provisioning Domains
-   (PvD) [RFC8801], DHCP [RFC2131][RFC8415], and 3GPP PCO.  These are
-   described in the following sub-sections.
+   SVCB records [RFC9460], IPv6 Provisioning Domains (PvD) [RFC8801],
+   DHCP [RFC2131][RFC8415], and 3GPP PCO.  These are described in the
+   following sub-sections.
 
       Standardizing all or some of these mechanisms is for further
       discussion.
@@ -324,17 +324,16 @@ Table of Contents
    aware" in Section 14.4 and a new Special-Use Domain Name "cifi.arpa"
    in Section 14.3.
 
-   The local network is configured to respond to DNS SVCB
-   [I-D.ietf-dnsop-svcb-https] queries with ServiceMode (Section 2.4.3
-   of [I-D.ietf-dnsop-svcb-https]) for "_cidfi-aware.cidfi.arpa" with
-   the DNS names of that network's and upstream network's CIDFI-aware
-   network elements (CNEs).  If upstream networks also support CIDFI
-   (e.g., the ISP network) those SVCB records are aggregated into the
-   local DNS server's response by the local network's recursive DNS
-   resolvers.  For example, a query for "_cidfi-aware.cidfi.arpa" might
-   return two answers for the two CNEs on the local network, one
-   belonging to the local ISP (example.net) and the other belonging to
-   the local Wi-Fi network (example.com).
+   The local network is configured to respond to DNS SVCB [RFC9460]
+   queries with ServiceMode (Section 2.4.3 of [RFC9460]) for "_cidfi-
+   aware.cidfi.arpa" with the DNS names of that network's and upstream
+   network's CIDFI-aware network elements (CNEs).  If upstream networks
+   also support CIDFI (e.g., the ISP network) those SVCB records are
+   aggregated into the local DNS server's response by the local
+   network's recursive DNS resolvers.  For example, a query for "_cidfi-
+   aware.cidfi.arpa" might return two answers for the two CNEs on the
+   local network, one belonging to the local ISP (example.net) and the
+   other belonging to the local Wi-Fi network (example.com).
 
    _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 service-cidfi.example.net. (
        alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
@@ -416,8 +415,7 @@ Table of Contents
 
    The client determines if the local network provides CIDFI service by
    issuing a query to the local DNS server for "_cidfi-
-   aware.cidfi.arpa." with the SVCB resource record type (64)
-   [I-D.ietf-dnsop-svcb-https].
+   aware.cidfi.arpa." with the SVCB resource record type (64) [RFC9460].
 
 5.1.2.  Client Learns Using Provisioning Domain
 
@@ -1174,14 +1172,6 @@ Table of Contents
               DOI 10.17487/RFC9146, March 2022,
               <https://www.rfc-editor.org/rfc/rfc9146>.
 
-   [I-D.ietf-dnsop-svcb-https]
-              Schwartz, B. M., Bishop, M., and E. Nygren, "Service
-              Binding and Parameter Specification via the DNS (SVCB and
-              HTTPS Resource Records)", Work in Progress, Internet-
-              Draft, draft-ietf-dnsop-svcb-https-12, 11 March 2023,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-
-              svcb-https-12>.
-
    [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,
               DOI 10.17487/RFC9000, May 2021,
@@ -1221,6 +1211,11 @@ Table of Contents
               Shao, "Discovering Provisioning Domain Names and Data",
               RFC 8801, DOI 10.17487/RFC8801, July 2020,
               <https://www.rfc-editor.org/rfc/rfc8801>.
+
+   [RFC9460]  Schwartz, B., Bishop, M., and E. Nygren, "Service Binding
+              and Parameter Specification via the DNS (SVCB and HTTPS
+              Resource Records)", RFC 9460, DOI 10.17487/RFC9460,
+              November 2023, <https://www.rfc-editor.org/rfc/rfc9460>.
 
    [STUN]     Petit-Huguenin, M., Salgueiro, G., Rosenberg, J., Wing,
               D., Mahy, R., and P. Matthews, "Session Traversal
