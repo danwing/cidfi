@@ -158,7 +158,7 @@ to put in place adequate traffic distribution policies (e.g., prefer the use of 
 offload a network).
 
 {{design-approaches}} depicts examples of approaches to establish channels to convey
-and share metadata between hosts, networks, and servers. This document adheres to the
+and share metadata between hosts, networks, and servers. This document adheres to
 the client-centric metadata sharing approach because it preserves privacy and also
 takes advantage of clients having a full view on their available network attachments.
 
@@ -231,7 +231,7 @@ server to signal packet importance. The following main steps are involved in CID
   to local network conditions.
 
 CIDFI does not require that all these steps are enabled. Incremental
-deployments may envisaged (e.g., network and client support, network, client,
+deployments may be envisaged (e.g., network and client support, network, client,
 and server support)
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
@@ -863,8 +863,7 @@ The client uses that signal to now request higher-quality video from
 the server.
 
 Similarly, the CIDFI client may begin receiving traffic
-with different characteristics which might be be signaled to the CIDFI
-Network Elements.
+with different characteristics which might be be signaled to the CNEs.
 
 For example, a client might be participating in an audio-only call
 which is modified to audio and video, requiring additional bandwidth
@@ -1107,7 +1106,7 @@ Because the CIDFI network element, QUIC server, and QUIC client all
 cooperate to share the primary QUIC connection's Destination CID,
 when a new CIDFI network element is involved (e.g., due to client
 attaching to a different network), a new Destination CID SHOULD
-be used for the reasons discussed in {{Section 9.5 of QUIC}}}.
+be used for the reasons discussed in {{Section 9.5 of QUIC}}).
 
 We need clear way to signal which DCIDs can be used for 'this'
 network attach and which DCIDs are for a migrated connection.  Probably
@@ -1124,7 +1123,7 @@ the CIDFI client, such as when closing the application; however, this
 signal cannot be relied upon due to network disconnect, battery
 depletion, and suchlike.
 
-> probably want keepalives on client->CNE communication.  TODO.
+> TODO: Probably want keepalives on client->CNE communication. To be assessed.
 
 # Security Considerations
 
