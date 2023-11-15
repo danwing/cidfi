@@ -156,6 +156,62 @@ some of the traffic during these events. Network-to-host signals are useful
 to put in place adequate traffic distribution policies (e.g., prefer the use of alternate paths,
 offload a network).
 
+{{design-approaches}} depicts examples of approaches to establish channels to convey
+and share metadata between hosts, networks, and servers. This document adheres to the
+the client-centric metadata sharing approach because it preserves privacy and also
+takes advantage of clients having a full view on their available network attachments.
+
+~~~~~ aasvg
+(1)	Proxied Connection
+                  .----------------.           .--------.
+                  |                |         .-------.  |
+.------.          |                |        .-------. |-'
+│Client+----------+   Network(s)   +--------+Server |-'
+'------'          |                |        '-------'
+    |             '----------------'           |
+    |                     |                    |
+    |/-------------------\|/------------------\|
+    | User Data + Metadata|User Data + Metadata|
+    |\-------------------/|\------------------/|
+    |  Secure Connection  |  Secure Connection |
+
+(2)	Out-of-band Metadata Sharing
+                  .----------------.           .--------.
+                  |                |         .-------.  |
+.------.          |                |        .-------. |-'
+│Client+----------+   Network(s)   +--------+Server |-'
+'------'          |                |        '-------'
+    |             '----------------'           |
+    |                     |                    |
+    |                     |                    |
+    |/----------------------------------------\|
+    |End-to-End Secure Connection + User Data  +----.
+    |\----------------------------------------/ GLUE|
+    |/-------------------\|/------------------\  CXs|
+    | Metadata (Optional) |    Metadata        +----'
+    |\-------------------/|\------------------/|
+    |                     |                    |
+
+(3)	Client-centric Metadata Sharing
+                  .----------------.           .--------.
+                  |                |         .-------.  |
+.------.          |                |        .-------. |-'
+│Client+----------+   Network(s)   +--------+Server |-'
+'------'          |                |        '-------'
+    |             '----------------'           |
+    |                     |                    |
+    |/-------------------\|                    |
+    |      Metadata       |                    |
+    |\-------------------/|                    |
+    |  Secure Connection  |                    |
+    |/----------------------------------------\|
+    |        End-to-End Secure Connection      |
+    |             User Data + Metadata         |
+    |\----------------------------------------/|
+    |                     |                    |
+~~~~~
+{: #design-approaches artwork-align="center" title="Candidate Design Approaches" :height=88}
+
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
 connection or a DTLS connection {{DTLS-CID}} from the network to the
@@ -177,7 +233,6 @@ CIDFI does not require that all these steps are enabled. Incremental
 deployments may envisaged (e.g., network and client support, network, client,
 and server support)
 
-
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
@@ -186,25 +241,34 @@ Access Network (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
 domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
 
+For the sake of illustration, {{fig-arch}} simplifies the representation
+of the various involved network segments. It also assumes that multiple
+server instances are enabled in the server network but the document
+does not make any assumption about the internal structure of the service
+nor how a flow is processed by or steered to a service instance. However,
+CIDFI includes provisions to ensure that the service instance that is
+selected to service a client request is the same instance that will
+receive CIDFI metadata for that client.
+
 ~~~~~ aasvg
                     |                     |          |
 +------+   +------+ | +------+            |          |
 |CIDFI-|   |CIDFI-| | |CIDFI-|            |          |
-|aware |   |aware | | |aware |  +------+  |          |
-|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |
-+------+   |access| | |router|  +------+  |   |      | +--------+
-           |point | | +------+            |   |      | | CIDFI- |
-           +------+ |                     | +-+----+ | | aware  |
-                    |                     | |router+---+ QUIC or|
-+---------+         | +------+            | +-+----+ | | DTLS   |
-| CIDFI-  |         | |CIDFI-|            |   |      | | server |
+|aware |   |aware | | |aware |  +------+  |          |   +----------+
+|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |  +---------+ |
++------+   |access| | |router|  +------+  |   |      | +--------+ | |
+           |point | | +------+            |   |      | | CIDFI- | | |
+           +------+ |                     | +-+----+ | | aware  | | |
+                    |                     | |router+---+ QUIC or| | |
++---------+         | +------+            | +-+----+ | | DTLS   | |-+
+| CIDFI-  |         | |CIDFI-|            |   |      | | server |-+
 | aware   |         | |aware |  +------+  |   |      | +--------+
 | client  +-----B-----+RAN   +--+router+------+      |
 |(handset)|         | |router|  +------+  |          |
 +---------+         | +------+            |          |
                     |                     |          |
-                    |                     | transit  |  server
-   user network     |    ISP network      | network  |  network
+                    |                     | Transit  |  Server
+   User Network     |    ISP Network      | Network  |  Network
 ~~~~~
 {: #fig-arch artwork-align="center" title="Network Diagram" :height=88}
 
@@ -247,8 +311,10 @@ as discussed in {{extending}}.
 
 {::boilerplate bcp14-tagged}
 
+The document makes use of the following terms:
+
 CID:
-: Connection Identifier used by {{QUIC}} or by {{DTLS-CID}}.
+: Connection Identifier used by {{QUIC}} or {{DTLS-CID}}.
 
 CNE:
 : CIDFI-aware Network Element, a network element that
