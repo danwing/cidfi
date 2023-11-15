@@ -9,12 +9,14 @@
 <meta content="Tirumaleswar Reddy" name="author">
 <meta content="Mohamed Boucadair" name="author">
 <meta content="
-       Conveying metadata about network conditions and metadata about
-individual packets can improve the user experience especially on
-wireless networks which suffer bandwidth and delay variability. 
-       This document describes how clients and servers can cooperate with
+       Host-to-network signaling and network-to-host signaling can improve
+the user experience to adapt to network's constraints and share expected application needs, and thus to provide
+differentiated service to individual packets. 
+       This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
-information about network conditions and packet importance. 
+information about network conditions and packet importance.  With
+optional server support individual packets can receive differentiated
+service. The proposed approach covers both directions of a flow. 
     " name="description">
 <meta content="xml2rfc 3.18.2" name="generator">
 <meta content="user experience" name="keyword">
@@ -1049,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 17 May 2024</td>
+<td class="center">Expires 18 May 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-wing-cidfi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-14" class="published">14 November 2023</time>
+<time datetime="2023-11-15" class="published">15 November 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-05-17">17 May 2024</time></dd>
+<dd class="expires"><time datetime="2024-05-18">18 May 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1088,12 +1090,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">CID Flow Indicator (CIDFI)</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">Conveying metadata about network conditions and metadata about
-individual packets can improve the user experience especially on
-wireless networks which suffer bandwidth and delay variability.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">This document describes how clients and servers can cooperate with
+<p id="section-abstract-1">Host-to-network signaling and network-to-host signaling can improve
+the user experience to adapt to network's constraints and share expected application needs, and thus to provide
+differentiated service to individual packets.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
-information about network conditions and packet importance.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+information about network conditions and packet importance.  With
+optional server support individual packets can receive differentiated
+service. The proposed approach covers both directions of a flow.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1130,7 +1134,7 @@ information about network conditions and packet importance.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1381,18 +1385,44 @@ of several protocols that allow communicating about a <span>[<a href="#QUIC" cla
 connection or a DTLS connection <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span> from the network to the
 server and the server to the network.  The information exchanged
 allows the server to know about network conditions and allows the
-server to signal packet importance.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5"><a href="#fig-arch" class="auto internal xref">Figure 1</a> provides a sample network diagram of a CIDFI system showing two
+server to signal packet importance. The following main steps are involved in CIDFI; some of them are optional:<a href="#section-1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-5.1">
+          <p id="section-1-5.1.1">CIDFI-awareness discovery between a host and a network.<a href="#section-1-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.2">
+          <p id="section-1-5.2.1">Establishment of a secure association with all or a subset of CIDFI-aware
+networks.<a href="#section-1-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.3">
+          <p id="section-1-5.3.1">Negotiation of CIDFI support with remote servers.<a href="#section-1-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.4">
+          <p id="section-1-5.4.1">CIDFI-aware networks sharing of changes of network conditions.<a href="#section-1-5.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.5">
+          <p id="section-1-5.5.1">CIDFI-aware clients sharing of metadata with CIDFI-aware networks as hints
+to help processing flows.<a href="#section-1-5.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-5.6">
+          <p id="section-1-5.6.1">CIDFI-aware clients sharing of metadata with CIDFI-aware server to adapt
+to local network conditions.<a href="#section-1-5.6.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-1-6">CIDFI does not require that all these steps are enabled. Incremental
+deployments may envisaged (e.g., network and client support, network, client,
+and server support)<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7"><a href="#fig-arch" class="auto internal xref">Figure 1</a> provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
 bandwidth-constrained link between a smartphone handset and its Radio
 Access Network (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
-domains such as Wi-Fi, an ISP edge router, and a 5G RAN.<a href="#section-1-5" class="pilcrow">¶</a></p>
+domains such as Wi-Fi, an ISP edge router, and a 5G RAN.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <span id="name-network-diagram"></span><div id="fig-arch">
 <figure id="figure-1">
-        <div id="section-1-6.1">
-          <div class="alignCenter art-svg artwork" id="section-1-6.1.1">
+        <div id="section-1-8.1">
+          <div class="alignCenter art-svg artwork" id="section-1-8.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="320" width="528" viewBox="0 0 528 320" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,48 L 8,112" fill="none" stroke="black"></path>
               <path d="M 8,176 L 8,256" fill="none" stroke="black"></path>
@@ -1489,29 +1519,41 @@ domains such as Wi-Fi, an ISP edge router, and a 5G RAN.<a href="#section-1-5" c
                 <text x="384" y="308">network</text>
                 <text x="480" y="308">network</text>
               </g>
-            </svg><a href="#section-1-6.1.1" class="pilcrow">¶</a>
+            </svg><a href="#section-1-8.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
 <a href="#name-network-diagram" class="selfRef">Network Diagram</a>
         </figcaption></figure>
 </div>
-<p id="section-1-7">The CIDFI-aware client establishes a TLS connection with the
+<p id="section-1-9">The CIDFI-aware client establishes a TLS connection with the
 CIDFI-aware network elements (Wi-Fi access point, edge router, and RAN
 router in the above diagram).  Over this connection it receives
-network performance information and it sends mapping of (QUIC or DTLS)
-Destination CIDs to packet importance.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8">The design creates new state in the CIDFI-aware network elements for
-mapping from the QUIC Destination CID or DTLS Destination CID to the
-packet importance, bandwidth information for that connection towards
-the client, and for the TLS-encrypted communication with the client.<a href="#section-1-8" class="pilcrow">¶</a></p>
-<p id="section-1-9"><a href="#network-to-host" class="auto internal xref">Section 6.3.2</a> describes network-to-host signaling
+network performance information (n2h) and it sends mapping of (QUIC or DTLS)
+Destination CIDs to packet importance (h2n).<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-10">The design creates new state in the CIDFI-aware network elements for
+mapping from Destination CID to the packet metadata and maintaining
+triggers to update the client if the network characteristics change,
+and to maintain a TLS channel with the client.<a href="#section-1-10" class="pilcrow">¶</a></p>
+<p id="section-1-11"><a href="#network-to-host" class="auto internal xref">Section 6.3.2</a> describes network-to-host signaling
 similar to the use case described in <span><a href="https://datatracker.ietf.org/doc/html/draft-joras-sadcdn-01#section-2" class="relref">Section 2</a> of [<a href="#I-D.joras-sadcdn" class="cite xref">I-D.joras-sadcdn</a>]</span>, with metadata
-relaying through the client.<a href="#section-1-9" class="pilcrow">¶</a></p>
-<p id="section-1-10"><a href="#host-to-network" class="auto internal xref">Section 6.3.1</a> describes host-to-network
+relaying through the client.<a href="#section-1-11" class="pilcrow">¶</a></p>
+<p id="section-1-12"><a href="#host-to-network" class="auto internal xref">Section 6.3.1</a> describes host-to-network
 metadata signaling similar to the use cases described in <span><a href="https://datatracker.ietf.org/doc/html/draft-joras-sadcdn-01#section-3" class="relref">Section 3</a> of [<a href="#I-D.joras-sadcdn" class="cite xref">I-D.joras-sadcdn</a>]</span>.  The host-to-network metadata signaling can
-also benefit <span>[<a href="#I-D.ietf-avtcore-rtp-over-quic" class="cite xref">I-D.ietf-avtcore-rtp-over-quic</a>]</span> and <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span>.<a href="#section-1-10" class="pilcrow">¶</a></p>
-<p id="section-1-11">A discussion of extending CIDFI to other protocols is provided in <a href="#extending" class="auto internal xref">Appendix A</a>.<a href="#section-1-11" class="pilcrow">¶</a></p>
+also benefit <span>[<a href="#I-D.ietf-avtcore-rtp-over-quic" class="cite xref">I-D.ietf-avtcore-rtp-over-quic</a>]</span> and <span>[<a href="#DTLS-CID" class="cite xref">DTLS-CID</a>]</span>.<a href="#section-1-12" class="pilcrow">¶</a></p>
+<p id="section-1-13">CIDFI brings benefits to QUIC and DTLS because those protocols are of
+primary interest.  QUIC is quickly replacing HTTPS-over-TCP on many
+websites and content delivery networks because of its advantages to
+both end users and servers, supplanting TCP.  Applications can take
+advantage of QUIC's unreliability to help networks provide reasonable
+service to clients on constrained links, especially as the user
+transitions from a high quality wireless reception to lower quality
+reception (e.g., entering a building).  DTLS is used by WebRTC and
+SIP for establishing interactive real-time audio, video, and screen
+sharing, which benefit from knowing network characteristics (n2h
+signaling) and benefit from prioritizing audio over video (h2n
+signaling).  That said, CIDFI can be extended to other protocols
+as discussed in <a href="#extending" class="auto internal xref">Appendix A</a>.<a href="#section-1-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1558,20 +1600,24 @@ anticipate using a more efficient encoding such as <span>[<a href="#CBOR" class=
         <dt id="section-3-2.1">Client Authorization:</dt>
         <dd style="margin-left: 1.5em" id="section-3-2.2">
           <p id="section-3-2.2.1">The client authorizes each CIDFI-aware network element (CNE) to participate in CIDFI
-for each QUIC or DTLS flow.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+for each QUIC (or DTLS) flow.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-2.3">Same Server:</dt>
         <dd style="margin-left: 1.5em" id="section-3-2.4">
-          <p id="section-3-2.4.1">Communication about the network metadata arrives over the primary QUIC or
-DTLS connection which ensures it arrives at the same server instance even in the presence of
-network translators (NAT) or server-side load balancers.<a href="#section-3-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.4.1">When the server also participates in CIDFI, the same QUIC connection is used for CIDFI
+communication with that server,
+which ensures it arrives at the same server instance even in the presence of
+network translators (NAT) or server-side ECMP load balancers or server-side CID-aware
+load balancers <span>[<a href="#I-D.ietf-quic-load-balancers" class="cite xref">I-D.ietf-quic-load-balancers</a>]</span>.<a href="#section-3-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-2.5">Privacy:</dt>
         <dd style="margin-left: 1.5em" id="section-3-2.6">
-          <p id="section-3-2.6.1">The packet importance is only known by CIDFI-aware network
-elements (CNEs).  The network performance data is protected by TLS.<a href="#section-3-2.6.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.6.1">The host-to-network signaling of the mapping from packet metadata to CID is only sent to CIDFI-aware network
+elements (CNEs) and is protected by TLS.  The network-to-host signaling of network metadata is protected by TLS.  For
+CIDFI to operate, a CNE never needs the server's identity, and a CNE is never provided decryption keys for
+the QUIC communication between the client and server.<a href="#section-3-2.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-2.7">Integrity:</dt>
@@ -1591,6 +1637,10 @@ client and server and with the participating CIDFI-aware network elements.<a hre
 </dd>
       <dd class="break"></dd>
 </dl>
+<p id="section-3-3">CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
+translation (NAT64).  Packet metadata is communicated over a
+TLS-encrypted channel from the CIDFI client to its CIDFI-aware network elements,
+and mapped to integrity-protected QUIC (or DTLS) Connection Identifiers.<a href="#section-3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="network-preparation">
@@ -1600,7 +1650,7 @@ client and server and with the participating CIDFI-aware network elements.<a hre
       </h2>
 <p id="section-4-1">The network is configured to advertise its support for CIDFI.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">For this step, four mechanisms are described in this document: DNS
-SVCB records <span>[<a href="#I-D.ietf-dnsop-svcb-https" class="cite xref">I-D.ietf-dnsop-svcb-https</a>]</span>, IPv6 Provisioning Domains (PvD) <span>[<a href="#RFC8801" class="cite xref">RFC8801</a>]</span>, DHCP <span>[<a href="#RFC2131" class="cite xref">RFC2131</a>]</span><span>[<a href="#RFC8415" class="cite xref">RFC8415</a>]</span>, and 3GPP PCO.
+SVCB records <span>[<a href="#RFC9460" class="cite xref">RFC9460</a>]</span>, IPv6 Provisioning Domains (PvD) <span>[<a href="#RFC8801" class="cite xref">RFC8801</a>]</span>, DHCP <span>[<a href="#RFC2131" class="cite xref">RFC2131</a>]</span><span>[<a href="#RFC8415" class="cite xref">RFC8415</a>]</span>, and 3GPP PCO.
 These are described in the following sub-sections.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-4-3.1">
@@ -1616,7 +1666,7 @@ These are described in the following sub-sections.<a href="#section-4-2" class="
 <a href="#iana-svcb" class="auto internal xref">Section 14.4</a> and a new Special-Use Domain Name "cifi.arpa" in
 <a href="#iana-sudn" class="auto internal xref">Section 14.3</a>.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">The local network is configured to respond to DNS SVCB
-<span>[<a href="#I-D.ietf-dnsop-svcb-https" class="cite xref">I-D.ietf-dnsop-svcb-https</a>]</span> queries with ServiceMode (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12#section-2.4.3" class="relref">Section 2.4.3</a> of [<a href="#I-D.ietf-dnsop-svcb-https" class="cite xref">I-D.ietf-dnsop-svcb-https</a>]</span>) for "_cidfi-aware.cidfi.arpa" with
+<span>[<a href="#RFC9460" class="cite xref">RFC9460</a>]</span> queries with ServiceMode (<span><a href="https://rfc-editor.org/rfc/rfc9460#section-2.4.3" class="relref">Section 2.4.3</a> of [<a href="#RFC9460" class="cite xref">RFC9460</a>]</span>) for "_cidfi-aware.cidfi.arpa" with
 the DNS names of that network's and upstream network's CIDFI-aware
 network elements (CNEs).  If upstream networks also support CIDFI (e.g., the
 ISP network) those SVCB records are aggregated into the local DNS
@@ -1738,7 +1788,7 @@ network and ISP do not support CIDFI) client processing stops.<a href="#section-
 <p id="section-5.1.1-1">The client determines if the local network provides CIDFI service by
 issuing a query to the local DNS server for
 "_cidfi-aware.cidfi.arpa." with the SVCB resource record type (64)
-<span>[<a href="#I-D.ietf-dnsop-svcb-https" class="cite xref">I-D.ietf-dnsop-svcb-https</a>]</span>.<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
+<span>[<a href="#RFC9460" class="cite xref">RFC9460</a>]</span>.<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="client-learns-using-provisioning-domain">
@@ -1815,32 +1865,35 @@ the client owns its UDP 4-tuple.<a href="#section-5.2-4" class="pilcrow">¶</a><
 <p id="section-6-1">When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server, the client:<a href="#section-6-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-6-2">
 <li id="section-6-2.1">
-          <p id="section-6-2.1.1">learns the server supports CIDFI
-and obtains its mapping of transmitted Destination CIDs to metadata.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.1.1">learns if the server supports CIDFI
+and obtains its mapping of transmitted Destination CIDs to metadata, described
+in <a href="#server-supports-cidfi" class="auto internal xref">Section 6.1</a>.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.2">
           <p id="section-6-2.2.1">proves ownership of its UDP 4-tuple to
-the on-path CNEs.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+the on-path CNEs, described in <a href="#ownership" class="auto internal xref">Section 6.2</a>.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.3">
           <p id="section-6-2.3.1">performs initial metadata exchange
-with the CIDFI network element and server, and server and network element.<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
+with the CIDFI network element and server, and server and network element,
+described in <a href="#initial-metadata-exchange" class="auto internal xref">Section 6.3</a>.<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.4">
-          <p id="section-6-2.4.1">continually update the CIDFI network element whenever new information is received from the server.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.4.1">for the duration of the connection, receives network-to-host and performs
+host-to-network updates as network conditions or network requirements change,
+described in <a href="#ongoing" class="auto internal xref">Section 7</a>. Some policies are provided to CNEs to control which network changes can triggers updating clients.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-6-3">These steps are described in more detail below.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-6-4.1">
-          <p id="section-6-4.1.1">Note: the client is also a sender, and can also perform all these
+<li class="normal ulEmpty" id="section-6-3.1">
+          <p id="section-6-3.1.1">Note: the client is also a sender, and can also perform all these
 functions in its direction.  This functionality will be expanded in
 later versions of this document.  For example, a mobile device
 connected to Wi-Fi with 5G backhaul might be running an interactive
 audio/video application and want to indicate to its internal Wi-Fi
 driver and to the 5G modem its mapping from its transmitted QUIC
 Destination CID to per-packet metadata and the application can benefit
-from receiving network performance metrics.<a href="#section-6-4.1.1" class="pilcrow">¶</a></p>
+from receiving network performance metrics.<a href="#section-6-3.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="server-supports-cidfi">
@@ -1850,7 +1903,15 @@ from receiving network performance metrics.<a href="#section-6-4.1.1" class="pil
         </h3>
 <p id="section-6.1-1">On initial connection to a QUIC server, the client includes a new QUIC
 transport parameter CIDFI (<a href="#iana-tp" class="auto internal xref">Section 14.1</a>) which is remembered for 0-RTT.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">If the server does not indicate CIDFI support, CIDFI processing stops.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">If the server does not indicate CIDFI support, the client can still
+perform CIDFI -- but does not expect different CIDs to indicate
+differentiated behavior.  The client can still signal its CNE(s) about
+the flow, because the client knows some characteristics of the flow it
+is receiving.  For example, if the client requested streaming video of
+a certain bandwidth from the server or participated in a WebRTC
+offer/answer exchange, the client knows some connectivity expectation about the
+incoming flow without the server supporting CIDFI.  Processing
+continues with the next step.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">If the server indicates CIDFI support, then the server creates a
 new Server-Initiated, Bidirectional QUIC stream which is dedicated to
 CIDFI communication.  This stream number is communicated in the
@@ -1862,6 +1923,7 @@ CIDFI transport response during the QUIC handshake.<a href="#section-6.1-3" clas
         </ul>
 <p id="section-6.1-5">The QUIC client and server exchange CIDFI information over
 this CIDFI-dedicated stream as described in <a href="#initial-metadata-exchange" class="auto internal xref">Section 6.3</a>.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+<p id="section-6.1-6">Processing continues with the next step.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ownership">
@@ -1986,6 +2048,7 @@ if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-
 one UDP 4-tuple.  When the connection is migrated (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the CNE won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
 CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 5</a>).<a href="#section-6.2-7" class="pilcrow">¶</a></p>
+<p id="section-6.2-8">Processing continues with the next step.<a href="#section-6.2-8" class="pilcrow">¶</a></p>
 <div id="stun-cidfi-nonce-attribute">
 <section id="section-6.2.1">
           <h4 id="name-stun-cidfi-nonce-attribute">
@@ -2080,10 +2143,16 @@ of the QUIC CIDFI transport parameter is remembered for 0-RTT, the
 client can immediately send the nonce.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
 <p id="section-6.3-2">The primary purpose of a second Connection ID is connection migration
 (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).  With CIDFI, additional Connection IDs are
-necessary to:
-  * maintain CIDFI operation when topology remains the same.
-  * use Destination Connection ID to indicate packet importance<a href="#section-6.3-2" class="pilcrow">¶</a></p>
-<p id="section-6.3-3">To maintain CIDFI operation when topology remains the same, the
+necessary to:<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.3-3.1">
+            <p id="section-6.3-3.1.1">maintain CIDFI operation when topology remains the same.<a href="#section-6.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-3.2">
+            <p id="section-6.3-3.2.1">use Destination Connection ID to indicate packet importance<a href="#section-6.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.3-4">To maintain CIDFI operation when topology remains the same, the
 CIDFI client signals the CNEs of that 'next'
 Destination CID.  When QUIC detects a topology change, however, that
 Destination CID <span class="bcp14">MUST NOT</span> be used by the peer, otherwise it links
@@ -2091,24 +2160,24 @@ the communication on the old topology to the new topology (<span><a href="https:
 Thus, an additional Connection ID is purposefully not communicated
 from the CIDFI client to its CNEs, so that
 Connection ID can be immediately used by the peer during connection
-migration when the topology changes.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
-<p id="section-6.3-4">Note that the source IP address and source UDP port number are not signaled
+migration when the topology changes.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
+<p id="section-6.3-5">Note that the source IP address and source UDP port number are not signaled
 by design.  This is because NATs (<span>[<a href="#NAPT" class="cite xref">NAPT</a>]</span>,
 <span>[<a href="#NAT" class="cite xref">NAT</a>]</span>), multiple NATs on the path, IPv6/IPv4 translation,
 similar technologies, and QUIC connection migration all complicate
 accurate signaling of the source IP address and source UDP port
-number.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
-<p id="section-6.3-5">If the CNE receives the HTTPS map request but has not
+number.<a href="#section-6.3-5" class="pilcrow">¶</a></p>
+<p id="section-6.3-6">If the CNE receives the HTTPS map request but has not
 yet seen the STUN nonce message it rejects the mapping request with a
 403 and provides a new nonce.  The new nonce avoids the problem of an
 attacker seeing the previous nonce and using that nonce on its own UDP
 4-tuple.  The client then sends a new STUN message with that new nonce
 value and send a new HTTPS mapping request(s).  This interaction is
-highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="auto internal xref">Figure 7</a>.<a href="#section-6.3-5" class="pilcrow">¶</a></p>
+highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="auto internal xref">Figure 7</a>.<a href="#section-6.3-6" class="pilcrow">¶</a></p>
 <span id="name-example-of-a-client-re-tran"></span><div id="ex-lost-nonce">
 <figure id="figure-7">
-          <div id="section-6.3-6.1">
-            <div class="alignCenter art-svg artwork" id="section-6.3-6.1.1">
+          <div id="section-6.3-7.1">
+            <div class="alignCenter art-svg artwork" id="section-6.3-7.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="496" width="512" viewBox="0 0 512 496" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 24,64 L 24,144" fill="none" stroke="black"></path>
                 <path d="M 24,176 L 24,480" fill="none" stroke="black"></path>
@@ -2200,14 +2269,17 @@ highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="au
                   <text x="320" y="436">importance"</text>
                   <text x="52" y="468">Ok</text>
                 </g>
-              </svg><a href="#section-6.3-6.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-6.3-7.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
 <a href="#name-example-of-a-client-re-tran" class="selfRef">Example of a Client Re-transmitting Lost Nonce</a>
           </figcaption></figure>
 </div>
-<p id="section-6.3-7">There are two types of metadata exchanged, described in the following sub-sections.<a href="#section-6.3-7" class="pilcrow">¶</a></p>
+<p id="section-6.3-8">After the initial metadata is exchanged, processing continues with
+ongoing host-to-network and network-to-host updates as described in
+<a href="#ongoing" class="auto internal xref">Section 7</a>.<a href="#section-6.3-8" class="pilcrow">¶</a></p>
+<p id="section-6.3-9">There are two types of metadata exchanged, described in the following sub-sections.<a href="#section-6.3-9" class="pilcrow">¶</a></p>
 <div id="host-to-network">
 <section id="section-6.3.1">
           <h4 id="name-host-to-network-signaling">
@@ -2369,25 +2441,27 @@ update more frequently than once every second.<a href="#section-6.3.2-4" class="
       <h2 id="name-ongoing-signaling">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-ongoing-signaling" class="section-name selfRef">Ongoing Signaling</a>
       </h2>
-<p id="section-7-1">Typically, due to environmental changes on wireless networks or other user's
+<p id="section-7-1">Throughout the life of the connection host-to-network and network-to-host
+signaling is updated whenever characteristics change. Still, some policies are provided to control when these updates are triggers. Such policies are meant to preserve the connection stability.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Typically, due to environmental changes on wireless networks or other user's
 traffic patterns, a particular flow may be able to operate faster or
 might need to operate slower.  The relevant CNE <span class="bcp14">SHOULD</span> signal
 such conditions to the client (<a href="#network-to-host" class="auto internal xref">Section 6.3.2</a>), which can then
 relay that information to the server using either CIDFI or via its
-application.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">For example, a  streaming video client might be retrieving low quality
+application.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">For example, a  streaming video client might be retrieving low quality
 video because one of their invoked CNEs indicated constrained
 bandwidth.  Later, after moving closer to an antenna, more bandwidth is
 available which is signaled by the CNE to the client.
 The client uses that signal to now request higher-quality video from
-the server.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">Similarly, the CIDFI client may begin receiving traffic
+the server.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">Similarly, the CIDFI client may begin receiving traffic
 with different characteristics which might be be signaled to the CIDFI
-Network Elements.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">For example, a client might be participating in an audio-only call
+Network Elements.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">For example, a client might be participating in an audio-only call
 which is modified to audio and video, requiring additional bandwidth
 and likely new CIDs to differentiate the video packets from the audio
-packets.<a href="#section-7-4" class="pilcrow">¶</a></p>
+packets.<a href="#section-7-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="load-balancers">
@@ -2395,7 +2469,7 @@ packets.<a href="#section-7-4" class="pilcrow">¶</a></p>
       <h2 id="name-interaction-with-load-balan">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-interaction-with-load-balan" class="section-name selfRef">Interaction with Load Balancers</a>
       </h2>
-<p id="section-8-1">HTTPS servers, including QUIC servers, are frequently behind load balancers.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">QUIC servers are likely to be behind CID-aware load balancers <span>[<a href="#I-D.ietf-quic-load-balancers" class="cite xref">I-D.ietf-quic-load-balancers</a>]</span>.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <p id="section-8-2">With CIDFI, all the communications to the load-balanced QUIC server are over the same UDP 4-tuple
 as the primary QUIC connection but in a different QUIC stream.  This means
 no changes are required to ECMP load balancers or to CID-aware load balancers
@@ -2721,10 +2795,10 @@ effect of using fixed identifier (DCIDs) rather than encrypting
 the packet importance.  This was a design trade-off to reduce the
 CPU effort on the CNEs.  A mitigation is using
 several DCIDs for every packet importance.<a href="#section-13-1" class="pilcrow">¶</a></p>
-<p id="section-13-2">Communications are relayed through the client because only the
-client and server knows the identity of the server and can validate
-its certificate.  The protocol in this specification does not disclose
-the server's identity to the CIDFI network element.<a href="#section-13-2" class="pilcrow">¶</a></p>
+<p id="section-13-2">Other than what can be inferred from a destination IP address, the server's identity is not disclosed to the CIDFI Network Elements,
+thus maintaining the end user's privacy.  Communications are relayed through the client because only the
+client knows the identity of the server and can validate
+its certificate.<a href="#section-13-2" class="pilcrow">¶</a></p>
 <p id="section-13-3">For an attacker to succeed with the nonce challenge against a victim's
 UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE packet using
 the victim's source IP address and a valid HMAC.  A valid HMAC can
@@ -2886,10 +2960,6 @@ example: "/metadata"
         <dd>
 <span class="refAuthor">Rescorla, E., Ed.</span>, <span class="refAuthor">Tschofenig, H., Ed.</span>, <span class="refAuthor">Fossati, T.</span>, and <span class="refAuthor">A. Kraus</span>, <span class="refTitle">"Connection Identifier for DTLS 1.2"</span>, <span class="seriesInfo">RFC 9146</span>, <span class="seriesInfo">DOI 10.17487/RFC9146</span>, <time datetime="2022-03" class="refDate">March 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9146">https://www.rfc-editor.org/rfc/rfc9146</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-dnsop-svcb-https">[I-D.ietf-dnsop-svcb-https]</dt>
-        <dd>
-<span class="refAuthor">Schwartz, B. M.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service Binding and Parameter Specification via the DNS (SVCB and HTTPS Resource Records)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-svcb-https-12</span>, <time datetime="2023-03-11" class="refDate">11 March 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="QUIC">[QUIC]</dt>
         <dd>
 <span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
@@ -2922,6 +2992,10 @@ example: "/metadata"
         <dd>
 <span class="refAuthor">Pfister, P.</span>, <span class="refAuthor">Vyncke, É.</span>, <span class="refAuthor">Pauly, T.</span>, <span class="refAuthor">Schinazi, D.</span>, and <span class="refAuthor">W. Shao</span>, <span class="refTitle">"Discovering Provisioning Domain Names and Data"</span>, <span class="seriesInfo">RFC 8801</span>, <span class="seriesInfo">DOI 10.17487/RFC8801</span>, <time datetime="2020-07" class="refDate">July 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8801">https://www.rfc-editor.org/rfc/rfc8801</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC9460">[RFC9460]</dt>
+        <dd>
+<span class="refAuthor">Schwartz, B.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service Binding and Parameter Specification via the DNS (SVCB and HTTPS Resource Records)"</span>, <span class="seriesInfo">RFC 9460</span>, <span class="seriesInfo">DOI 10.17487/RFC9460</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9460">https://www.rfc-editor.org/rfc/rfc9460</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="STUN">[STUN]</dt>
       <dd>
 <span class="refAuthor">Petit-Huguenin, M.</span>, <span class="refAuthor">Salgueiro, G.</span>, <span class="refAuthor">Rosenberg, J.</span>, <span class="refAuthor">Wing, D.</span>, <span class="refAuthor">Mahy, R.</span>, and <span class="refAuthor">P. Matthews</span>, <span class="refTitle">"Session Traversal Utilities for NAT (STUN)"</span>, <span class="seriesInfo">RFC 8489</span>, <span class="seriesInfo">DOI 10.17487/RFC8489</span>, <time datetime="2020-02" class="refDate">February 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8489">https://www.rfc-editor.org/rfc/rfc8489</a>&gt;</span>. </dd>
@@ -2950,6 +3024,10 @@ example: "/metadata"
 <dt id="I-D.ietf-moq-requirements">[I-D.ietf-moq-requirements]</dt>
         <dd>
 <span class="refAuthor">Gruessing, J.</span> and <span class="refAuthor">S. Dawkins</span>, <span class="refTitle">"Media Over QUIC - Use Cases and Requirements for Media Transport Protocol Design"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-requirements-02</span>, <time datetime="2023-09-29" class="refDate">29 September 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-requirements-02">https://datatracker.ietf.org/doc/html/draft-ietf-moq-requirements-02</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-quic-load-balancers">[I-D.ietf-quic-load-balancers]</dt>
+        <dd>
+<span class="refAuthor">Duke, M.</span>, <span class="refAuthor">Banks, N.</span>, and <span class="refAuthor">C. Huitema</span>, <span class="refTitle">"QUIC-LB: Generating Routable QUIC Connection IDs"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-load-balancers-17</span>, <time datetime="2023-08-15" class="refDate">15 August 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-quic-load-balancers-17">https://datatracker.ietf.org/doc/html/draft-ietf-quic-load-balancers-17</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.joras-sadcdn">[I-D.joras-sadcdn]</dt>
         <dd>
