@@ -156,6 +156,62 @@ some of the traffic during these events. Network-to-host signals are useful
 to put in place adequate traffic distribution policies (e.g., prefer the use of alternate paths,
 offload a network).
 
+{{design-approaches}} depicts examples of approaches to establish channels to convey
+and share metadata between hosts, networks, and servers. This document adheres to the
+the client-centric metadata sharing approach because it preserves privacy and also
+takes advantage of clients having a full view on their available network attachments.
+
+~~~~~ aasvg
+(1)	Proxied Connection
+                  .----------------.           .--------.
+                  |                |         .-------.  |
+.------.          |                |        .-------. |-'
+│Client+----------+   Network(s)   +--------+Server |-'
+'------'          |                |        '-------'
+    |             '----------------'           |
+    |                     |                    |
+    |/-------------------\|/------------------\|
+    | User Data + Metadata|User Data + Metadata|
+    |\-------------------/|\------------------/|
+    |  Secure Connection  |  Secure Connection |
+
+(2)	Out-of-band Metadata Sharing
+                  .----------------.           .--------.
+                  |                |         .-------.  |
+.------.          |                |        .-------. |-'
+│Client+----------+   Network(s)   +--------+Server |-'
+'------'          |                |        '-------'
+    |             '----------------'           |
+    |                     |                    |
+    |                     |                    |
+    |/----------------------------------------\|
+    |End-to-End Secure Connection + User Data  +----.
+    |\----------------------------------------/ GLUE|
+    |/-------------------\|/------------------\  CXs|
+    | Metadata (Optional) |    Metadata        +----'
+    |\-------------------/|\------------------/|
+    |                     |                    |
+
+(3)	Client-centric Metadata Sharing
+                  .----------------.           .--------.
+                  |                |         .-------.  |
+.------.          |                |        .-------. |-'
+│Client+----------+   Network(s)   +--------+Server |-'
+'------'          |                |        '-------'
+    |             '----------------'           |
+    |                     |                    |
+    |/-------------------\|                    |
+    |      Metadata       |                    |
+    |\-------------------/|                    |
+    |  Secure Connection  |                    |
+    |/----------------------------------------\|
+    |        End-to-End Secure Connection      |
+    |             User Data + Metadata         |
+    |\----------------------------------------/|
+    |                     |                    |
+~~~~~
+{: #design-approaches artwork-align="center" title="Candidate Design Approaches" :height=88}
+
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
 connection or a DTLS connection {{DTLS-CID}} from the network to the
