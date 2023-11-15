@@ -156,6 +156,62 @@ Table of Contents
    distribution policies (e.g., prefer the use of alternate paths,
    offload a network).
 
+   Figure 1 depicts examples of approaches to establish channels to
+   convey and share metadata between hosts, networks, and servers.  This
+   document adheres to the the client-centric metadata sharing approach
+   because it preserves privacy and also takes advantage of clients
+   having a full view on their available network attachments.
+
+         (1)     Proxied Connection
+                           .----------------.           .--------.
+                           |                |         .-------.  |
+         .------.          |                |        .-------. |-'
+         │Client+----------+   Network(s)   +--------+Server |-'
+         '------'          |                |        '-------'
+             |             '----------------'           |
+             |                     |                    |
+             |/-------------------\|/------------------\|
+             | User Data + Metadata|User Data + Metadata|
+             |\-------------------/|\------------------/|
+             |  Secure Connection  |  Secure Connection |
+
+         (2)     Out-of-band Metadata Sharing
+                           .----------------.           .--------.
+                           |                |         .-------.  |
+         .------.          |                |        .-------. |-'
+         │Client+----------+   Network(s)   +--------+Server |-'
+         '------'          |                |        '-------'
+             |             '----------------'           |
+             |                     |                    |
+             |                     |                    |
+             |/----------------------------------------\|
+             |End-to-End Secure Connection + User Data  +----.
+             |\----------------------------------------/ GLUE|
+             |/-------------------\|/------------------\  CXs|
+             | Metadata (Optional) |    Metadata        +----'
+             |\-------------------/|\------------------/|
+             |                     |                    |
+
+         (3)     Client-centric Metadata Sharing
+                           .----------------.           .--------.
+                           |                |         .-------.  |
+         .------.          |                |        .-------. |-'
+         │Client+----------+   Network(s)   +--------+Server |-'
+         '------'          |                |        '-------'
+             |             '----------------'           |
+             |                     |                    |
+             |/-------------------\|                    |
+             |      Metadata       |                    |
+             |\-------------------/|                    |
+             |  Secure Connection  |                    |
+             |/----------------------------------------\|
+             |        End-to-End Secure Connection      |
+             |             User Data + Metadata         |
+             |\----------------------------------------/|
+             |                     |                    |
+
+                   Figure 1: Candidate Design Approaches
+
    This document defines CIDFI (pronounced "sid fye") which is a system
    of several protocols that allow communicating about a [QUIC]
    connection or a DTLS connection [DTLS-CID] from the network to the
@@ -183,7 +239,7 @@ Table of Contents
    deployments may envisaged (e.g., network and client support, network,
    client, and server support)
 
-   Figure 1 provides a sample network diagram of a CIDFI system showing
+   Figure 2 provides a sample network diagram of a CIDFI system showing
    two bandwidth-constrained networks (or links) depicted by "B" and
    CIDFI-aware devices immediately upstream of those links, and another
    bandwidth-constrained link between a smartphone handset and its Radio
@@ -192,7 +248,7 @@ Table of Contents
    different administrative domains such as Wi-Fi, an ISP edge router,
    and a 5G RAN.
 
-   For the sake of illustration, Figure 1 simplifies the representation
+   For the sake of illustration, Figure 2 simplifies the representation
    of the various involved network segments.  It also assumes that
    multiple server instances are enabled in the server network but the
    document does not make any assumption about the internal structure of
@@ -220,7 +276,7 @@ Table of Contents
                        |                     | Transit  |  Server
       User Network     |    ISP Network      | Network  |  Network
 
-                         Figure 1: Network Diagram
+                         Figure 2: Network Diagram
 
    The CIDFI-aware client establishes a TLS connection with the CIDFI-
    aware network elements (Wi-Fi access point, edge router, and RAN
@@ -355,7 +411,7 @@ Table of Contents
        cidfimetadata=/cidfi-metadata
        )
 
-                     Figure 2: Example of SVCB Records
+                     Figure 3: Example of SVCB Records
 
    When multihoming, the multihome-capable CPE aggregates all upstream
    networks' "_cidfi-aware.cidfi.arpa" responses into the response sent
@@ -367,7 +423,7 @@ Table of Contents
    request PvD Additional Information (Section 4.1 of [RFC8801]).
 
    The "application/pvd+json" returned looks like what is depicted in
-   Figure 3 when there are two CIDFI-aware network elements, service-
+   Figure 4 when there are two CIDFI-aware network elements, service-
    cidfi and wi-fi.
 
            {
@@ -385,7 +441,7 @@ Table of Contents
               ]
            }
 
-                    Figure 3: Example of PvD Information
+                    Figure 4: Example of PvD Information
 
    Multiple CIDFI-aware network elements on a network path will require
    propagating the Provisioning Domain Additional Information.  For
@@ -473,7 +529,7 @@ Table of Contents
       ]
    }
 
-                 Figure 4: Example of CIDFI HMAC and Nonce
+                 Figure 5: Example of CIDFI HMAC and Nonce
 
 6.  Client Operation on Each Connection to a QUIC Server
 
@@ -548,7 +604,7 @@ Table of Contents
    CNEs the single STUN indication contains a CIDFI-NONCE attribute from
    each of them.  This message is discarded by the QUIC server.
 
-   Figure 5 shows a summarized message flow obtaining the nonce and HMAC
+   Figure 6 shows a summarized message flow obtaining the nonce and HMAC
    secret from the CNE then later sending the nonce and HMAC in the same
    UDP 4-tuple towards the QUIC server:
 
@@ -577,7 +633,7 @@ Table of Contents
         |  HTTPS: Ok                         |                  |
         |<-----------------------------------+                  |
 
-                     Figure 5: Example of Flow Exhange
+                     Figure 6: Example of Flow Exhange
 
    The short header's Destination Connection ID (DCID) can be 0 bytes or
    as short as 8 bits, so multiple QUIC clients are likely to use the
@@ -604,7 +660,7 @@ Table of Contents
 
 6.2.1.  STUN CIDFI-NONCE Attribute
 
-   The format of the STUN CIDFI-NONCE attribute is shown in Figure 6.
+   The format of the STUN CIDFI-NONCE attribute is shown in Figure 7.
 
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -624,7 +680,7 @@ Table of Contents
      |                                                               |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-               Figure 6: Format of STUN CIDFI-NONCE Attribute
+               Figure 7: Format of STUN CIDFI-NONCE Attribute
 
    The nonce is 128 bits obtained from the CIDFI network element.  The
    HMAC-output field is computed per [RFC5869] using the CIDFI network
@@ -674,7 +730,7 @@ Table of Contents
    UDP 4-tuple.  The client then sends a new STUN message with that new
    nonce value and send a new HTTPS mapping request(s).  This
    interaction is highlighted in the simplified message flow in
-   Figure 7.
+   Figure 8.
 
                                        CIDFI-aware            QUIC
       client                           edge router           server
@@ -706,7 +762,7 @@ Table of Contents
         |  Ok                                |                  |
         |<-----------------------------------+                  |
 
-          Figure 7: Example of a Client Re-transmitting Lost Nonce
+          Figure 8: Example of a Client Re-transmitting Lost Nonce
 
    After the initial metadata is exchanged, processing continues with
    ongoing host-to-network and network-to-host updates as described in
@@ -724,7 +780,7 @@ Table of Contents
 
    The communication from the client to the server are using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
-   communication (Figure 8).
+   communication (Figure 9).
 
                       CIDFI-aware       CIDFI-aware
        client     Wi-Fi Access Point    edge router           server
@@ -743,7 +799,7 @@ Table of Contents
          |  QUIC CIDFI stream: Ok             |                  |
          +------------------------------------------------------>|
 
-                  Figure 8: Example of CIDIF Communication
+                  Figure 9: Example of CIDIF Communication
 
    To each of the network elements authorized by the client, the client
    sends the mappings of the server's transmitted Destination CIDs to
@@ -753,7 +809,7 @@ Table of Contents
 
    The CNE sends network performance information to the server which is
    intended to influence the sender's traffic rate (such as improving or
-   reducing fidelity of the audio or video).  In Figure 9, the CNE
+   reducing fidelity of the audio or video).  In Figure 10, the CNE
    informs the client of reduced bandwidth and the client informs the
    server using CIDFI.
 
@@ -769,7 +825,7 @@ Table of Contents
             |  Ok              |                 |            |
             +----------------------------------->|            |
 
-      Figure 9: Example of CIDIFI Communication with Metadata Sharing
+      Figure 10: Example of CIDIFI Communication with Metadata Sharing
 
    The communication from the client to the server is using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
@@ -881,7 +937,7 @@ Table of Contents
 
    Over the CIDFI-dedicated QUIC stream, the server sends mapping
    information to the client when then propagates that information to
-   each of the CNEs.  An example is shown in Figure 10.
+   each of the CNEs.  An example is shown in Figure 11.
 
    {
       "metadata-parameters":[
@@ -920,7 +976,7 @@ Table of Contents
       ]
    }
 
-                Figure 10: Example JSON for Flow Importance
+                Figure 11: Example JSON for Flow Importance
 
 10.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
 
@@ -939,7 +995,7 @@ Table of Contents
    information to the client when then propagates that information to
    each of the CNEs.
 
-   An example is shown in Figure 11.
+   An example is shown in Figure 12.
 
    {
       "dscp":[
@@ -966,7 +1022,7 @@ Table of Contents
       ]
    }
 
-                  Figure 11: Example JSON for DSCP Mapping
+                  Figure 12: Example JSON for DSCP Mapping
 
 10.2.  CIDFI-aware Network Element to Server
 
