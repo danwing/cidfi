@@ -164,53 +164,46 @@ Table of Contents
    because it preserves privacy and also takes advantage of clients
    having a full view on their available network attachments.
 
-          (1)  Proxied Connection
-                            .--------------.             +------+
-                           |                |          +-+----+ |
-          +------+         |   Network(s)   |        +-+----+ +-+
-          |Client+---------)----------------(--------+Server+-+
-          +------+         |                |        +------+
-              |             '--------------'             |
-              |                     |                    |
-              |/-------------------\|/------------------\|
-              + User Data + Metadata+User Data + Metadata+
-              |\-------------------/|\------------------/|
-              |  Secure Connection  |  Secure Connection |
+   (1)  Proxied Connection
+                          .--------------.                   +------+
+                         |                |                +-+----+ |
+   +------+              |   Network(s)   |              +-+----+ +-+
+   |Client+--------------)----------------(--------------+Server+-+
+   +---+--+              |                |              +---+--+
+       |                  '-------+------'                   |
+       |                          |                          |
+       +<===User Data+Metadata===>+<===User Data+Metadata===>+
+       |   Secure Connection 1    |   Secure Connection 2    |
+       |                          |                          |
 
-          (2)  Out-of-band Metadata Sharing
-                            .--------------.             +------+
-                           |                |          +-+----+ |
-          +------+         |   Network(s)   |        +-+----+ +-+
-          |Client+---------)----------------(--------+Server+-+
-          +------+         |                |        +------+
-              |             '--------------'             |
-              |                      |                   |
-              |/----------------------------------------\|
-              +End-to-End Secure Connection + User Data  +<----.
-              |\----------------------------------------/|  GLUE|
-              |                      |                   |      |
-              |/--------------------\|/-----------------\|   CXs|
-              + Metadata (Optional)  +    Metadata       +<----'
-              |\--------------------/|\-----------------/|
-              |                      |                   |
+   (2)  Out-of-band Metadata Sharing
+                           .--------------.                  +------+
+                          |                |               +-+----+ |
+   +------+               |   Network(s)   |             +-+----+ +-+
+   |Client+---------------)----------------(-------------+Server+-+
+   +---+--+               |                |             +---+--+
+       |                   '-------+------'                  |
+       |                           |                         |
+       +<-----End-to-End Secure Connection + User Data------>+<---.
+       |                           |                         | GLUE|
+       |                           |                         | CXs |
+       +<-- Metadata (Optional) -->+<----- Metadata -------->+<---'
+       |    Secure Connection 1    |    Secure Connection 2  |
+       |                           |                         |
 
-          (3)  Client-centric Metadata Sharing
-                            .--------------.             +------+
-                           |                |          +-+----+ |
-          +------+         |   Network(s)   |        +-+----+ +-+
-          |Client+---------)----------------(--------+Server+-+
-          +------+         |                |        +------+
-              |             '--------------'             |
-              |                     |                    |
-              |/-------------------\|                    |
-              +      Metadata       +                    |
-              |\-------------------/|                    |
-              |  Secure Connection  |                    |
-              |/----------------------------------------\|
-              +        End-to-End Secure Connection      +
-              +             User Data + Metadata         +
-              |\----------------------------------------/|
-              |                     |                    |
+   (3)  Client-centric Metadata Sharing
+                             .--------------.                  +------+
+                            |                |               +-+----+ |
+   +------+                 |   Network(s)   |             +-+----+ +-+
+   |Client+-----------------)----------------(-------------+Server+-+
+   +---+--+                 |                |             +---+--+
+       |                     '-------+------'                  |
+       |                             |                         |
+       +<--------- Metadata -------->+                         |
+       |        Secure Connection    |                         |
+       |                             |                         |
+       +<== End-to-End Secure Connection User Data+Metadata ==>+
+       |                             |                         |
 
                    Figure 1: Candidate Design Approaches
 
