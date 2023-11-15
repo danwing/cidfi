@@ -225,7 +225,7 @@ relaying through the client.
 
 {{host-to-network}} describes host-to-network
 metadata signaling similar to the use cases described in {{Section 3
-of I-D.joras-sadcdn}}.  The host-to-network metadata signaling can
+of ?I-D.joras-sadcdn}}.  The host-to-network metadata signaling can
 also benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
 
 CIDFI brings benefits to QUIC and DTLS because those protocols are of
@@ -304,7 +304,7 @@ and mapped to integrity-protected QUIC (or DTLS) Connection Identifiers.
 The network is configured to advertise its support for CIDFI.
 
 For this step, four mechanisms are described in this document: DNS
-SVCB records {{!I-D.ietf-dnsop-svcb-https}}, IPv6 Provisioning Domains (PvD) {{!RFC8801}}, DHCP {{!RFC2131}}{{!RFC8415}}, and 3GPP PCO.
+SVCB records {{!RFC9460}}, IPv6 Provisioning Domains (PvD) {{!RFC8801}}, DHCP {{!RFC2131}}{{!RFC8415}}, and 3GPP PCO.
 These are described in the following sub-sections.
 
 > Standardizing all or some of these mechanisms is for further discussion.
@@ -317,8 +317,8 @@ This document defines a new DNS Service Binding parameter "cidfi-aware" in
 {{iana-sudn}}.
 
 The local network is configured to respond to DNS SVCB
-{{!I-D.ietf-dnsop-svcb-https}} queries with ServiceMode ({{Section
-2.4.3 of !I-D.ietf-dnsop-svcb-https}}) for "_cidfi-aware.cidfi.arpa" with
+{{!RFC9460}} queries with ServiceMode ({{Section
+2.4.3 of !RFC9460}}) for "_cidfi-aware.cidfi.arpa" with
 the DNS names of that network's and upstream network's CIDFI-aware
 network elements (CNEs).  If upstream networks also support CIDFI (e.g., the
 ISP network) those SVCB records are aggregated into the local DNS
@@ -414,7 +414,7 @@ In all cases below,
 The client determines if the local network provides CIDFI service by
 issuing a query to the local DNS server for
 "_cidfi-aware.cidfi.arpa." with the SVCB resource record type (64)
-{{I-D.ietf-dnsop-svcb-https}}.
+{{!RFC9460}}.
 
 ### Client Learns Using Provisioning Domain
 
