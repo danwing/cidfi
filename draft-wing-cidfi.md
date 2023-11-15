@@ -187,9 +187,9 @@ takes advantage of clients having a full view on their available network attachm
     |/----------------------------------------\|
     |End-to-End Secure Connection + User Data  +----.
     |\----------------------------------------/ GLUE|
-    |                     |/------------------\  CXs|
-    |                     |    Metadata        +----'
-    |                     |\------------------/|
+    |/-------------------\|/------------------\  CXs|
+    | Metadata (Optional) |    Metadata        +----'
+    |\-------------------/|\------------------/|
     |                     |                    |
 
 (3)	Client-centric Metadata Sharing
