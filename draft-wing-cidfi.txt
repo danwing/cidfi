@@ -144,10 +144,11 @@ Table of Contents
    consumes more bandwidth which then gets dropped by the network).
 
    Due to network constraints a network element will need to drop or
-   even prioritize a packet ahead of other packets.  The decision of
-   which packet to drop or prioritize is improved if the network element
-   knows the importance of the packet.  Metadata carried in each packet
-   can influence that decision to improve the user experience.
+   even prioritize a packet ahead of other packets of the same flow.
+   The decision of which packet to drop or prioritize is improved if the
+   network element knows the importance of the packet.  Metadata carried
+   in each packet can influence that decision to improve the user
+   experience.
 
    There are also exceptional cases (crisis) where "normal" network
    resources cannot be used at maximum and, thus, a network would seek
@@ -158,7 +159,7 @@ Table of Contents
 
    Figure 1 depicts examples of approaches to establish channels to
    convey and share metadata between hosts, networks, and servers.  This
-   document adheres to the the client-centric metadata sharing approach
+   document adheres to the client-centric metadata sharing approach
    because it preserves privacy and also takes advantage of clients
    having a full view on their available network attachments.
 
@@ -236,8 +237,8 @@ Table of Contents
       adapt to local network conditions.
 
    CIDFI does not require that all these steps are enabled.  Incremental
-   deployments may envisaged (e.g., network and client support, network,
-   client, and server support)
+   deployments may be envisaged (e.g., network and client support,
+   network, client, and server support)
 
    Figure 2 provides a sample network diagram of a CIDFI system showing
    two bandwidth-constrained networks (or links) depicted by "B" and
@@ -859,8 +860,7 @@ Table of Contents
    uses that signal to now request higher-quality video from the server.
 
    Similarly, the CIDFI client may begin receiving traffic with
-   different characteristics which might be be signaled to the CIDFI
-   Network Elements.
+   different characteristics which might be be signaled to the CNEs.
 
    For example, a client might be participating in an audio-only call
    which is modified to audio and video, requiring additional bandwidth
@@ -1087,7 +1087,7 @@ Table of Contents
    cooperate to share the primary QUIC connection's Destination CID,
    when a new CIDFI network element is involved (e.g., due to client
    attaching to a different network), a new Destination CID SHOULD be
-   used for the reasons discussed in Section 9.5 of [QUIC]}.
+   used for the reasons discussed in Section 9.5 of [QUIC]).
 
    We need clear way to signal which DCIDs can be used for 'this'
    network attach and which DCIDs are for a migrated connection.
@@ -1103,7 +1103,8 @@ Table of Contents
    application; however, this signal cannot be relied upon due to
    network disconnect, battery depletion, and suchlike.
 
-      probably want keepalives on client->CNE communication.  TODO.
+      TODO: Probably want keepalives on client->CNE communication.  To
+      be assessed.
 
 13.  Security Considerations
 
