@@ -162,7 +162,7 @@ the client-centric metadata sharing approach because it preserves privacy and al
 takes advantage of clients having a full view on their available network attachments.
 
 ~~~~~ aasvg
-(1)	Proxied Connection
+(1)  Proxied Connection
                   .----------------.           .--------.
                   |                |         .-------.  |
 .------.          |                |        .-------. |-'
@@ -175,7 +175,7 @@ takes advantage of clients having a full view on their available network attachm
     |\-------------------/|\------------------/|
     |  Secure Connection  |  Secure Connection |
 
-(2)	Out-of-band Metadata Sharing
+(2)  Out-of-band Metadata Sharing
                   .----------------.           .--------.
                   |                |         .-------.  |
 .------.          |                |        .-------. |-'
@@ -192,7 +192,7 @@ takes advantage of clients having a full view on their available network attachm
     |\-------------------/|\------------------/|
     |                     |                    |
 
-(3)	Client-centric Metadata Sharing
+(3)  Client-centric Metadata Sharing
                   .----------------.           .--------.
                   |                |         .-------.  |
 .------.          |                |        .-------. |-'
