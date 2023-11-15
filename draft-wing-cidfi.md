@@ -177,7 +177,6 @@ CIDFI does not require that all these steps are enabled. Incremental
 deployments may envisaged (e.g., network and client support, network, client,
 and server support)
 
-
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
 CIDFI-aware devices immediately upstream of those links, and another
@@ -256,8 +255,10 @@ as discussed in {{extending}}.
 
 {::boilerplate bcp14-tagged}
 
+The document makes use of the following terms:
+
 CID:
-: Connection Identifier used by {{QUIC}} or by {{DTLS-CID}}.
+: Connection Identifier used by {{QUIC}} or {{DTLS-CID}}.
 
 CNE:
 : CIDFI-aware Network Element, a network element that
