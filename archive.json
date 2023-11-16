@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-14T01:12:27.996639+00:00",
+  "timestamp": "2023-11-16T01:15:17.444951+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -95,6 +95,103 @@
           "body": "outdated",
           "createdAt": "2023-11-06T19:38:32Z",
           "updatedAt": "2023-11-06T19:38:42Z"
+        }
+      ]
+    },
+    {
+      "number": 26,
+      "id": "I_kwDOKCXv8852vxQ2",
+      "title": "See if csig is relevant to this work",
+      "url": "https://github.com/danwing/cidfi/issues/26",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://datatracker.ietf.org/doc/draft-ravi-ippm-csig/",
+      "createdAt": "2023-11-14T08:30:30Z",
+      "updatedAt": "2023-11-15T19:02:02Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "VMatrix1900",
+          "authorAssociation": "NONE",
+          "body": "Hi, I would like to bring another draft of extending QUIC CID to your attention. See https://datatracker.ietf.org/doc/draft-shi-quic-structured-connection-id/",
+          "createdAt": "2023-11-14T09:18:12Z",
+          "updatedAt": "2023-11-14T09:18:12Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "CSIG seems to have the network elements tag packets with new information at layer 2, which is eventually received by the end host and reflected back to the sender in TCP option or -- somehow -- in UDP.  This seems to require layer 2 to support CSIG from the network element doing CSIG to the host receiving the packet, as well as the host receiving the packet to pull that information from layer 2 header and hand to the (application?) stack to reflect in a TCP option (somehow; there aren't great APIs for doing that on iOS or Windows) or into UDP payload.  \r\n\r\nSorry, feels like a research project where all the parts can be controlled by someone wanting to build this idea.  Like a software-oriented datacenter.\r\n\r\nI don't see it working on the Internet but perhaps I cannot think grand enough?",
+          "createdAt": "2023-11-14T21:16:30Z",
+          "updatedAt": "2023-11-14T21:16:30Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "@VMatrix1900, regarding draft-shi-quic-structured-connection-id, I have tons of questions.  How is Configuration Agent discovered by client, and how by server, how does configuration agent know which Intermediary to signal, who would operate the Configuration Agent (the client's [Wi-Fi] network? The subscriber's ISP? The server's network?  Any and all of those?).  Can there be multiple Intermediaries?  Overall, the network diagram feels like a Software Defined Network that emerged 10-15 years ago, and are still actively used, and which might be useful to leverage for such a system.",
+          "createdAt": "2023-11-14T21:23:45Z",
+          "updatedAt": "2023-11-14T21:23:45Z"
+        },
+        {
+          "author": "VMatrix1900",
+          "authorAssociation": "NONE",
+          "body": "> CSIG seems to have the network elements tag packets with new information at layer 2, which is eventually received by the end host and reflected back to the sender in TCP option or -- somehow -- in UDP. This seems to require layer 2 to support CSIG from the network element doing CSIG to the host receiving the packet, as well as the host receiving the packet to pull that information from layer 2 header and hand to the (application?) stack to reflect in a TCP option (somehow; there aren't great APIs for doing that on iOS or Windows) or into UDP payload.\r\n> \r\n> Sorry, feels like a research project where all the parts can be controlled by someone wanting to build this idea. Like a software-oriented datacenter.\r\n> \r\n> I don't see it working on the Internet but perhaps I cannot think grand enough?\r\n\r\nCSIG is for Datacenter network in which the switch is used to modify the L2 tag. It can not work on the internet.",
+          "createdAt": "2023-11-15T06:08:08Z",
+          "updatedAt": "2023-11-15T06:08:08Z"
+        },
+        {
+          "author": "VMatrix1900",
+          "authorAssociation": "NONE",
+          "body": "> @VMatrix1900, regarding draft-shi-quic-structured-connection-id, I have tons of questions. How is Configuration Agent discovered by client, and how by server, how does configuration agent know which Intermediary to signal, who would operate the Configuration Agent (the client's [Wi-Fi] network? The subscriber's ISP? The server's network? Any and all of those?). Can there be multiple Intermediaries? Overall, the network diagram feels like a Software Defined Network that emerged 10-15 years ago, and are still actively used, and which might be useful to leverage for such a system.\r\n\r\nThe configuration agent is within the same domain as the intermediary. It is location depends on the usecase. In the media use case, the intermediary is the wireless node in the client access network. The configuration agent is the controller of the wireless nodes. In the QUIC-TE use case, the intermediary is in the server's network (Cloud WAN). The conguration agent is the controller of the Cloud WAN. It looks like SDN indeed.",
+          "createdAt": "2023-11-15T06:21:31Z",
+          "updatedAt": "2023-11-15T06:21:31Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "> In the media use case, the intermediary is the wireless node in the client access network.  The configuration agent is the controller of the wireless nodes.\r\n\r\nWhich means the content server (let's say, \"Facebook\") communicates with the subscriber's Internet Service Provider.  Which means they have to authenticate each other, which means the ISP learns the identity of the content provider.  This means ESNI no longer hides the identity from the ISP (but ESNI would continue to hide the server's identity from other on-path devices, of course).\r\n\r\n> In the QUIC-TE use case, the intermediary is in the server's network (Cloud WAN). The conguration agent is the controller of the Cloud WAN. \r\n\r\nOk.  That model seems similar to draft-ietf-quic-load-balancers, but rather than controlling a load balancer you're controlling the WAN.",
+          "createdAt": "2023-11-15T19:02:02Z",
+          "updatedAt": "2023-11-15T19:02:02Z"
+        }
+      ]
+    },
+    {
+      "number": 34,
+      "id": "I_kwDOKCXv88527RlS",
+      "title": "metadata is not needed for each packet",
+      "url": "https://github.com/danwing/cidfi/issues/34",
+      "state": "CLOSED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/danwing/cidfi/blob/fc1c5d954810610bb9802f95868738c9217f638d/draft-wing-cidfi.md?plain=1#L150\r\n\r\nI thought that I have modified this to cover cases where only a subset of packets are enriched, not all. Any reason why we have all to be so?",
+      "createdAt": "2023-11-15T17:45:40Z",
+      "updatedAt": "2023-11-15T18:17:07Z",
+      "closedAt": "2023-11-15T18:17:07Z",
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "You're right -- we don't need every CID mapped to metadata.  Also as written, that sentence implies the metadata is *in* the IP packet itself.  With CIDFI, that never occurs.  Rather, it's a mapping of CID to metadata.\r\n\r\nAnd, yes, there is no reason to have every CID mapped to metadata.  Those would receive 'default' treatment (whatever that is).",
+          "createdAt": "2023-11-15T17:51:39Z",
+          "updatedAt": "2023-11-15T17:51:39Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> You're right -- we don't need every CID mapped to metadata. Also as written, that sentence implies the metadata is _in_ the IP packet itself. With CIDFI, that never occurs. Rather, it's a mapping of CID to metadata.\r\n> \r\n> And, yes, there is no reason to have every CID mapped to metadata. Those would receive 'default' treatment (whatever that is).\r\n\r\nAgree. I trust you will change the text. Thanks.\r\n",
+          "createdAt": "2023-11-15T17:54:30Z",
+          "updatedAt": "2023-11-15T17:54:30Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "Fixed in #35 ",
+          "createdAt": "2023-11-15T18:16:35Z",
+          "updatedAt": "2023-11-15T18:16:35Z"
         }
       ]
     }
@@ -994,24 +1091,26 @@
       "id": "PR_kwDOKCXv885fFQ5j",
       "title": "No CIDFI, No Cry",
       "url": "https://github.com/danwing/cidfi/pull/23",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Like Bob Marley sang.\r\n\r\nThis was Tiru's observation, now brought to the text of the I-D.",
       "createdAt": "2023-11-09T22:34:26Z",
-      "updatedAt": "2023-11-13T19:37:54Z",
+      "updatedAt": "2023-11-14T18:07:29Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
-      "baseRefOid": "891d4b5d570b5082f2f7d4762447dd14ee3c43e0",
+      "baseRefOid": "9fe0e8e729073f1e659fc37a2915053ff18ec342",
       "headRepository": "danwing/cidfi",
       "headRefName": "server_no_cidfi",
-      "headRefOid": "1c31d99bb95a51c9b14a391f9d7d75bcc404db42",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "cbd4fb14c13db996b0201e599a20f89ffdc3ea9c",
+      "closedAt": "2023-11-14T18:07:28Z",
+      "mergedAt": "2023-11-14T18:07:28Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "83d7485e44e9129e9ea33ce377ec1baa1ff85533"
+      },
       "comments": [],
       "reviews": [
         {
@@ -1066,51 +1165,514 @@
       "id": "PR_kwDOKCXv885fUj8D",
       "title": "rewrite abstract and introduction",
       "url": "https://github.com/danwing/cidfi/pull/24",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Further clarify server is optional, and say network-to-host and host-to-network more times.  :-)",
       "createdAt": "2023-11-13T16:53:29Z",
-      "updatedAt": "2023-11-13T20:57:21Z",
+      "updatedAt": "2023-11-14T18:06:30Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
-      "baseRefOid": "891d4b5d570b5082f2f7d4762447dd14ee3c43e0",
+      "baseRefOid": "00c1237e8e500c43c1c53f95ba0a86732976ae93",
       "headRepository": "danwing/cidfi",
       "headRefName": "abstract_intro",
-      "headRefOid": "afd9a853a50e4e5fe81e34592459ada0f61e1316",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "147ae84e3cd9581f1f56ed7dbd4d6a584b1f7672",
+      "closedAt": "2023-11-14T18:06:29Z",
+      "mergedAt": "2023-11-14T18:06:29Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "9fe0e8e729073f1e659fc37a2915053ff18ec342"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nDj0u",
+          "commit": {
+            "abbreviatedOid": "afd9a85"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "Thanks Dan. Please find here some changes, including adding mentions about policies to control the stability of a connection.",
+          "createdAt": "2023-11-14T06:16:31Z",
+          "updatedAt": "2023-11-14T06:36:02Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\r\nHost-to-network signaling and network-to-host signaling can improve\r\n```",
+              "createdAt": "2023-11-14T06:16:31Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 8,
+              "body": "```suggestion\r\nthe user experience to adapt to network's constraints and share expected application needs, and thus to provide\r\n```",
+              "createdAt": "2023-11-14T06:18:57Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 17,
+              "body": "```suggestion\r\nservice. The proposed approach covers both directions of a flow.\r\n```",
+              "createdAt": "2023-11-14T06:19:56Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 42,
+              "body": "```suggestion\r\nimportance of the packet.  Metadata carried in each packet (or a subset) can inform the\r\n```",
+              "createdAt": "2023-11-14T06:21:26Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 49,
+              "body": "```suggestion\r\nDTLS client stack and at least one CIDFI-aware Network Element\r\n```",
+              "createdAt": "2023-11-14T06:22:57Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 57,
+              "body": "```suggestion\r\nOptionally, a CIDFI-aware server can be deployed which then allows\r\n```",
+              "createdAt": "2023-11-14T06:24:28Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 60,
+              "body": "```suggestion\r\nBy including a CIDFI-aware server in the system the CNE can provide\r\n```",
+              "createdAt": "2023-11-14T06:24:54Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 58,
+              "body": "```suggestion\r\ndifferentiating classes of packets within a flow (e.g., specific QUIC streams).  Those\r\n```",
+              "createdAt": "2023-11-14T06:25:18Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 79,
+              "body": "```suggestion\r\nmapping from Destination CIDs to the packet metadata and maintaining\r\n```",
+              "createdAt": "2023-11-14T06:25:45Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 81,
+              "body": "```suggestion\r\nand to maintain a (D)TLS channel with the client.\r\n```",
+              "createdAt": "2023-11-14T06:26:15Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 128,
+              "body": "```suggestion\r\nCIDFI to operate, a CNE never needs the server's identity, and a CNE is never provided decryption keys for\r\n```",
+              "createdAt": "2023-11-14T06:29:43Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 163,
+              "body": "```suggestion\r\n     described in {{ongoing}}. Some policies are provided to CNEs to control which network changes can triggers updating clients.\r\n```",
+              "createdAt": "2023-11-14T06:31:19Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 178,
+              "body": "```suggestion\r\ndifferentiated behavior.  The client can still signal its CNE(s) about\r\n```",
+              "createdAt": "2023-11-14T06:31:53Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 229,
+              "body": "```suggestion\r\nsignaling is updated whenever characteristics change. Still, some policies are provided to control when these updates are triggers. Such policies are meant to preserve the connection stability.\r\n```",
+              "createdAt": "2023-11-14T06:33:51Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            },
+            {
+              "originalPosition": 239,
+              "body": "```suggestion\r\nQUIC servers are likely to be behind CID-aware load balancers {{?I-D.ietf-quic-load-balancers}}.\r\n```",
+              "createdAt": "2023-11-14T06:34:43Z",
+              "updatedAt": "2023-11-14T06:36:02Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 25,
       "id": "PR_kwDOKCXv885fU8Mx",
       "title": "more explicitly say privacy is maintained in Security Considerations",
       "url": "https://github.com/danwing/cidfi/pull/25",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-11-13T17:55:31Z",
-      "updatedAt": "2023-11-13T17:55:32Z",
+      "updatedAt": "2023-11-14T18:04:57Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "0db26f4de3d9361bd671705df6b40a8bc07077f4",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "privacy",
+      "headRefOid": "0a321123c570781feaf7290d98c14198a4748f62",
+      "closedAt": "2023-11-14T18:04:56Z",
+      "mergedAt": "2023-11-14T18:04:56Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "00c1237e8e500c43c1c53f95ba0a86732976ae93"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nDobf",
+          "commit": {
+            "abbreviatedOid": "545bf15"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "No more data revealed other than what can be (already) inferred from a destination IP address. ",
+          "createdAt": "2023-11-14T06:37:06Z",
+          "updatedAt": "2023-11-14T06:45:40Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\r\nclient knows the identity of the server and can validate\r\n```",
+              "createdAt": "2023-11-14T06:37:06Z",
+              "updatedAt": "2023-11-14T06:45:40Z"
+            },
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nOther than what can be inferred from a destination IP address, the server's identity is not disclosed to the CIDFI Network Elements,\r\n```",
+              "createdAt": "2023-11-14T06:38:09Z",
+              "updatedAt": "2023-11-14T06:45:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885nI8i7",
+          "commit": {
+            "abbreviatedOid": "0a32112"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "yep.",
+          "createdAt": "2023-11-14T18:04:37Z",
+          "updatedAt": "2023-11-14T18:04:37Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 27,
+      "id": "PR_kwDOKCXv885fat9y",
+      "title": "Add a provider-centric use case",
+      "url": "https://github.com/danwing/cidfi/pull/27",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-14T14:33:17Z",
+      "updatedAt": "2023-11-14T18:01:27Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "891d4b5d570b5082f2f7d4762447dd14ee3c43e0",
       "headRepository": "danwing/cidfi",
-      "headRefName": "privacy",
-      "headRefOid": "545bf1557ba888c42f7b2e186b157e8837362a77",
+      "headRefName": "boucadair-patch-3",
+      "headRefOid": "7858b2ba6e0c3c4f6301e9ea15ebd55717723642",
+      "closedAt": "2023-11-14T18:01:26Z",
+      "mergedAt": "2023-11-14T18:01:26Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "0db26f4de3d9361bd671705df6b40a8bc07077f4"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nIZxC",
+          "commit": {
+            "abbreviatedOid": "7858b2b"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-14T17:01:45Z",
+          "updatedAt": "2023-11-14T17:01:45Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 28,
+      "id": "PR_kwDOKCXv885fa63c",
+      "title": "Generalize the procedure before diving into QUIC specifics",
+      "url": "https://github.com/danwing/cidfi/pull/28",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-14T15:02:01Z",
+      "updatedAt": "2023-11-14T17:00:58Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "891d4b5d570b5082f2f7d4762447dd14ee3c43e0",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-4",
+      "headRefOid": "88efa23bc431e53e92011fb90116b8608ba32c53",
+      "closedAt": "2023-11-14T17:00:57Z",
+      "mergedAt": "2023-11-14T17:00:57Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "2ca9f3b52a842601bbb7db64128a8600a01e485c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 29,
+      "id": "PR_kwDOKCXv885ffo6r",
+      "title": "Update SVCB reference",
+      "url": "https://github.com/danwing/cidfi/pull/29",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-15T08:45:41Z",
+      "updatedAt": "2023-11-15T08:48:08Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "83d7485e44e9129e9ea33ce377ec1baa1ff85533",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-3",
+      "headRefOid": "82fb2aee75242eae8acebbb5f8d6b295593541e1",
+      "closedAt": "2023-11-15T08:48:07Z",
+      "mergedAt": "2023-11-15T08:48:07Z",
+      "mergedBy": "boucadair",
+      "mergeCommit": {
+        "oid": "33d08d4af830afa9823f10e832c116129b1d6a73"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 30,
+      "id": "PR_kwDOKCXv885ffuwl",
+      "title": "simplification + multiple service instances",
+      "url": "https://github.com/danwing/cidfi/pull/30",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-15T09:02:15Z",
+      "updatedAt": "2023-11-15T17:12:00Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "33d08d4af830afa9823f10e832c116129b1d6a73",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "simplification-multiple-service-instances",
+      "headRefOid": "3b6a8b1e70879a459a94009c15fa96185de12c89",
+      "closedAt": "2023-11-15T17:11:59Z",
+      "mergedAt": "2023-11-15T17:11:59Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "fc1c5d954810610bb9802f95868738c9217f638d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nQ_OJ",
+          "commit": {
+            "abbreviatedOid": "10a38c0"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-15T17:03:58Z",
+          "updatedAt": "2023-11-15T17:03:58Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 31,
+      "id": "PR_kwDOKCXv885fhCOV",
+      "title": "short mention of candidate approaches + focus on client-centric",
+      "url": "https://github.com/danwing/cidfi/pull/31",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-15T12:53:52Z",
+      "updatedAt": "2023-11-15T17:04:31Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "simplification-multiple-service-instances",
+      "baseRefOid": "10a38c0b291e0dd7928eb5afc308d868e303f370",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "short-mention-of-candidate-approaches",
+      "headRefOid": "694f46a5dba4cd830aa7422ff59d98eb18038c6b",
+      "closedAt": "2023-11-15T17:04:30Z",
+      "mergedAt": "2023-11-15T17:04:30Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "3b6a8b1e70879a459a94009c15fa96185de12c89"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nQ-zt",
+          "commit": {
+            "abbreviatedOid": "694f46a"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-15T17:03:02Z",
+          "updatedAt": "2023-11-15T17:03:02Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 32,
+      "id": "PR_kwDOKCXv885fi1HL",
+      "title": "fix few nits",
+      "url": "https://github.com/danwing/cidfi/pull/32",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-15T17:43:59Z",
+      "updatedAt": "2023-11-15T17:44:53Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "fc1c5d954810610bb9802f95868738c9217f638d",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-3",
+      "headRefOid": "a0d4c4c3cda863c7184c81e107ebc1fb0c6827c9",
+      "closedAt": "2023-11-15T17:44:53Z",
+      "mergedAt": "2023-11-15T17:44:53Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "6813f5e33cf1e0b0efc29bea548fb8ed2cd6cf31"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nRXT3",
+          "commit": {
+            "abbreviatedOid": "a0d4c4c"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-15T17:44:47Z",
+          "updatedAt": "2023-11-15T17:44:47Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 33,
+      "id": "PR_kwDOKCXv885fi1ex",
+      "title": "tabs to spaces",
+      "url": "https://github.com/danwing/cidfi/pull/33",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-15T17:45:14Z",
+      "updatedAt": "2023-11-15T17:45:22Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "6813f5e33cf1e0b0efc29bea548fb8ed2cd6cf31",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tabs_to_spaces",
+      "headRefOid": "6e1373d7b9ef6658f781f729203e1c26109462dc",
+      "closedAt": "2023-11-15T17:45:21Z",
+      "mergedAt": "2023-11-15T17:45:21Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "1846b0ad6e57803fd6f81219d924ec2002fb5e18"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 35,
+      "id": "PR_kwDOKCXv885fi-i1",
+      "title": "clarify metadata is mapped to network-visible field (the CID, but we \u2026",
+      "url": "https://github.com/danwing/cidfi/pull/35",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026introduce CID later in the introduction)",
+      "createdAt": "2023-11-15T18:14:56Z",
+      "updatedAt": "2023-11-15T18:17:23Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "1846b0ad6e57803fd6f81219d924ec2002fb5e18",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "every_packet",
+      "headRefOid": "c710e23ce83110a4bdb2d8063590e2fec10f083f",
+      "closedAt": "2023-11-15T18:17:22Z",
+      "mergedAt": "2023-11-15T18:17:22Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "04ae2362c859f0b523e922ed25ac8a714730bd3c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 36,
+      "id": "PR_kwDOKCXv885fjJ7x",
+      "title": "fix AASVG",
+      "url": "https://github.com/danwing/cidfi/pull/36",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-15T18:51:56Z",
+      "updatedAt": "2023-11-15T19:34:38Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "04ae2362c859f0b523e922ed25ac8a714730bd3c",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "fix_aasvg",
+      "headRefOid": "9a21849552de993a4b2a2cd3702361045cdc0545",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "@boucadair, while editing this I had a few questions:\r\n\r\nFor (1), what is a \"proxied connection\".  Is that a MASQUE-like thing?  Or CONNECT UDP?  Or what?\r\n\r\nFor (2), what is \"out of band metadata sharing\".  \r\n\r\nFor (2), I don't understand how there is optional metadata from client to \"Network\", but there is non-optional (?) metadata from Server to \"Network\".  The client is always involved in that signaling, but I think the diagram is showing the client has no metadata it would communicate to the \"Network\"?\r\n\r\nFor (2), I don't know if my change depicts \"Glue CXs\" properly because I couldn't figure out the intent of the original diagram.\r\n\r\nFor all of them, I suppose \"Network\" the CIDFI-aware Network Element, right?  I wasn't confident enough on that assumption to make the change.\r\n\r\n",
+          "createdAt": "2023-11-15T18:57:53Z",
+          "updatedAt": "2023-11-15T18:57:53Z"
+        }
+      ],
       "reviews": []
     }
   ]
