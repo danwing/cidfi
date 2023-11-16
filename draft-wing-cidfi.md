@@ -328,7 +328,7 @@ Client Authorization:
 : The client authorizes each CIDFI-aware network element (CNE) to participate in CIDFI
 for each QUIC (or DTLS) flow.
 
-Same Server:
+Same Server Instance:
 : When the server also participates in CIDFI, the same QUIC connection is used for CIDFI
 communication with that server,
 which ensures it arrives at the same server instance even in the presence of
@@ -342,21 +342,21 @@ CIDFI to operate, a CNE never needs the server's identity, and a CNE is never pr
 the QUIC communication between the client and server.
 
 Integrity:
-: The packet importance is mapped to Destination CIDs which are
+: Metadata sharing, including the mapping of packet importance to Destination CIDs, are
 integrity protected by QUIC (or DTLS) itself and cannot be modified by on-path
 network elements.  The communication between client, server, and
 network elements is protected by TLS.
+: Packet metadata is communicated over a
+TLS-encrypted channel from the CIDFI client to its CIDFI-aware network elements,
+and mapped to integrity-protected QUIC (or DTLS) CIDs.
 
 Internet Survival:
 : The QUIC (or DTLS) communications between clients
 and servers are not changed so CIDFI is expected to work wherever QUIC
 (or DTLS) works.  The elements involved are only the QUIC (or DTLS)
 client and server and with the participating CIDFI-aware network elements.
-
-CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
-translation (NAT64).  Packet metadata is communicated over a
-TLS-encrypted channel from the CIDFI client to its CIDFI-aware network elements,
-and mapped to integrity-protected QUIC (or DTLS) Connection Identifiers.
+: CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
+translation (NAT64).  
 
 
 # Network Preparation
