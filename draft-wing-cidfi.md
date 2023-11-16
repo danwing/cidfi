@@ -127,7 +127,8 @@ differentiated service to individual packets.
 
 This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
-information about network conditions and packet importance.  With
+information about network conditions and packet importance to meet both
+intentional and reactive management policies.  With
 optional server support individual packets can receive differentiated
 service. The proposed approach covers both directions of a flow.
 
@@ -142,7 +143,8 @@ slow down their transmission rate.  This feedback takes time and contributes
 to poor user experience when the sender over- or under-shoots the actual
 available bandwidth, especially if the sender changes fidelity of the
 content (e.g., improves video quality which consumes more bandwidth which
-then gets dropped by the network).
+then gets dropped by the network).  This is also called an 'intentional
+management policy'.
 
 Due to network constraints a network element will need to drop or even
 prioritize a packet ahead of other packets within the same UDP 4-tuple. The decision of which packet
@@ -151,11 +153,12 @@ importance of the packet.  By mapping packet metadata to a network-visible
 field in each packet, the network element is better informed and better able
 to improve the user experience.
 
-There are also exceptional cases (crisis) where "normal" network resources
-cannot be used at maximum and, thus, a network would seek to reduce or offload
-some of the traffic during these events. Network-to-host signals are useful
-to put in place adequate traffic distribution policies (e.g., prefer the use of alternate paths,
-offload a network).
+There are also exceptional cases (crisis) where "normal" network
+resources cannot be used at maximum and, thus, a network would seek to
+reduce or offload some of the traffic during these events -- often
+called 'reactive traffic policy'. Network-to-host signals are
+useful to put in place adequate traffic distribution policies (e.g.,
+prefer the use of alternate paths, offload a network).
 
 {{design-approaches}} depicts examples of approaches to establish channels to convey
 and share metadata between hosts, networks, and servers. This document adheres to
