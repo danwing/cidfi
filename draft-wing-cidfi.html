@@ -14,7 +14,8 @@ the user experience to adapt to network's constraints and share expected applica
 differentiated service to individual packets. 
        This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
-information about network conditions and packet importance.  With
+information about network conditions and packet importance to meet both
+intentional and reactive management policies.  With
 optional server support individual packets can receive differentiated
 service. The proposed approach covers both directions of a flow. 
     " name="description">
@@ -1095,7 +1096,8 @@ the user experience to adapt to network's constraints and share expected applica
 differentiated service to individual packets.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
-information about network conditions and packet importance.  With
+information about network conditions and packet importance to meet both
+intentional and reactive management policies.  With
 optional server support individual packets can receive differentiated
 service. The proposed approach covers both directions of a flow.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
@@ -1369,18 +1371,20 @@ slow down their transmission rate.  This feedback takes time and contributes
 to poor user experience when the sender over- or under-shoots the actual
 available bandwidth, especially if the sender changes fidelity of the
 content (e.g., improves video quality which consumes more bandwidth which
-then gets dropped by the network).<a href="#section-1-1" class="pilcrow">¶</a></p>
+then gets dropped by the network).  This is also called an 'intentional
+management policy'.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Due to network constraints a network element will need to drop or even
 prioritize a packet ahead of other packets within the same UDP 4-tuple. The decision of which packet
 to drop or prioritize is improved if the network element knows the
 importance of the packet.  By mapping packet metadata to a network-visible
 field in each packet, the network element is better informed and better able
 to improve the user experience.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">There are also exceptional cases (crisis) where "normal" network resources
-cannot be used at maximum and, thus, a network would seek to reduce or offload
-some of the traffic during these events. Network-to-host signals are useful
-to put in place adequate traffic distribution policies (e.g., prefer the use of alternate paths,
-offload a network).<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-3">There are also exceptional cases (crisis) where "normal" network
+resources cannot be used at maximum and, thus, a network would seek to
+reduce or offload some of the traffic during these events -- often
+called 'reactive traffic policy'. Network-to-host signals are
+useful to put in place adequate traffic distribution policies (e.g.,
+prefer the use of alternate paths, offload a network).<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4"><a href="#design-approaches" class="auto internal xref">Figure 1</a> depicts examples of approaches to establish channels to convey
 and share metadata between hosts, networks, and servers. This document adheres to
 the client-centric metadata sharing approach because it preserves privacy and also
