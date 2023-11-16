@@ -164,54 +164,47 @@ takes advantage of clients having a full view on their available network attachm
 
 ~~~~~ aasvg
 (1)  Proxied Connection
-                  .----------------.           .--------.
-                  |                |         .-------.  |
-.------.          |                |        .-------. |-'
-│Client+----------+   Network(s)   +--------+Server |-'
-'------'          |                |        '-------'
-    |             '----------------'           |
-    |                     |                    |
-    |/-------------------\|/------------------\|
-    | User Data + Metadata|User Data + Metadata|
-    |\-------------------/|\------------------/|
-    |  Secure Connection  |  Secure Connection |
+                       .--------------.                   +------+
+                      |                |                +-+----+ |
++------+              |   Network(s)   |              +-+----+ +-+
+|Client+--------------)----------------(--------------+Server+-+
++---+--+              |                |              +---+--+
+    |                  '-------+------'                   |
+    |                          |                          |
+    +<===User Data+Metadata===>+<===User Data+Metadata===>+
+    |   Secure Connection 1    |   Secure Connection 2    |
+    |                          |                          |
 
 (2)  Out-of-band Metadata Sharing
-                  .----------------.           .--------.
-                  |                |         .-------.  |
-.------.          |                |        .-------. |-'
-│Client+----------+   Network(s)   +--------+Server |-'
-'------'          |                |        '-------'
-    |             '----------------'           |
-    |                     |                    |
-    |                     |                    |
-    |/----------------------------------------\|
-    |End-to-End Secure Connection + User Data  +----.
-    |\----------------------------------------/ GLUE|
-    |/-------------------\|/------------------\  CXs|
-    | Metadata (Optional) |    Metadata        +----'
-    |\-------------------/|\------------------/|
-    |                     |                    |
+                        .--------------.                  +------+
+                       |                |               +-+----+ |
++------+               |   Network(s)   |             +-+----+ +-+
+|Client+---------------)----------------(-------------+Server+-+
++---+--+               |                |             +---+--+
+    |                   '-------+------'                  |
+    |                           |                         |
+    +<-----End-to-End Secure Connection + User Data------>+<---.
+    |                           |                         | GLUE|
+    |                           |                         | CXs |
+    +<-- Metadata (Optional) -->+<----- Metadata -------->+<---'
+    |    Secure Connection 1    |    Secure Connection 2  |
+    |                           |                         |
 
 (3)  Client-centric Metadata Sharing
-                  .----------------.           .--------.
-                  |                |         .-------.  |
-.------.          |                |        .-------. |-'
-│Client+----------+   Network(s)   +--------+Server |-'
-'------'          |                |        '-------'
-    |             '----------------'           |
-    |                     |                    |
-    |/-------------------\|                    |
-    |      Metadata       |                    |
-    |\-------------------/|                    |
-    |  Secure Connection  |                    |
-    |/----------------------------------------\|
-    |        End-to-End Secure Connection      |
-    |             User Data + Metadata         |
-    |\----------------------------------------/|
-    |                     |                    |
+                          .--------------.                  +------+
+                         |                |               +-+----+ |
++------+                 |   Network(s)   |             +-+----+ +-+
+|Client+-----------------)----------------(-------------+Server+-+
++---+--+                 |                |             +---+--+
+    |                     '-------+------'                  |
+    |                             |                         |
+    +<--------- Metadata -------->+                         |
+    |        Secure Connection    |                         |
+    |                             |                         |
+    +<== End-to-End Secure Connection User Data+Metadata ==>+
+    |                             |                         |
 ~~~~~
-{: #design-approaches artwork-align="center" title="Candidate Design Approaches" :height=88}
+{: #design-approaches artwork-align="center" title="Candidate Design Approaches"}
 
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
