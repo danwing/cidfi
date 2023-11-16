@@ -1214,7 +1214,7 @@ service. The proposed approach covers both directions of a flow.<a href="#sectio
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-client-operation-on-each-co" class="internal xref">Client Operation on Each Connection to a QUIC Server</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-client-operation-on-each-co" class="internal xref">Client Operation on Each Connection to a Server</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-client-learns-server-suppor" class="internal xref">Client Learns Server Supports CIDFI</a></p>
@@ -1833,7 +1833,7 @@ anticipate using a more efficient encoding such as <span>[<a href="#CBOR" class=
 for each QUIC (or DTLS) flow.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.3">Same Server:</dt>
+<dt id="section-3-2.3">Same Server Instance:</dt>
         <dd style="margin-left: 1.5em" id="section-3-2.4">
           <p id="section-3-2.4.1">When the server also participates in CIDFI, the same QUIC connection is used for CIDFI
 communication with that server,
@@ -1852,25 +1852,34 @@ the QUIC communication between the client and server.<a href="#section-3-2.6.1" 
         <dd class="break"></dd>
 <dt id="section-3-2.7">Integrity:</dt>
         <dd style="margin-left: 1.5em" id="section-3-2.8">
-          <p id="section-3-2.8.1">The packet importance is mapped to Destination CIDs which are
+          <p id="section-3-2.8.1">Metadata sharing, including the mapping of packet importance to Destination CIDs, are
 integrity protected by QUIC (or DTLS) itself and cannot be modified by on-path
 network elements.  The communication between client, server, and
 network elements is protected by TLS.<a href="#section-3-2.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.9">Internet Survival:</dt>
+<dt id="section-3-2.9"></dt>
         <dd style="margin-left: 1.5em" id="section-3-2.10">
-          <p id="section-3-2.10.1">The QUIC (or DTLS) communications between clients
+          <p id="section-3-2.10.1">Packet metadata is communicated over a
+TLS-encrypted channel from the CIDFI client to its CIDFI-aware network elements,
+and mapped to integrity-protected QUIC (or DTLS) CIDs.<a href="#section-3-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-2.11">Internet Survival:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.12">
+          <p id="section-3-2.12.1">The QUIC (or DTLS) communications between clients
 and servers are not changed so CIDFI is expected to work wherever QUIC
 (or DTLS) works.  The elements involved are only the QUIC (or DTLS)
-client and server and with the participating CIDFI-aware network elements.<a href="#section-3-2.10.1" class="pilcrow">¶</a></p>
+client and server and with the participating CIDFI-aware network elements.<a href="#section-3-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-2.13"></dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.14">
+          <p id="section-3-2.14.1">CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
+translation (NAT64).<a href="#section-3-2.14.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-3-3">CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
-translation (NAT64).  Packet metadata is communicated over a
-TLS-encrypted channel from the CIDFI client to its CIDFI-aware network elements,
-and mapped to integrity-protected QUIC (or DTLS) Connection Identifiers.<a href="#section-3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="network-preparation">
@@ -2087,10 +2096,10 @@ the client owns its UDP 4-tuple.<a href="#section-5.2-4" class="pilcrow">¶</a><
 </div>
 </section>
 </div>
-<div id="client-operation-on-each-connection-to-a-quic-server">
+<div id="client-operation-on-each-connection-to-a-server">
 <section id="section-6">
       <h2 id="name-client-operation-on-each-co">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-client-operation-on-each-co" class="section-name selfRef">Client Operation on Each Connection to a QUIC Server</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-client-operation-on-each-co" class="section-name selfRef">Client Operation on Each Connection to a Server</a>
       </h2>
 <p id="section-6-1">When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server, the client:<a href="#section-6-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-6-2">
