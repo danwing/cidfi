@@ -356,7 +356,7 @@ and servers are not changed so CIDFI is expected to work wherever QUIC
 (or DTLS) works.  The elements involved are only the QUIC (or DTLS)
 client and server and with the participating CIDFI-aware network elements.
 : CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
-translation (NAT64).  
+translation (NAT64).
 
 
 # Network Preparation
