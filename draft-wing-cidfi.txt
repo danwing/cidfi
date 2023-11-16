@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 18 May 2024                                               Nokia
+Expires: 19 May 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                        15 November 2023
+                                                        16 November 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 May 2024.
+   This Internet-Draft will expire on 19 May 2024.
 
 Copyright Notice
 
@@ -164,53 +164,46 @@ Table of Contents
    because it preserves privacy and also takes advantage of clients
    having a full view on their available network attachments.
 
-         (1)  Proxied Connection
-                           .----------------.           .--------.
-                           |                |         .-------.  |
-         .------.          |                |        .-------. |-'
-         │Client+----------+   Network(s)   +--------+Server |-'
-         '------'          |                |        '-------'
-             |             '----------------'           |
-             |                     |                    |
-             |/-------------------\|/------------------\|
-             | User Data + Metadata|User Data + Metadata|
-             |\-------------------/|\------------------/|
-             |  Secure Connection  |  Secure Connection |
+   (1)  Proxied Connection
+                          .--------------.                   +------+
+                         |                |                +-+----+ |
+   +------+              |   Network(s)   |              +-+----+ +-+
+   |Client+--------------)----------------(--------------+Server+-+
+   +---+--+              |                |              +---+--+
+       |                  '-------+------'                   |
+       |                          |                          |
+       +<===User Data+Metadata===>+<===User Data+Metadata===>+
+       |   Secure Connection 1    |   Secure Connection 2    |
+       |                          |                          |
 
-         (2)  Out-of-band Metadata Sharing
-                           .----------------.           .--------.
-                           |                |         .-------.  |
-         .------.          |                |        .-------. |-'
-         │Client+----------+   Network(s)   +--------+Server |-'
-         '------'          |                |        '-------'
-             |             '----------------'           |
-             |                     |                    |
-             |                     |                    |
-             |/----------------------------------------\|
-             |End-to-End Secure Connection + User Data  +----.
-             |\----------------------------------------/ GLUE|
-             |/-------------------\|/------------------\  CXs|
-             | Metadata (Optional) |    Metadata        +----'
-             |\-------------------/|\------------------/|
-             |                     |                    |
+   (2)  Out-of-band Metadata Sharing
+                           .--------------.                  +------+
+                          |                |               +-+----+ |
+   +------+               |   Network(s)   |             +-+----+ +-+
+   |Client+---------------)----------------(-------------+Server+-+
+   +---+--+               |                |             +---+--+
+       |                   '-------+------'                  |
+       |                           |                         |
+       +<-----End-to-End Secure Connection + User Data------>+<---.
+       |                           |                         | GLUE|
+       |                           |                         | CXs |
+       +<-- Metadata (Optional) -->+<----- Metadata -------->+<---'
+       |    Secure Connection 1    |    Secure Connection 2  |
+       |                           |                         |
 
-         (3)  Client-centric Metadata Sharing
-                           .----------------.           .--------.
-                           |                |         .-------.  |
-         .------.          |                |        .-------. |-'
-         │Client+----------+   Network(s)   +--------+Server |-'
-         '------'          |                |        '-------'
-             |             '----------------'           |
-             |                     |                    |
-             |/-------------------\|                    |
-             |      Metadata       |                    |
-             |\-------------------/|                    |
-             |  Secure Connection  |                    |
-             |/----------------------------------------\|
-             |        End-to-End Secure Connection      |
-             |             User Data + Metadata         |
-             |\----------------------------------------/|
-             |                     |                    |
+   (3)  Client-centric Metadata Sharing
+                             .--------------.                  +------+
+                            |                |               +-+----+ |
+   +------+                 |   Network(s)   |             +-+----+ +-+
+   |Client+-----------------)----------------(-------------+Server+-+
+   +---+--+                 |                |             +---+--+
+       |                     '-------+------'                  |
+       |                             |                         |
+       +<--------- Metadata -------->+                         |
+       |        Secure Connection    |                         |
+       |                             |                         |
+       +<== End-to-End Secure Connection User Data+Metadata ==>+
+       |                             |                         |
 
                    Figure 1: Candidate Design Approaches
 
