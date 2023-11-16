@@ -527,7 +527,7 @@ the client owns its UDP 4-tuple.
 {: #hmac-ex artwork-align="center" title="Example of CIDFI HMAC and Nonce"}
 
 
-# Client Operation on Each Connection to a QUIC Server
+# Client Operation on Each Connection to a Server
 
 When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server, the client:
 
