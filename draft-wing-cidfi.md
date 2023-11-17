@@ -228,7 +228,13 @@ server to signal packet importance. The following main steps are involved in CID
 
 CIDFI does not require that all these steps are enabled. Incremental
 deployments may be envisaged (e.g., network and client support, network, client,
-and server support)
+and server support). Differentiated service can
+be provided to a flow, packets within a flow, or a combination thereof as a function
+of the CIDFI support by various involved entities. For example, a CIDFI-aware network
+might share signals with clients that would then trigger locally connection migration or relay
+the information to the server (if it is CIDFI-aware) to adjust its sending behavior
+by avoiding aggressive use of local resources or using alternate paths. {{metadata-exchanged}}
+further elaborates on the differentiated service that can be provided by enabling CIDFI.
 
 {{fig-arch}} provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
@@ -316,6 +322,10 @@ CID:
 CNE:
 : CIDFI-aware Network Element, a network element that
 supports this CIDFI specification.  This is typically a router.
+
+Differentiated service:
+: Refers to a differentiated processing that can be provided to a flow (or specific packets within a flow) by a network, client, or server.
+: Examples of differentiated service are: prioritization, adaptive transmission, or traffic steering.
 
 ## Notations
 
