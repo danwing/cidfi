@@ -313,7 +313,7 @@ as discussed in {{extending}}.
 
 Streaming video only needs to be transmitted slightly faster than the
 video playout rate.  Sending the video significantly faster can waste
-bandwidth, most notably if the user abandons the video early.  CIDFI
+bandwidth, most notably if the user abandons the video early.  Worse, as discussed in {{Section 3.10 of RFC8517}}, a fast download of a video that won't be viewed completely by the subscriber may lead to quick exhaustion of the user data quota. CIDFI
 helps this use-case with its network-to-host signaling which informs
 the client of available bandwidth allowing the client to choose
 a compatible video stream.  This functionality does not need a CIDFI-
