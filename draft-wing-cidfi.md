@@ -123,7 +123,7 @@ informative:
 
 Host-to-network signaling and network-to-host signaling can improve
 the user experience to adapt to network's constraints and share expected application needs, and thus to provide
-differentiated service to a flow and to packets within a flow.
+differentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both. 
 
 This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
