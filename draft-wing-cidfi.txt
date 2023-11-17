@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 19 May 2024                                               Nokia
+Expires: 20 May 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                        16 November 2023
+                                                        17 November 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 May 2024.
+   This Internet-Draft will expire on 20 May 2024.
 
 Copyright Notice
 
