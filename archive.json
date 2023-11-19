@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-16T01:15:17.444951+00:00",
+  "timestamp": "2023-11-19T01:19:36.176154+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -110,7 +110,7 @@
       "labels": [],
       "body": "https://datatracker.ietf.org/doc/draft-ravi-ippm-csig/",
       "createdAt": "2023-11-14T08:30:30Z",
-      "updatedAt": "2023-11-15T19:02:02Z",
+      "updatedAt": "2023-11-16T05:26:49Z",
       "closedAt": null,
       "comments": [
         {
@@ -154,6 +154,27 @@
           "body": "> In the media use case, the intermediary is the wireless node in the client access network.  The configuration agent is the controller of the wireless nodes.\r\n\r\nWhich means the content server (let's say, \"Facebook\") communicates with the subscriber's Internet Service Provider.  Which means they have to authenticate each other, which means the ISP learns the identity of the content provider.  This means ESNI no longer hides the identity from the ISP (but ESNI would continue to hide the server's identity from other on-path devices, of course).\r\n\r\n> In the QUIC-TE use case, the intermediary is in the server's network (Cloud WAN). The conguration agent is the controller of the Cloud WAN. \r\n\r\nOk.  That model seems similar to draft-ietf-quic-load-balancers, but rather than controlling a load balancer you're controlling the WAN.",
           "createdAt": "2023-11-15T19:02:02Z",
           "updatedAt": "2023-11-15T19:02:02Z"
+        },
+        {
+          "author": "VMatrix1900",
+          "authorAssociation": "NONE",
+          "body": "> > In the media use case, the intermediary is the wireless node in the client access network.  The configuration agent is the controller of the wireless nodes.\r\n> \r\n> Which means the content server (let's say, \"Facebook\") communicates with the subscriber's Internet Service Provider. Which means they have to authenticate each other, which means the ISP learns the identity of the content provider. This means ESNI no longer hides the identity from the ISP (but ESNI would continue to hide the server's identity from other on-path devices, of course).\r\n\r\nThis is related to the business model. It does not necessarily reveal the content server identity. Let's say ISP provide media-aware QoS optimization service. It can issue an anoymous key to any content servers who purchase the service(think of a concert ticket which do not check the ID instead of flight ticket which is tied to ID). Then the intermediary can not differentiate between different content providers.",
+          "createdAt": "2023-11-16T03:41:49Z",
+          "updatedAt": "2023-11-16T03:41:49Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "> This is related to the business model. It does not necessarily reveal the content server identity. Let's say ISP provide media-aware QoS optimization service. It can issue an anoymous key to any content servers who purchase the service(think of a concert ticket which do not check the ID instead of flight ticket which is tied to ID). Then the intermediary can not differentiate between different content providers.\r\n\r\nSorry, I don't see how that would work.  ISP puts the key onto a publicly-available server at, let's say, https://www.t-mobile.com/key.txt, and all the content providers would use that key, and nobody would abuse it?  That can't be what you have in mind.  I only see a solution with some sort of authorization for Certain Special content providers to use that key.  And each content provider would be given its own key because unique keys are necessary for hygiene (key rotation and the eventual fallout of their contract and need to pull their key without disrupting service for other content providers).\r\n\r\n(Is there a better place to have this discussion?)",
+          "createdAt": "2023-11-16T03:52:17Z",
+          "updatedAt": "2023-11-16T03:52:17Z"
+        },
+        {
+          "author": "VMatrix1900",
+          "authorAssociation": "NONE",
+          "body": "@danwing I created [an issue](https://github.com/VMatrix1900/draft-quic-structured-connection-id/issues/1) in my repo. Let's continue dicussion there.",
+          "createdAt": "2023-11-16T05:26:49Z",
+          "updatedAt": "2023-11-16T05:26:49Z"
         }
       ]
     },
@@ -192,6 +213,37 @@
           "body": "Fixed in #35 ",
           "createdAt": "2023-11-15T18:16:35Z",
           "updatedAt": "2023-11-15T18:16:35Z"
+        }
+      ]
+    },
+    {
+      "number": 41,
+      "id": "I_kwDOKCXv8853HxoZ",
+      "title": "Stream ID",
+      "url": "https://github.com/danwing/cidfi/issues/41",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/danwing/cidfi/blob/8e3eef44bd73ad95e96fc311fd447f53f21774cf/draft-wing-cidfi.md?plain=1#L581\r\n\r\nWe may consider defining a new QUIC frame, similar in processing to the DATAGRAM frame (but no user data is allowed inside). The frame can be sent in both directions h2n and n2h. No stream ID would be required then.",
+      "createdAt": "2023-11-17T08:20:29Z",
+      "updatedAt": "2023-11-17T16:24:31Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "Sounds like a great idea.  One note:  this communication is merely h2h, as no network element is involved -- although the data inside is intended to be relayed to the CIDFI Network Element.  I don't know how to express that in concise words, however.",
+          "createdAt": "2023-11-17T16:14:33Z",
+          "updatedAt": "2023-11-17T16:14:33Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "You are right that the frame is mainly between the ultimate endpoints of a communication.",
+          "createdAt": "2023-11-17T16:24:30Z",
+          "updatedAt": "2023-11-17T16:24:30Z"
         }
       ]
     }
@@ -1646,24 +1698,26 @@
       "id": "PR_kwDOKCXv885fjJ7x",
       "title": "fix AASVG",
       "url": "https://github.com/danwing/cidfi/pull/36",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-11-15T18:51:56Z",
-      "updatedAt": "2023-11-15T19:34:38Z",
+      "updatedAt": "2023-11-16T16:51:35Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "04ae2362c859f0b523e922ed25ac8a714730bd3c",
       "headRepository": "danwing/cidfi",
       "headRefName": "fix_aasvg",
       "headRefOid": "9a21849552de993a4b2a2cd3702361045cdc0545",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-11-16T16:51:32Z",
+      "mergedAt": "2023-11-16T16:51:32Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "f82c7ab1128489fb9baed93bfbe78a06f0b4b744"
+      },
       "comments": [
         {
           "author": "danwing",
@@ -1671,9 +1725,258 @@
           "body": "@boucadair, while editing this I had a few questions:\r\n\r\nFor (1), what is a \"proxied connection\".  Is that a MASQUE-like thing?  Or CONNECT UDP?  Or what?\r\n\r\nFor (2), what is \"out of band metadata sharing\".  \r\n\r\nFor (2), I don't understand how there is optional metadata from client to \"Network\", but there is non-optional (?) metadata from Server to \"Network\".  The client is always involved in that signaling, but I think the diagram is showing the client has no metadata it would communicate to the \"Network\"?\r\n\r\nFor (2), I don't know if my change depicts \"Glue CXs\" properly because I couldn't figure out the intent of the original diagram.\r\n\r\nFor all of them, I suppose \"Network\" the CIDFI-aware Network Element, right?  I wasn't confident enough on that assumption to make the change.\r\n\r\n",
           "createdAt": "2023-11-15T18:57:53Z",
           "updatedAt": "2023-11-15T18:57:53Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> @boucadair, while editing this I had a few questions:\r\n> \r\n> For (1), what is a \"proxied connection\". Is that a MASQUE-like thing? Or CONNECT UDP? Or what?\r\n> \r\n\r\nThis can be MASQUE thing, 3GPP ATSSS, whatsoever. We don't need to call out how this is realized by what the external behavior looks like. \r\n\r\n> For (2), what is \"out of band metadata sharing\".\r\n> \r\n> For (2), I don't understand how there is optional metadata from client to \"Network\", but there is non-optional (?) metadata from Server to \"Network\". The client is always involved in that signaling, but I think the diagram is showing the client has no metadata it would communicate to the \"Network\"?\r\n\r\n(2) is actually mirroring existing practices marketed, e.g., as RAN-assisted acceleration and the like. The client is not involved in such schemes (to ease deployablity and lower dependency on UEs). Adding a client-network leg is an evolution to these schemes, and hence the \"optional\" tagging.\r\n\r\nWe may have a variant of (2) with both legs optional or mandatory, but I thought this would over-complexify the figure.\r\n\r\n> \r\n> For (2), I don't know if my change depicts \"Glue CXs\" properly because I couldn't figure out the intent of the original diagram.\r\n> \r\n\r\nEndpoints will need to correlate the signal with the main communication. Some means to glue the two sessions is thus required. Again we we don't need to explain how, but that is an extra feature at the server side compared to the use of the main communication to share data.\r\n\r\n> For all of them, I suppose \"Network\" the CIDFI-aware Network Element, right? I wasn't confident enough on that assumption to make the change.\r\n\r\nIn practice yes, but we don't have \"CIDFI-aware Network Element\" introduced at this stage. The intent of the figure is to provide a macroscopic view before diving into CIDFI mechanic. ",
+          "createdAt": "2023-11-16T06:41:06Z",
+          "updatedAt": "2023-11-16T06:41:06Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "Thanks for explanation!",
+          "createdAt": "2023-11-16T16:51:34Z",
+          "updatedAt": "2023-11-16T16:51:34Z"
         }
       ],
       "reviews": []
+    },
+    {
+      "number": 37,
+      "id": "PR_kwDOKCXv885fp9y-",
+      "title": "use 'reactive' and 'intentional' to describe traffic policies",
+      "url": "https://github.com/danwing/cidfi/pull/37",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-16T17:08:13Z",
+      "updatedAt": "2023-11-16T20:05:43Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "f82c7ab1128489fb9baed93bfbe78a06f0b4b744",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "reactive",
+      "headRefOid": "efd305635f920cfa935df9732c1bbd1c04342960",
+      "closedAt": "2023-11-16T20:05:42Z",
+      "mergedAt": "2023-11-16T20:05:42Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "cb3d20297294390533b22ecc27268d01c49bf60e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885na9L5",
+          "commit": {
+            "abbreviatedOid": "efd3056"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-16T18:02:41Z",
+          "updatedAt": "2023-11-16T18:02:41Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 38,
+      "id": "PR_kwDOKCXv885fqZk9",
+      "title": "Some restructure of design goals",
+      "url": "https://github.com/danwing/cidfi/pull/38",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "avoid redundant statements + generalize metadata sharing (beyond packet importance)",
+      "createdAt": "2023-11-16T18:10:44Z",
+      "updatedAt": "2023-11-16T20:05:20Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "f82c7ab1128489fb9baed93bfbe78a06f0b4b744",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-3",
+      "headRefOid": "27febaaa68c34f1b80d40bdbfda1199c885d1d29",
+      "closedAt": "2023-11-16T20:05:19Z",
+      "mergedAt": "2023-11-16T20:05:19Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "b0fc871210bd8d7fe0a6488206230184f45bf926"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nb2i6",
+          "commit": {
+            "abbreviatedOid": "27febaa"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-16T20:05:13Z",
+          "updatedAt": "2023-11-16T20:05:13Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 39,
+      "id": "PR_kwDOKCXv885fstP7",
+      "title": "introduction now mentions entire flow, to handle situation where serv\u2026",
+      "url": "https://github.com/danwing/cidfi/pull/39",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026er isn't doing CIDFI.",
+      "createdAt": "2023-11-17T02:16:19Z",
+      "updatedAt": "2023-11-17T16:50:02Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "8e3eef44bd73ad95e96fc311fd447f53f21774cf",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "intro_say_entire_flow",
+      "headRefOid": "2fe9672ac61137fb76d9e869574fc7a672f0f17e",
+      "closedAt": "2023-11-17T16:50:01Z",
+      "mergedAt": "2023-11-17T16:50:01Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "ac7a0ff71907ad15eb04bd172ca11cc88af12bf0"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nfEV0",
+          "commit": {
+            "abbreviatedOid": "4b16269"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-17T07:25:11Z",
+          "updatedAt": "2023-11-17T07:25:12Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\ndifferentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both. \r\n```",
+              "createdAt": "2023-11-17T07:25:12Z",
+              "updatedAt": "2023-11-17T07:25:12Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 40,
+      "id": "PR_kwDOKCXv885ft2i1",
+      "title": "Add a definition of Differentiated service + mention about flows/pack\u2026",
+      "url": "https://github.com/danwing/cidfi/pull/40",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026ets in a flows, etc.",
+      "createdAt": "2023-11-17T07:46:51Z",
+      "updatedAt": "2023-11-17T16:18:48Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "8e3eef44bd73ad95e96fc311fd447f53f21774cf",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "Differentiated-service",
+      "headRefOid": "843dbc51e56245b49d2010310254d9a7d2b35c0b",
+      "closedAt": "2023-11-17T16:18:46Z",
+      "mergedAt": "2023-11-17T16:18:46Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "5be5524aa7589c2d4f0efbc24ff88b6ebfe72ba8"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885njl7Q",
+          "commit": {
+            "abbreviatedOid": "843dbc5"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-17T16:15:49Z",
+          "updatedAt": "2023-11-17T16:15:49Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 42,
+      "id": "PR_kwDOKCXv885fxjZu",
+      "title": "added Introduction use-case subsections: video streaming and interact\u2026",
+      "url": "https://github.com/danwing/cidfi/pull/42",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026ive audio/video/screen sharing",
+      "createdAt": "2023-11-17T17:00:29Z",
+      "updatedAt": "2023-11-17T19:32:02Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "ac7a0ff71907ad15eb04bd172ca11cc88af12bf0",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "use_cases",
+      "headRefOid": "8c5848da40be59f58173cf3c11d12e13c8b33996",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nkBp1",
+          "commit": {
+            "abbreviatedOid": "5a07839"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-17T17:05:47Z",
+          "updatedAt": "2023-11-17T17:07:29Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "```suggestion\r\nbandwidth, most notably if the user abandons the video early.  Worse, as discussed in {{Section 3.10 of RFC8517}}, a fast download of a video that won't be viewed completely by the subscriber may lead to quick exhaustion of the user data quota. CIDFI\r\n```",
+              "createdAt": "2023-11-17T17:05:47Z",
+              "updatedAt": "2023-11-17T17:07:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885nk-7j",
+          "commit": {
+            "abbreviatedOid": "0562fb7"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "ok",
+          "createdAt": "2023-11-17T19:29:57Z",
+          "updatedAt": "2023-11-17T19:29:57Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
