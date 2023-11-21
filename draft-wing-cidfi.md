@@ -682,10 +682,9 @@ same incoming Destination CID on their own UDP 4-tuple. The STUN
 Indication message allows the CIDFI network element to distinguish
 each QUIC client's UDP 4-tuple.
 
-The default size of a short Destination Connection ID (DCID) is 8 bytes, 
-and multiple QUIC clients may use the same incoming Destination CID on 
-their own UDP 4-tuple. The STUN Indication message allows the CIDFI network 
-element to distinguish each QUIC client's UDP 4-tuple.
+Because multiple QUIC clients may use the same incoming Destination CID on
+their own UDP 4-tuple, the STUN Indication message allows a CNE
+to distinguish each QUIC client's UDP 4-tuple.
 
 To reduce CIDFI setup time the client STUN Indication MAY be sent at
 the same time as the QUIC Initial packet ({{Section 17.2.2 of QUIC}}), which is encouraged
