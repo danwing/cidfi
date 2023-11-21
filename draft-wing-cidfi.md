@@ -1026,7 +1026,7 @@ to each of the CNEs. An example is shown in {{fig-import}}.
 ~~~~~
 {: #fig-import artwork-align="left" title="Example JSON for Flow Importance"}
 
-Note: {{fig-import}} lists sample attributes and they will be discussed in detail in a separate document.
+> Note: {{fig-import}} lists sample attributes and they will be discussed in detail in a separate document.
 
 ### Mapping DiffServ Code Point (DSCP) to DCIDs {#mapping-dscp}
 
