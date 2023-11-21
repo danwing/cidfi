@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 20 May 2024                                               Nokia
+Expires: 24 May 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                        17 November 2023
+                                                        21 November 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -19,7 +19,9 @@ Abstract
    Host-to-network signaling and network-to-host signaling can improve
    the user experience to adapt to network's constraints and share
    expected application needs, and thus to provide differentiated
-   service to individual packets.
+   service to a flow and to packets within a flow.  The differentiated
+   service may be provided at the network (e.g., packet prioritization),
+   the server (e.g., adaptive transmission), or both.
 
    This document describes how clients can communicate with their nearby
    network elements so their QUIC and DTLS streams can be augmented with
@@ -60,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 May 2024.
+   This Internet-Draft will expire on 24 May 2024.
 
 Copyright Notice
 
@@ -79,10 +81,12 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
+     1.1.  Operation with Streaming Video
+     1.2.  Operation with Interactive Audio/Video/Screen sharing
    2.  Conventions and Definitions
      2.1.  Notations
    3.  Design Goals
-   4.  Network Preparation
+   4.  Network Configuration to Support CIDFI
      4.1.  DNS SVCB Records
      4.2.  Provisioning Domains
      4.3.  DHCP or 3GPP PCO
@@ -317,6 +321,41 @@ Table of Contents
    signaling).  That said, CIDFI can be extended to other protocols as
    discussed in Appendix A.
 
+1.1.  Operation with Streaming Video
+
+   Streaming video only needs to be transmitted slightly faster than the
+   video playout rate.  Sending the video significantly faster can waste
+   bandwidth, most notably if the user abandons the video early.  Worse,
+   as discussed in Section 3.10 of [RFC8517], a fast download of a video
+   that won't be viewed completely by the subscriber may lead to quick
+   exhaustion of the user data quota.  CIDFI helps this use-case with
+   its network-to-host signaling which informs the client of available
+   bandwidth allowing the client to choose a compatible video stream.
+   This functionality does not need a CIDFI- aware server.
+
+   With reliable transport such as TCP, the only purpose of video key
+   frames is the user scrolling forward/backward.  When video streaming
+   uses unreliable transport ([RFC9221]) it is beneficial to
+   differentiate keyframes from predictive frames on the network
+   especially when the network performs reactive policy management.
+   When the server also supports CIDFI, key frames can be differentiated
+   which improves user experience during linear playout.
+
+1.2.  Operation with Interactive Audio/Video/Screen sharing
+
+   With interactive sessions CIDFI can help determine the bandwidth
+   available for the flow so the video (and screen sharing) quality and
+   size can be constrained to the available bandwidth.  This benefit can
+   be deployed locally with a CIDFI-aware client and CIDFI-aware
+   network.
+
+   When the remote peer also supports CIDFI, the remote peer can
+   differentiate packets containing audio, video, or screen sharing.  In
+   certain use-cases audio is the most important whereas in other use-
+   cases screen sharing is most important.  With CIDFI, the relative
+   importance of each packet can be differentiated as that relative
+   importance changes during a session.
+
 2.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -387,7 +426,7 @@ Table of Contents
       CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT),
       and IPv6/IPv4 translation (NAT64).
 
-4.  Network Preparation
+4.  Network Configuration to Support CIDFI
 
    The network is configured to advertise its support for CIDFI.
 
@@ -1419,6 +1458,17 @@ Table of Contents
               J. Korhonen, "Access-Network-Identifier Option in DHCP",
               RFC 7839, DOI 10.17487/RFC7839, June 2016,
               <https://www.rfc-editor.org/rfc/rfc7839>.
+
+   [RFC8517]  Dolson, D., Ed., Snellman, J., Boucadair, M., Ed., and C.
+              Jacquenet, "An Inventory of Transport-Centric Functions
+              Provided by Middleboxes: An Operator Perspective",
+              RFC 8517, DOI 10.17487/RFC8517, February 2019,
+              <https://www.rfc-editor.org/rfc/rfc8517>.
+
+   [RFC9221]  Pauly, T., Kinnear, E., and D. Schinazi, "An Unreliable
+              Datagram Extension to QUIC", RFC 9221,
+              DOI 10.17487/RFC9221, March 2022,
+              <https://www.rfc-editor.org/rfc/rfc9221>.
 
    [RTP]      Schulzrinne, H., Casner, S., Frederick, R., and V.
               Jacobson, "RTP: A Transport Protocol for Real-Time
