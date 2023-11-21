@@ -123,7 +123,7 @@ informative:
 
 Host-to-network signaling and network-to-host signaling can improve
 the user experience to adapt to network's constraints and share expected application needs, and thus to provide
-differentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both. 
+differentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both.
 
 This document describes how clients can communicate with their nearby
 network elements so their QUIC and DTLS streams can be augmented with
@@ -309,6 +309,40 @@ signaling) and benefit from prioritizing audio over video (h2n
 signaling).  That said, CIDFI can be extended to other protocols
 as discussed in {{extending}}.
 
+## Operation with Streaming Video
+
+Streaming video only needs to be transmitted slightly faster than the
+video playout rate.  Sending the video significantly faster can waste
+bandwidth, most notably if the user abandons the video early.  Worse, as discussed in {{Section 3.10 of ?RFC8517}}, a fast download of a video that won't be viewed completely by the subscriber may lead to quick exhaustion of the user data quota. CIDFI
+helps this use-case with its network-to-host signaling which informs
+the client of available bandwidth allowing the client to choose
+a compatible video stream.  This functionality does not need a CIDFI-
+aware server.
+
+With reliable transport such as TCP, the only purpose of
+video key frames is the user scrolling forward/backward.  When
+video streaming uses unreliable transport ({{?RFC9221}})
+it is beneficial to differentiate keyframes from predictive
+frames on the network especially when the network performs
+reactive policy management.  When the server also supports CIDFI,
+key frames can be differentiated which improves user experience
+during linear playout.
+
+## Operation with Interactive Audio/Video/Screen sharing
+
+With interactive sessions CIDFI can help determine the bandwidth
+available for the flow so the video (and screen sharing) quality and
+size can be constrained to the available bandwidth.  This benefit
+can be deployed locally with a CIDFI-aware client and CIDFI-aware
+network.
+
+When the remote peer also supports CIDFI, the remote peer can
+differentiate packets containing audio, video, or screen sharing.  In
+certain use-cases audio is the most important whereas in other
+use-cases screen sharing is most important.  With CIDFI, the relative
+importance of each packet can be differentiated as that relative
+importance changes during a session.
+
 
 # Conventions and Definitions
 
@@ -372,7 +406,7 @@ client and server and with the participating CIDFI-aware network elements.
 translation (NAT64).
 
 
-# Network Preparation
+# Network Configuration to Support CIDFI
 
 The network is configured to advertise its support for CIDFI.
 
