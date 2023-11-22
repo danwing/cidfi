@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 24 May 2024                                               Nokia
+Expires: 25 May 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                        21 November 2023
+                                                        22 November 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 May 2024.
+   This Internet-Draft will expire on 25 May 2024.
 
 Copyright Notice
 
@@ -1216,10 +1216,7 @@ Table of Contents
       CIDFI treatment, making it accessible to the attacker.  The
       attacker can send NEW_CONNECTION_ID frames to the server with the
       victim's (observed) Destination CID, effectively claiming the
-      victim's CIDFI signaling for themselves.  To mitigate this replay
-      attack, shared networks require per-endpoint encryption (e.g., Wi-
-      Fi WPA3, DOCSIS BPI+) or traffic separation (e.g., Ethernet
-      switching rather than bridging).
+      victim's CIDFI signaling for themselves.
 
 14.  IANA Considerations
 
