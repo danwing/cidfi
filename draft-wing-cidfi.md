@@ -1192,7 +1192,7 @@ Spoofing Attacks:
 
 On-Path Attacks:
 : An on-path attacker can observe the victim's Discovery Packet, block it, and then forward the packet within the attacker's 5-tuple. Subsequently, the on-path attacker can 'steal' the victim's CIDFI control from the victim's UDP 4-tuple, causing the victim's CIDFI signaling for that UDP 4-tuple to influence the attacker's UDP 4-tuple.
-: Although the on-path attacker can't directly observe the encrypted CIDFI signaling, this attack effectively disables the victim's CIDFI treatment, making it accessible to the attacker. The attacker can send NEW_CONNECTION_ID frames to the server with the victim's (observed) Destination CID, effectively claiming the victim's CIDFI signaling for themselves. To mitigate this replay attack, shared networks require per-endpoint encryption (e.g., Wi-Fi WPA3, DOCSIS BPI+) or traffic separation (e.g., Ethernet switching rather than bridging).
+: Although the on-path attacker can't directly observe the encrypted CIDFI signaling, this attack effectively disables the victim's CIDFI treatment, making it accessible to the attacker. The attacker can send NEW_CONNECTION_ID frames to the server with the victim's (observed) Destination CID, effectively claiming the victim's CIDFI signaling for themselves. 
 
 # IANA Considerations
 
