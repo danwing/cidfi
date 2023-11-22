@@ -1216,7 +1216,9 @@ Table of Contents
       CIDFI treatment, making it accessible to the attacker.  The
       attacker can send NEW_CONNECTION_ID frames to the server with the
       victim's (observed) Destination CID, effectively claiming the
-      victim's CIDFI signaling for themselves.
+      victim's CIDFI signaling for themselves.  An on-path attacker can
+      do a lot more damage by blocking or rate-limiting the victim's
+      traffic.
 
 14.  IANA Considerations
 
