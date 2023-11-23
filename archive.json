@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-21T01:17:38.493468+00:00",
+  "timestamp": "2023-11-23T01:14:25.628121+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -246,6 +246,46 @@
           "updatedAt": "2023-11-17T16:24:30Z"
         }
       ]
+    },
+    {
+      "number": 44,
+      "id": "I_kwDOKCXv8853jDks",
+      "title": "Packet type in Figure 6",
+      "url": "https://github.com/danwing/cidfi/issues/44",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L672\r\n\r\nWhy is this an initial packet? This should be any QUIC packet with SCID=xyz + signaled 4-uple. No?\r\n\r\nAlso, why do we have an OK right after?",
+      "createdAt": "2023-11-22T06:42:20Z",
+      "updatedAt": "2023-11-22T11:37:37Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "On Nov 22, 2023, at 1:42\u202fAM, Med ***@***.***> wrote:\ufeff\r\nhttps://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L672\r\nWhy is this an initial packet? This should be any QUIC packet with SCID=xyz + signaled 4-uple. No?Agreed, it could be a connection migration to this network. \u00a0But really we don\u2019t need a QUIC exchange first; we can avoid showing that if it clarifies things to not show QUIC initial handshake.\u00a0\r\nAlso, why do we have an OK right after?The Ok shows the server supports CIDFI. \u00a0Now that the server is optional for CIDFI, we don\u2019t need the Ok.\u00a0-d\r\n\r\n\u2014Reply to this email directly, view it on GitHub, or unsubscribe.You are receiving this because you are subscribed to this thread.Message ID: ***@***.***>",
+          "createdAt": "2023-11-22T11:37:36Z",
+          "updatedAt": "2023-11-22T11:37:36Z"
+        }
+      ]
+    },
+    {
+      "number": 45,
+      "id": "I_kwDOKCXv8853jFG9",
+      "title": "Direction",
+      "url": "https://github.com/danwing/cidfi/issues/45",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L833C30-L833C34\r\n\r\n\"Map DCID=xyz as high importance\": refers here to a CID chosen by the server not the DCID used by the server to communicate with the client (which is mirroring a CID picked by the client). \r\n\r\nMay be worth clarifying in the text.",
+      "createdAt": "2023-11-22T06:47:46Z",
+      "updatedAt": "2023-11-22T06:47:46Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -1923,24 +1963,26 @@
       "id": "PR_kwDOKCXv885fxjZu",
       "title": "added Introduction use-case subsections: video streaming and interact\u2026",
       "url": "https://github.com/danwing/cidfi/pull/42",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "\u2026ive audio/video/screen sharing",
       "createdAt": "2023-11-17T17:00:29Z",
-      "updatedAt": "2023-11-20T13:25:20Z",
+      "updatedAt": "2023-11-21T05:31:32Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "ac7a0ff71907ad15eb04bd172ca11cc88af12bf0",
       "headRepository": "danwing/cidfi",
       "headRefName": "use_cases",
       "headRefOid": "8c5848da40be59f58173cf3c11d12e13c8b33996",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-11-21T05:31:31Z",
+      "mergedAt": "2023-11-21T05:31:31Z",
+      "mergedBy": "tireddy2",
+      "mergeCommit": {
+        "oid": "602c0125c6d257b180f7f9cd711a05d1be2a28ef"
+      },
       "comments": [],
       "reviews": [
         {
@@ -2001,6 +2043,357 @@
           "createdAt": "2023-11-20T13:25:20Z",
           "updatedAt": "2023-11-20T13:25:20Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 43,
+      "id": "PR_kwDOKCXv885f_uP8",
+      "title": "Update security considerations section and update text for clarity",
+      "url": "https://github.com/danwing/cidfi/pull/43",
+      "state": "OPEN",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-21T09:16:31Z",
+      "updatedAt": "2023-11-22T10:51:13Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "602c0125c6d257b180f7f9cd711a05d1be2a28ef",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-2",
+      "headRefOid": "ff4de4b2682e91fa870288a8663bb24edc27ac9b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885nzkk6",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2023-11-21T09:59:24Z",
+          "updatedAt": "2023-11-21T10:22:02Z",
+          "comments": [
+            {
+              "originalPosition": 46,
+              "body": "Please add a pointer to where this is defined in RFC9000.",
+              "createdAt": "2023-11-21T09:59:24Z",
+              "updatedAt": "2023-11-21T10:22:02Z"
+            },
+            {
+              "originalPosition": 57,
+              "body": "```suggestion\r\n> Note: {{fig-import}} lists sample attributes and they will be discussed in detail in a separate document.\r\n```",
+              "createdAt": "2023-11-21T10:00:14Z",
+              "updatedAt": "2023-11-21T10:22:02Z"
+            },
+            {
+              "originalPosition": 101,
+              "body": "```suggestion\r\nSpoofing Attacks:\r\n: For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can only be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.\r\n: If the client does not support CIDFI, the attacker can influence the packet treatment of the victim's UDP 4-tuple.\r\n: If the client implements CIDFI, a CIDFI network element can identify an IP address spoofing attack. Concretely, the CNE will receive two HTTPS connections describing the same DCID; one connection from the attacker and another one from the victim. The CNE will then issue unique Nonces and HMACs to both the attacker and victim, and both the attacker and victim should send the STUN Indication on that same UDP 4-tuple. Such an event should trigger an alarm on the CNE. In this scenario, it is recommended that both the attacker and the victim be denied CIDFI access.\r\n: The spoofing of a victim's IP address is prevented by the network using network ingress filtering ({{!RFC2827}}, {{!RFC7513}}, {{!RFC6105}}, and/or {{!RFC6620}}).\r\n```",
+              "createdAt": "2023-11-21T10:12:28Z",
+              "updatedAt": "2023-11-21T10:22:02Z"
+            },
+            {
+              "originalPosition": 103,
+              "body": "```suggestion\r\nOn-Path Attacks:\r\n: An on-path attacker can observe the victim's Discovery Packet, block it, and then forward the packet within the attacker's 5-tuple. Subsequently, the on-path attacker can 'steal' the victim's CIDFI control from the victim's UDP 4-tuple, causing the victim's CIDFI signaling for that UDP 4-tuple to influence the attacker's UDP 4-tuple.\r\n: Although the on-path attacker can't directly observe the encrypted CIDFI signaling, this attack effectively disables the victim's CIDFI treatment, making it accessible to the attacker. The attacker can send NEW_CONNECTION_ID frames to the server with the victim's (observed) Destination CID, effectively claiming the victim's CIDFI signaling for themselves. To mitigate this replay attack, shared networks require per-endpoint encryption (e.g., Wi-Fi WPA3, DOCSIS BPI+) or traffic separation (e.g., Ethernet switching rather than bridging).\r\n```",
+              "createdAt": "2023-11-21T10:18:10Z",
+              "updatedAt": "2023-11-21T10:22:02Z"
+            },
+            {
+              "originalPosition": 103,
+              "body": "> The attacker can send NEW_CONNECTION_ID frames to the server with the..\r\n\r\nBut this will be rejected by the server. ",
+              "createdAt": "2023-11-21T10:21:54Z",
+              "updatedAt": "2023-11-21T10:22:02Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n0RDG",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-21T11:28:23Z",
+          "updatedAt": "2023-11-21T11:28:24Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "A QUIC client is free to use use any DCID; multiple QUIC clients within the the same endpoint itself can use the same DCID. ",
+              "createdAt": "2023-11-21T11:28:23Z",
+              "updatedAt": "2023-11-21T11:28:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n0doq",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-21T11:57:57Z",
+          "updatedAt": "2023-11-21T11:57:57Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "My comment was about an attacker who sends a NEW_CONNECTION_ID. Adding or retiring CIDs is encrypted and thus don't see on which case an attacker can inject those and pass through the validation at the server side. ",
+              "createdAt": "2023-11-21T11:57:57Z",
+              "updatedAt": "2023-11-21T11:57:57Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n1EgN",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-21T12:58:35Z",
+          "updatedAt": "2023-11-21T12:58:36Z",
+          "comments": [
+            {
+              "originalPosition": 46,
+              "body": "It is discussed in https://datatracker.ietf.org/doc/html/rfc9000#section-8.1. It says \"Additionally, an endpoint MAY consider the peer address validated if the peer uses a connection ID chosen by the endpoint and the connection ID contains at least 64 bits of entropy.\"\r\n",
+              "createdAt": "2023-11-21T12:58:35Z",
+              "updatedAt": "2023-11-21T12:58:36Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n1F2t",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-21T13:01:28Z",
+          "updatedAt": "2023-11-21T13:01:28Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "I meant the attacker can create a new QUIC connection using the same DCID. ",
+              "createdAt": "2023-11-21T13:01:28Z",
+              "updatedAt": "2023-11-21T13:06:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n1G3K",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-21T13:03:39Z",
+          "updatedAt": "2023-11-21T13:03:39Z",
+          "comments": [
+            {
+              "originalPosition": 46,
+              "body": "Please cite that section in the text. Thanks",
+              "createdAt": "2023-11-21T13:03:39Z",
+              "updatedAt": "2023-11-21T13:03:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n1H1Y",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-21T13:05:46Z",
+          "updatedAt": "2023-11-21T13:05:46Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "But if it creates a new connection, then the initial DCID will be set to zero. \r\n\r\nAlso, how this interferes with the connection that was established by the client. ",
+              "createdAt": "2023-11-21T13:05:46Z",
+              "updatedAt": "2023-11-21T13:05:57Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n2T3G",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-21T15:18:26Z",
+          "updatedAt": "2023-11-21T15:18:27Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "The on-path attacker creates a new QUIC connection with the same DCID as the victim to server, it drops the STUN indication message from client and sends STUN indication message to prove ownership of the 5-tuple. It means, the victim will not be able to prioritize packets. The connection from the victim will continue to exit.",
+              "createdAt": "2023-11-21T15:18:26Z",
+              "updatedAt": "2023-11-21T15:18:27Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n2YMH",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-21T15:26:22Z",
+          "updatedAt": "2023-11-21T15:26:23Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "I may be missing something, but I'm still having trouble with this part especially that the sentence right after says \"To mitigate **this replay attack** .. Can you please share a simple drawing with the various messages? Thanks.",
+              "createdAt": "2023-11-21T15:26:22Z",
+              "updatedAt": "2023-11-21T15:26:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n7VOt",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-22T05:48:05Z",
+          "updatedAt": "2023-11-22T05:48:05Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "The relay attack mitigation is not applicable with a on-path attacker who is capable of dropping the traffic from victim. I will remove it. ",
+              "createdAt": "2023-11-22T05:48:05Z",
+              "updatedAt": "2023-11-22T05:48:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n7nyA",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-22T06:53:55Z",
+          "updatedAt": "2023-11-22T06:53:55Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "Thanks for removing that part. \r\n\r\nStill need a figure with the various messages to digest the attack.",
+              "createdAt": "2023-11-22T06:53:55Z",
+              "updatedAt": "2023-11-22T06:53:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n84FI",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-22T10:07:01Z",
+          "updatedAt": "2023-11-22T10:07:01Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "[cidfi-attack.pptx](https://github.com/danwing/cidfi/files/13437765/cidfi-attack.pptx)\r\nAttached figure explaining the on-path attack.",
+              "createdAt": "2023-11-22T10:07:01Z",
+              "updatedAt": "2023-11-22T10:07:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n89aQ",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-22T10:17:48Z",
+          "updatedAt": "2023-11-22T10:17:48Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "Thanks. The file points to the generic cidfi prez.  ",
+              "createdAt": "2023-11-22T10:17:48Z",
+              "updatedAt": "2023-11-22T10:17:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n9M1R",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-22T10:50:19Z",
+          "updatedAt": "2023-11-22T10:50:20Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "[cidfi-attack.pptx](https://github.com/danwing/cidfi/files/13438288/cidfi-attack.pptx)\r\n",
+              "createdAt": "2023-11-22T10:50:20Z",
+              "updatedAt": "2023-11-22T10:50:20Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885n9NN_",
+          "commit": {
+            "abbreviatedOid": "e864ca3"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-22T10:51:13Z",
+          "updatedAt": "2023-11-22T10:51:13Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "Please see the updated presentation. ",
+              "createdAt": "2023-11-22T10:51:13Z",
+              "updatedAt": "2023-11-22T10:51:13Z"
+            }
+          ]
         }
       ]
     }
