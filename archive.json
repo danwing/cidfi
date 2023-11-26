@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-23T01:14:25.628121+00:00",
+  "timestamp": "2023-11-26T01:18:25.469742+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -259,7 +259,7 @@
       "labels": [],
       "body": "https://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L672\r\n\r\nWhy is this an initial packet? This should be any QUIC packet with SCID=xyz + signaled 4-uple. No?\r\n\r\nAlso, why do we have an OK right after?",
       "createdAt": "2023-11-22T06:42:20Z",
-      "updatedAt": "2023-11-22T11:37:37Z",
+      "updatedAt": "2023-11-23T13:10:53Z",
       "closedAt": null,
       "comments": [
         {
@@ -268,6 +268,13 @@
           "body": "On Nov 22, 2023, at 1:42\u202fAM, Med ***@***.***> wrote:\ufeff\r\nhttps://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L672\r\nWhy is this an initial packet? This should be any QUIC packet with SCID=xyz + signaled 4-uple. No?Agreed, it could be a connection migration to this network. \u00a0But really we don\u2019t need a QUIC exchange first; we can avoid showing that if it clarifies things to not show QUIC initial handshake.\u00a0\r\nAlso, why do we have an OK right after?The Ok shows the server supports CIDFI. \u00a0Now that the server is optional for CIDFI, we don\u2019t need the Ok.\u00a0-d\r\n\r\n\u2014Reply to this email directly, view it on GitHub, or unsubscribe.You are receiving this because you are subscribed to this thread.Message ID: ***@***.***>",
           "createdAt": "2023-11-22T11:37:36Z",
           "updatedAt": "2023-11-22T11:37:36Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ok, let's then update the figure. Thanks.",
+          "createdAt": "2023-11-23T13:10:51Z",
+          "updatedAt": "2023-11-23T13:10:51Z"
         }
       ]
     },
@@ -284,6 +291,38 @@
       "body": "https://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L833C30-L833C34\r\n\r\n\"Map DCID=xyz as high importance\": refers here to a CID chosen by the server not the DCID used by the server to communicate with the client (which is mirroring a CID picked by the client). \r\n\r\nMay be worth clarifying in the text.",
       "createdAt": "2023-11-22T06:47:46Z",
       "updatedAt": "2023-11-22T06:47:46Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 46,
+      "id": "I_kwDOKCXv8853stfh",
+      "title": "Collaborative and Interoperable Dissemination of Flow Indicators",
+      "url": "https://github.com/danwing/cidfi/issues/46",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "to record an alternative expansion of CIDFI, and more importantly to generalize the framework",
+      "createdAt": "2023-11-23T13:11:46Z",
+      "updatedAt": "2023-11-23T13:11:46Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 47,
+      "id": "I_kwDOKCXv8853ytnJ",
+      "title": "Signal a differentiated behavior from a server",
+      "url": "https://github.com/danwing/cidfi/issues/47",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Check if we can simplify the signals that can be triggered from the server and can be bound to a group of connections.\r\n\r\nstrip or pass through the signal.",
+      "createdAt": "2023-11-24T14:04:45Z",
+      "updatedAt": "2023-11-24T14:04:45Z",
       "closedAt": null,
       "comments": []
     }
