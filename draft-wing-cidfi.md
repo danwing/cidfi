@@ -645,33 +645,36 @@ them.  This message is discarded by the QUIC server.
 
 
 {{flow-diag}} shows a summarized message flow obtaining
-the nonce and HMAC secret from the CNE then later
-sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server:
+the nonce and HMAC secret from the CNE (steps 1-2) then later
+sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server (step 4).
+This message flow shows an initial QUIC handshake for simplicity (steps
+3 and 9) but a QUIC connection migration ({{Section 9 of [RFC9000]}}) can
+also occur and the CIDFI messages might appear before QUIC packets appear.
 
 ~~~~~ aasvg
  QUIC                            CIDFI-aware            QUIC
 client                           edge router           server
   |                                    |                  |
-  |  HTTPS: Enroll CIDFI router to participate            |
+  |  1. HTTPS: Enroll CIDFI router to participate         |
   +----------------------------------->|                  |
-  |  HTTPS: Ok.  nonce=12345           |                  |
+  |  2. HTTPS: Ok.  nonce=12345        |                  |
   |<-----------------------------------+                  |
   |                                    |                  |
   :                                    :                  :
   |                                    |                  |
-  |  QUIC Initial, transport parameter=CIDFI              |
+  |  3. QUIC Initial, transport parameter=CIDFI           |
   +------------------------------------------------------>|
-  |  STUN Indication, nonce=12345, hmac=e8FEc             |
+  |  4. STUN Indication, nonce=12345, hmac=e8FEc          |
   +------------------------------------------------------>|
-  |                                    |              discarded
+  |                                    |           5. discarded
   |                                    |                  |
-  |                    "I saw my nonce, HMAC is valid"    |
+  |                 6. "I saw my nonce, HMAC is valid"    |
   |                                    |                  |
-  |  HTTPS: "Map DCID=xyz as high importance"             |
+  |  7. HTTPS: "Map DCID=xyz as high importance"          |
   +----------------------------------->|                  |
-  |  QUIC Initial, transport parameter=CIDFI              |
+  |  8. QUIC Initial, transport parameter=CIDFI           |
   |<------------------------------------------------------+
-  |  HTTPS: Ok                         |                  |
+  |  9. HTTPS: Ok                      |                  |
   |<-----------------------------------+                  |
 ~~~~~
 {: #flow-diag title="Example of Flow Exhange" artwork-align="center"}
