@@ -26,10 +26,10 @@ keyword:
  - QUIC
 
 venue:
-  group: "ART Area"
+  group: "TSV Area"
   type: "Working Group"
-  mail: "art@ietf.org"
-  arch: "https://mailarchive.ietf.org/arch/browse/art/"
+  mail: "tsvwg@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/tsvwg/"
   github: "danwing/cidfi"
   latest: "https://danwing.github.io/cidfi/draft-wing-cidfi.html"
 
