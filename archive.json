@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-28T01:15:46.216364+00:00",
+  "timestamp": "2023-11-30T01:14:44.489135+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -259,7 +259,7 @@
       "labels": [],
       "body": "https://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L672\r\n\r\nWhy is this an initial packet? This should be any QUIC packet with SCID=xyz + signaled 4-uple. No?\r\n\r\nAlso, why do we have an OK right after?",
       "createdAt": "2023-11-22T06:42:20Z",
-      "updatedAt": "2023-11-23T13:10:53Z",
+      "updatedAt": "2023-11-29T21:43:06Z",
       "closedAt": null,
       "comments": [
         {
@@ -275,6 +275,13 @@
           "body": "Ok, let's then update the figure. Thanks.",
           "createdAt": "2023-11-23T13:10:51Z",
           "updatedAt": "2023-11-23T13:10:51Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "Fixed in PR #49 ",
+          "createdAt": "2023-11-29T21:43:05Z",
+          "updatedAt": "2023-11-29T21:43:05Z"
         }
       ]
     },
@@ -322,9 +329,41 @@
       "labels": [],
       "body": "Check if we can simplify the signals that can be triggered from the server and can be bound to a group of connections.\r\n\r\nstrip or pass through the signal.",
       "createdAt": "2023-11-24T14:04:45Z",
-      "updatedAt": "2023-11-24T14:04:45Z",
+      "updatedAt": "2023-11-29T20:48:43Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "Could you provide more detail what you're thinking or provide an example?",
+          "createdAt": "2023-11-29T20:48:41Z",
+          "updatedAt": "2023-11-29T20:48:41Z"
+        }
+      ]
+    },
+    {
+      "number": 48,
+      "id": "I_kwDOKCXv8854PxFz",
+      "title": "Importance signal may be abused by some hosts",
+      "url": "https://github.com/danwing/cidfi/issues/48",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Details about how the signal is used by CNEs to enforce policies are worth discussing.\r\n",
+      "createdAt": "2023-11-29T20:53:18Z",
+      "updatedAt": "2023-11-29T21:12:26Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "I agree some text is needed.\r\n\r\nMy view is a client only influences traffic to itself, and CIDFI does not influence traffic to other clients.  A difficulty of course is where the network places NATs which obscure \"other clients\" because of IP address sharing but NAPT isn't CIDFI's fault.",
+          "createdAt": "2023-11-29T21:12:25Z",
+          "updatedAt": "2023-11-29T21:12:25Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -2097,7 +2136,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-11-21T09:16:31Z",
-      "updatedAt": "2023-11-22T10:51:13Z",
+      "updatedAt": "2023-11-29T20:47:50Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "602c0125c6d257b180f7f9cd711a05d1be2a28ef",
@@ -2433,8 +2472,47 @@
               "updatedAt": "2023-11-22T10:51:13Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885orTdg",
+          "commit": {
+            "abbreviatedOid": "ff4de4b"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "> A valid HMAC can only be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.\r\n\r\nThe attacker doesn't need the HMAC key -- they can just see the STUN packet with the HMAC output from the victim.  So I'm not sure \"only\" in the original sentence is accurate.  I would say it's the only way for the attacker to get the HMAC key.  But obtaining the HMAC key is not the only way for the attacker to perform an attack on the STUN message.",
+          "createdAt": "2023-11-29T20:47:50Z",
+          "updatedAt": "2023-11-29T20:47:50Z",
+          "comments": []
         }
       ]
+    },
+    {
+      "number": 49,
+      "id": "PR_kwDOKCXv885gt1xb",
+      "title": "clarify QUIC Initial isn't necessary; in fact QUIC messages aren't necessary",
+      "url": "https://github.com/danwing/cidfi/pull/49",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "I added steps to the diagram so the text can talk about them, too.",
+      "createdAt": "2023-11-29T21:42:15Z",
+      "updatedAt": "2023-11-29T21:44:34Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "602c0125c6d257b180f7f9cd711a05d1be2a28ef",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "remove_initial",
+      "headRefOid": "3e33d0278160baf51e94669cc4d5fdb0dad22c4a",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
