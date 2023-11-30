@@ -4,8 +4,8 @@
 *.swp
 *.txt
 *.upload
-*~
 */~*
+*~
 .tags
 /*-[0-9][0-9].xml
 /.gems/
@@ -18,6 +18,7 @@
 /versioned/
 Gemfile.lock
 archive.json
+draft-wing-cidfi.xml
 draft-wing-tsvwg-cidfi.xml
 package-lock.json
 report.xml
