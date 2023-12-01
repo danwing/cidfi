@@ -648,7 +648,7 @@ them.  This message is discarded by the QUIC server.
 the nonce and HMAC secret from the CNE (steps 1-2) then later
 sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server (step 4).
 This message flow shows an initial QUIC handshake for simplicity (steps
-3 and 9) but a QUIC connection migration ({{Section 9 of QUIC}}) can
+3 and 8) but a QUIC connection migration ({{Section 9 of QUIC}}) can
 also occur and the CIDFI messages might appear before QUIC packets appear.
 
 ~~~~~ aasvg
