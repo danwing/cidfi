@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 25 May 2024                                               Nokia
+Expires: 3 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                        22 November 2023
+                                                         1 December 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 May 2024.
+   This Internet-Draft will expire on 3 June 2024.
 
 Copyright Notice
 
@@ -1183,9 +1183,9 @@ Table of Contents
    Spoofing Attacks:  For an attacker to succeed with the nonce
       challenge against a victim's UDP 4-tuple, an attacker has to send
       a STUN CIDFI-NONCE packet using the victim's source IP address and
-      a valid HMAC.  A valid HMAC can only be obtained by the attacker
-      making its own connection to the CIDFI-aware server and spoofing
-      the source IP address and UDP port number of the victim.
+      a valid HMAC.  A valid HMAC can be obtained by the attacker making
+      its own connection to the CIDFI-aware server and spoofing the
+      source IP address and UDP port number of the victim.
 
       If the client does not support CIDFI, the attacker can influence
       the packet treatment of the victim's UDP 4-tuple.
