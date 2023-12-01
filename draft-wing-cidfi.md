@@ -164,6 +164,8 @@ prefer the use of alternate paths, offload a network).
 and share metadata between hosts, networks, and servers. This document adheres to
 the client-centric metadata sharing approach because it preserves privacy and also
 takes advantage of clients having a full view on their available network attachments.
+Metadata exhanges can occur in one single direction or both directions of a flows.
+
 
 ~~~~~ aasvg
 (1)  Proxied Connection
