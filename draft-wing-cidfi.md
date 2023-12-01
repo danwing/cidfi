@@ -132,7 +132,6 @@ intentional and reactive management policies.  With
 optional server support individual packets can receive differentiated
 service. The proposed approach covers both directions of a flow.
 
-
 --- middle
 
 # Introduction
@@ -208,6 +207,10 @@ takes advantage of clients having a full view on their available network attachm
     |                             |                         |
 ~~~~~
 {: #design-approaches artwork-align="center" title="Candidate Design Approaches"}
+
+The draft is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol. To illustrate its applicability, we have chosen to use the proposed framework with QUIC transport and application protocols using DTLS.
+
+# Overview
 
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
