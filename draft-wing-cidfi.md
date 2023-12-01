@@ -1185,7 +1185,7 @@ client knows the identity of the server and can validate
 its certificate.
 
 Spoofing Attacks:
-: For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can only be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.
+: For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.
 : If the client does not support CIDFI, the attacker can influence the packet treatment of the victim's UDP 4-tuple.
 : If the client implements CIDFI, a CIDFI network element can identify an IP address spoofing attack. Concretely, the CNE will receive two HTTPS connections describing the same DCID; one connection from the attacker and another one from the victim. The CNE will then issue unique Nonces and HMACs to both the attacker and victim, and both the attacker and victim should send the STUN Indication on that same UDP 4-tuple. Such an event should trigger an alarm on the CNE. In this scenario, it is recommended that both the attacker and the victim be denied CIDFI access.
 : The spoofing of a victim's IP address is prevented by the network using network ingress filtering ({{!RFC2827}}, {{!RFC7513}}, {{!RFC6105}}, and/or {{!RFC6620}}).
