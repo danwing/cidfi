@@ -11,7 +11,7 @@ Expires: 4 June 2024                                               Nokia
                                                          2 December 2023
 
 
-                       CID Flow Indicator (CIDFI)
+                Framework for CID Flow Indicator (CIDFI)
                         draft-wing-cidfi-latest
 
 Abstract
