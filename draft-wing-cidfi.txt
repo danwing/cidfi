@@ -168,7 +168,9 @@ Table of Contents
    convey and share metadata between hosts, networks, and servers.  This
    document adheres to the client-centric metadata sharing approach
    because it preserves privacy and also takes advantage of clients
-   having a full view on their available network attachments.
+   having a full view on their available network attachments.  Metadata
+   exhanges can occur in one single direction or both directions of a
+   flows.
 
    (1)  Proxied Connection
                           .--------------.                   +------+
