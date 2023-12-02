@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 3 June 2024                                               Nokia
+Expires: 4 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         1 December 2023
+                                                         2 December 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 June 2024.
+   This Internet-Draft will expire on 4 June 2024.
 
 Copyright Notice
 
@@ -214,10 +214,10 @@ Table of Contents
 
                    Figure 1: Candidate Design Approaches
 
-   The draft is a generic framework that would function in any network
-   deployment.  This framework can be leveraged by any transport
+   The document is a generic framework that would function in any
+   network deployment.  This framework can be leveraged by any transport
    protocol (see Appendix A).  To illustrate the framework's
-   applicability this draft focuses on QUIC transport and application
+   applicability this document focuses on QUIC transport and application
    protocols using DTLS.
 
 2.  Overview
