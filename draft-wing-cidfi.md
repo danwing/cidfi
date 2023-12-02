@@ -208,7 +208,7 @@ takes advantage of clients having a full view on their available network attachm
 ~~~~~
 {: #design-approaches artwork-align="center" title="Candidate Design Approaches"}
 
-The draft is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol (see {{extending}}). To illustrate the framework's applicability this draft focuses on QUIC transport and application protocols using DTLS.
+The document is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol (see {{extending}}). To illustrate the framework's applicability this document focuses on QUIC transport and application protocols using DTLS.
 
 # Overview
 
