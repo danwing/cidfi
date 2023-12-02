@@ -1,5 +1,5 @@
 ---
-title: "CID Flow Indicator (CIDFI)"
+title: "Framework for CID Flow Indicator (CIDFI)"
 abbrev: "CIDFI"
 category: std
 
