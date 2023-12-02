@@ -439,11 +439,11 @@ Wi-Fi network (example.com).
 
 ~~~~~
 _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 service-cidfi.example.net. (
-    alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
+    alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
     cidfimetadata=/cidfi-metadata
     )
 _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 wifi.example.com. (
-    alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
+    alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
     cidfimetadata=/cidfi-metadata
     )
 ~~~~~
@@ -467,12 +467,12 @@ CIDFI-aware network elements, service-cidfi and wi-fi.
    "cidfi":[
       {
          "cidfinode":"service-cidfi.example.net",
-         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       },
       {
          "cidfinode":"wi-fi.example.net",
-         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       }
    ]
@@ -590,7 +590,7 @@ When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server,
      described in {{initial-metadata-exchange}}.
   4. for the duration of the connection, receives network-to-host and performs
      host-to-network updates as network conditions or network requirements change,
-     described in {{ongoing}}. Some policies are provided to CNEs to control which network changes can triggers updating clients.
+     described in {{ongoing}}. Some policies are provided to CNEs to control which network changes can trigger updating clients.
 
 
 > Note: the client is also a sender, and can also perform all these
@@ -687,10 +687,9 @@ same incoming Destination CID on their own UDP 4-tuple. The STUN
 Indication message allows the CIDFI network element to distinguish
 each QUIC client's UDP 4-tuple.
 
-Because multiple QUIC clients will use the same incoming Destination
-CID on their own UDP 4-tuple, the STUN Indication message also allows
-a CNE to distinguish which UDP 4-tuple belongs to
-each CIDFI client.
+Because multiple QUIC clients may use the same incoming Destination CID on
+their own UDP 4-tuple, the STUN Indication message allows a CNE
+to distinguish each QUIC client's UDP 4-tuple.
 
 To reduce CIDFI setup time the client STUN Indication MAY be sent at
 the same time as the QUIC Initial packet ({{Section 17.2.2 of QUIC}}), which is encouraged
@@ -1031,6 +1030,8 @@ to each of the CNEs. An example is shown in {{fig-import}}.
 ~~~~~
 {: #fig-import artwork-align="left" title="Example JSON for Flow Importance"}
 
+> Note: {{fig-import}} lists sample attributes and they will be discussed in detail in a separate document.
+
 ### Mapping DiffServ Code Point (DSCP) to DCIDs {#mapping-dscp}
 
 A mapping from Destination CID to DiffServ code point
@@ -1188,42 +1189,15 @@ thus maintaining the end user's privacy.  Communications are relayed through the
 client knows the identity of the server and can validate
 its certificate.
 
-For an attacker to succeed with the nonce challenge against a victim's
-UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE packet using
-the victim's source IP address and a valid HMAC.  A valid HMAC can
-only be obtained by the attacker making its own connection to the
-CIDFI server and spoofing the source IP address and UDP port of the
-victim.  Such spoofing of a victim's IP address is prevented by the
-network using network ingress filtering ({{?RFC2827}}, {{?RFC7513}},
-{{?RFC6105}}, and/or {{?RFC6620}}).  In the event network ingress
-filtering is not configured or configured improperly, the CIDFI
-network element can detect an attack if the client implements CIDFI.
-The CIDFI network element receive two HTTPS connections describing the
-same DCID (one connection from the attacker, another from the victim).
-The CIDFI network element will issue unique Nonces and HMACs to both
-the attacker and victim, and the attacker and victim will both send
-the STUN indication on that same UDP 4-tuple.  This should never
-normally occur and should generate an alarm on the CIDFI network
-element.  In this situation, it is recommended both attack and victim
-be denied CIDFI access.
+Spoofing Attacks:
+: For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.
+: If the client does not support CIDFI, the attacker can influence the packet treatment of the victim's UDP 4-tuple.
+: If the client implements CIDFI, a CIDFI network element can identify an IP address spoofing attack. Concretely, the CNE will receive two HTTPS connections describing the same DCID; one connection from the attacker and another one from the victim. The CNE will then issue unique Nonces and HMACs to both the attacker and victim, and both the attacker and victim should send the STUN Indication on that same UDP 4-tuple. Such an event should trigger an alarm on the CNE. In this scenario, it is recommended that both the attacker and the victim be denied CIDFI access.
+: The spoofing of a victim's IP address is prevented by the network using network ingress filtering ({{!RFC2827}}, {{!RFC7513}}, {{!RFC6105}}, and/or {{!RFC6620}}).
 
-If attacker can see the victim's Discovery Packet and attacker can
-send that packet inside the attacker's 5-tuple and race it to the
-on-path CIDFI network element (which needs to see the Discovery
-Packet) the attacker can then 'steal' the victim's CIDFI control from
-the victim's 5-tuple and the victim's CIDFI signaling thereafter for
-that 5-tuple will influence the attacker's 5-tuple.  The attacker
-can't see that CIDFI signaling (because it still goes to the victim
-which relays the CIDFI signaling to the CIDFI network element) but
-with this attack the victim's CIDFI treatment is effectively disabled
-and is available to the attacker.  The attacker can send
-NEW_CONNECTION_ID frames to the server with the victim's (observed)
-Destination CID, effectively stealing the victim's CIDFI signaling for
-themselves.  To mitigate this replay attack shared networks need
-per-endpoint encryption (e.g., Wi-Fi WPA3, DOCSIS BPI+) or traffic
-separation (e.g., Ethernet switching rather than bridging).
-
-
+On-Path Attacks:
+: An on-path attacker can observe the victim's Discovery Packet, block it, and then forward the packet within the attacker's 5-tuple. Subsequently, the on-path attacker can 'steal' the victim's CIDFI control from the victim's UDP 4-tuple, causing the victim's CIDFI signaling for that UDP 4-tuple to influence the attacker's UDP 4-tuple.
+: Although the on-path attacker can't directly observe the encrypted CIDFI signaling, this attack effectively disables the victim's CIDFI treatment, making it accessible to the attacker. The attacker can send NEW_CONNECTION_ID frames to the server with the victim's (observed) Destination CID, effectively claiming the victim's CIDFI signaling for themselves. An on-path attacker can do a lot more damage by blocking or rate-limiting the victim's traffic.
 
 # IANA Considerations
 
