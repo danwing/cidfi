@@ -1988,11 +1988,11 @@ Wi-Fi network (example.com).<a href="#section-4.1-2" class="pilcrow">¶</a></p>
           <div class="alignCenter art-text artwork" id="section-4.1-3.1">
 <pre>
 _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 service-cidfi.example.net. (
-    alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
+    alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
     cidfimetadata=/cidfi-metadata
     )
 _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 wifi.example.com. (
-    alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
+    alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
     cidfimetadata=/cidfi-metadata
     )
 </pre>
@@ -2023,12 +2023,12 @@ CIDFI-aware network elements, service-cidfi and wi-fi.<a href="#section-4.2-2" c
    "cidfi":[
       {
          "cidfinode":"service-cidfi.example.net",
-         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       },
       {
          "cidfinode":"wi-fi.example.net",
-         "cidfipathauth":"/path-auth-query {?cidfi}",
+         "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       }
    ]
@@ -2189,7 +2189,7 @@ described in <a href="#initial-metadata-exchange" class="auto internal xref">Sec
         <li id="section-6-2.4">
           <p id="section-6-2.4.1">for the duration of the connection, receives network-to-host and performs
 host-to-network updates as network conditions or network requirements change,
-described in <a href="#ongoing" class="auto internal xref">Section 7</a>. Some policies are provided to CNEs to control which network changes can triggers updating clients.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
+described in <a href="#ongoing" class="auto internal xref">Section 7</a>. Some policies are provided to CNEs to control which network changes can trigger updating clients.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <ul class="normal ulEmpty">
@@ -2357,10 +2357,9 @@ as short as 8 bits, so multiple QUIC clients are likely to use the
 same incoming Destination CID on their own UDP 4-tuple. The STUN
 Indication message allows the CIDFI network element to distinguish
 each QUIC client's UDP 4-tuple.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
-<p id="section-6.2-5">Because multiple QUIC clients will use the same incoming Destination
-CID on their own UDP 4-tuple, the STUN Indication message also allows
-a CNE to distinguish which UDP 4-tuple belongs to
-each CIDFI client.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
+<p id="section-6.2-5">Because multiple QUIC clients may use the same incoming Destination CID on
+their own UDP 4-tuple, the STUN Indication message allows a CNE
+to distinguish each QUIC client's UDP 4-tuple.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
 <p id="section-6.2-6">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
 the same time as the QUIC Initial packet (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-17.2.2" class="relref">Section 17.2.2</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>), which is encouraged
 if the client remembers the server supports CIDFI (0-RTT).<a href="#section-6.2-6" class="pilcrow">¶</a></p>
@@ -2921,6 +2920,11 @@ to each of the CNEs. An example is shown in <a href="#fig-import" class="auto in
 <a href="#name-example-json-for-flow-impor" class="selfRef">Example JSON for Flow Importance</a>
             </figcaption></figure>
 </div>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-10.1.1-6.1">
+              <p id="section-10.1.1-6.1.1">Note: <a href="#fig-import" class="auto internal xref">Figure 11</a> lists sample attributes and they will be discussed in detail in a separate document.<a href="#section-10.1.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </section>
 </div>
 <div id="mapping-dscp">
@@ -3118,39 +3122,38 @@ several DCIDs for every packet importance.<a href="#section-13-1" class="pilcrow
 thus maintaining the end user's privacy.  Communications are relayed through the client because only the
 client knows the identity of the server and can validate
 its certificate.<a href="#section-13-2" class="pilcrow">¶</a></p>
-<p id="section-13-3">For an attacker to succeed with the nonce challenge against a victim's
-UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE packet using
-the victim's source IP address and a valid HMAC.  A valid HMAC can
-only be obtained by the attacker making its own connection to the
-CIDFI server and spoofing the source IP address and UDP port of the
-victim.  Such spoofing of a victim's IP address is prevented by the
-network using network ingress filtering (<span>[<a href="#RFC2827" class="cite xref">RFC2827</a>]</span>, <span>[<a href="#RFC7513" class="cite xref">RFC7513</a>]</span>,
-<span>[<a href="#RFC6105" class="cite xref">RFC6105</a>]</span>, and/or <span>[<a href="#RFC6620" class="cite xref">RFC6620</a>]</span>).  In the event network ingress
-filtering is not configured or configured improperly, the CIDFI
-network element can detect an attack if the client implements CIDFI.
-The CIDFI network element receive two HTTPS connections describing the
-same DCID (one connection from the attacker, another from the victim).
-The CIDFI network element will issue unique Nonces and HMACs to both
-the attacker and victim, and the attacker and victim will both send
-the STUN indication on that same UDP 4-tuple.  This should never
-normally occur and should generate an alarm on the CIDFI network
-element.  In this situation, it is recommended both attack and victim
-be denied CIDFI access.<a href="#section-13-3" class="pilcrow">¶</a></p>
-<p id="section-13-4">If attacker can see the victim's Discovery Packet and attacker can
-send that packet inside the attacker's 5-tuple and race it to the
-on-path CIDFI network element (which needs to see the Discovery
-Packet) the attacker can then 'steal' the victim's CIDFI control from
-the victim's 5-tuple and the victim's CIDFI signaling thereafter for
-that 5-tuple will influence the attacker's 5-tuple.  The attacker
-can't see that CIDFI signaling (because it still goes to the victim
-which relays the CIDFI signaling to the CIDFI network element) but
-with this attack the victim's CIDFI treatment is effectively disabled
-and is available to the attacker.  The attacker can send
-NEW_CONNECTION_ID frames to the server with the victim's (observed)
-Destination CID, effectively stealing the victim's CIDFI signaling for
-themselves.  To mitigate this replay attack shared networks need
-per-endpoint encryption (e.g., Wi-Fi WPA3, DOCSIS BPI+) or traffic
-separation (e.g., Ethernet switching rather than bridging).<a href="#section-13-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-13-3">
+        <dt id="section-13-3.1">Spoofing Attacks:</dt>
+        <dd style="margin-left: 1.5em" id="section-13-3.2">
+          <p id="section-13-3.2.1">For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.<a href="#section-13-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-13-3.3"></dt>
+        <dd style="margin-left: 1.5em" id="section-13-3.4">
+          <p id="section-13-3.4.1">If the client does not support CIDFI, the attacker can influence the packet treatment of the victim's UDP 4-tuple.<a href="#section-13-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-13-3.5"></dt>
+        <dd style="margin-left: 1.5em" id="section-13-3.6">
+          <p id="section-13-3.6.1">If the client implements CIDFI, a CIDFI network element can identify an IP address spoofing attack. Concretely, the CNE will receive two HTTPS connections describing the same DCID; one connection from the attacker and another one from the victim. The CNE will then issue unique Nonces and HMACs to both the attacker and victim, and both the attacker and victim should send the STUN Indication on that same UDP 4-tuple. Such an event should trigger an alarm on the CNE. In this scenario, it is recommended that both the attacker and the victim be denied CIDFI access.<a href="#section-13-3.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-13-3.7"></dt>
+        <dd style="margin-left: 1.5em" id="section-13-3.8">
+          <p id="section-13-3.8.1">The spoofing of a victim's IP address is prevented by the network using network ingress filtering (<span>[<a href="#RFC2827" class="cite xref">RFC2827</a>]</span>, <span>[<a href="#RFC7513" class="cite xref">RFC7513</a>]</span>, <span>[<a href="#RFC6105" class="cite xref">RFC6105</a>]</span>, and/or <span>[<a href="#RFC6620" class="cite xref">RFC6620</a>]</span>).<a href="#section-13-3.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-13-3.9">On-Path Attacks:</dt>
+        <dd style="margin-left: 1.5em" id="section-13-3.10">
+          <p id="section-13-3.10.1">An on-path attacker can observe the victim's Discovery Packet, block it, and then forward the packet within the attacker's 5-tuple. Subsequently, the on-path attacker can 'steal' the victim's CIDFI control from the victim's UDP 4-tuple, causing the victim's CIDFI signaling for that UDP 4-tuple to influence the attacker's UDP 4-tuple.<a href="#section-13-3.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-13-3.11"></dt>
+        <dd style="margin-left: 1.5em" id="section-13-3.12">
+          <p id="section-13-3.12.1">Although the on-path attacker can't directly observe the encrypted CIDFI signaling, this attack effectively disables the victim's CIDFI treatment, making it accessible to the attacker. The attacker can send NEW_CONNECTION_ID frames to the server with the victim's (observed) Destination CID, effectively claiming the victim's CIDFI signaling for themselves. An on-path attacker can do a lot more damage by blocking or rate-limiting the victim's traffic.<a href="#section-13-3.12.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
 </section>
 </div>
 <div id="iana-considerations">
@@ -3295,9 +3298,25 @@ example: "/metadata"
         <dd>
 <span class="refAuthor">Nichols, K.</span>, <span class="refAuthor">Blake, S.</span>, <span class="refAuthor">Baker, F.</span>, and <span class="refAuthor">D. Black</span>, <span class="refTitle">"Definition of the Differentiated Services Field (DS Field) in the IPv4 and IPv6 Headers"</span>, <span class="seriesInfo">RFC 2474</span>, <span class="seriesInfo">DOI 10.17487/RFC2474</span>, <time datetime="1998-12" class="refDate">December 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2474">https://www.rfc-editor.org/rfc/rfc2474</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC2827">[RFC2827]</dt>
+        <dd>
+<span class="refAuthor">Ferguson, P.</span> and <span class="refAuthor">D. Senie</span>, <span class="refTitle">"Network Ingress Filtering: Defeating Denial of Service Attacks which employ IP Source Address Spoofing"</span>, <span class="seriesInfo">BCP 38</span>, <span class="seriesInfo">RFC 2827</span>, <span class="seriesInfo">DOI 10.17487/RFC2827</span>, <time datetime="2000-05" class="refDate">May 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2827">https://www.rfc-editor.org/rfc/rfc2827</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC4787">[RFC4787]</dt>
         <dd>
 <span class="refAuthor">Audet, F., Ed.</span> and <span class="refAuthor">C. Jennings</span>, <span class="refTitle">"Network Address Translation (NAT) Behavioral Requirements for Unicast UDP"</span>, <span class="seriesInfo">BCP 127</span>, <span class="seriesInfo">RFC 4787</span>, <span class="seriesInfo">DOI 10.17487/RFC4787</span>, <time datetime="2007-01" class="refDate">January 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4787">https://www.rfc-editor.org/rfc/rfc4787</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6105">[RFC6105]</dt>
+        <dd>
+<span class="refAuthor">Levy-Abegnoli, E.</span>, <span class="refAuthor">Van de Velde, G.</span>, <span class="refAuthor">Popoviciu, C.</span>, and <span class="refAuthor">J. Mohacsi</span>, <span class="refTitle">"IPv6 Router Advertisement Guard"</span>, <span class="seriesInfo">RFC 6105</span>, <span class="seriesInfo">DOI 10.17487/RFC6105</span>, <time datetime="2011-02" class="refDate">February 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6105">https://www.rfc-editor.org/rfc/rfc6105</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6620">[RFC6620]</dt>
+        <dd>
+<span class="refAuthor">Nordmark, E.</span>, <span class="refAuthor">Bagnulo, M.</span>, and <span class="refAuthor">E. Levy-Abegnoli</span>, <span class="refTitle">"FCFS SAVI: First-Come, First-Served Source Address Validation Improvement for Locally Assigned IPv6 Addresses"</span>, <span class="seriesInfo">RFC 6620</span>, <span class="seriesInfo">DOI 10.17487/RFC6620</span>, <time datetime="2012-05" class="refDate">May 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6620">https://www.rfc-editor.org/rfc/rfc6620</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7513">[RFC7513]</dt>
+        <dd>
+<span class="refAuthor">Bi, J.</span>, <span class="refAuthor">Wu, J.</span>, <span class="refAuthor">Yao, G.</span>, and <span class="refAuthor">F. Baker</span>, <span class="refTitle">"Source Address Validation Improvement (SAVI) Solution for DHCP"</span>, <span class="seriesInfo">RFC 7513</span>, <span class="seriesInfo">DOI 10.17487/RFC7513</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7513">https://www.rfc-editor.org/rfc/rfc7513</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
@@ -3388,25 +3407,9 @@ example: "/metadata"
         <dd>
 <span class="refAuthor">Custura, A.</span>, <span class="refAuthor">Secchi, R.</span>, and <span class="refAuthor">G. Fairhurst</span>, <span class="refTitle">"Exploring DSCP modification pathologies in the Internet"</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.sciencedirect.com/science/article/pii/S0140366417312835">https://www.sciencedirect.com/science/article/pii/S0140366417312835</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC2827">[RFC2827]</dt>
-        <dd>
-<span class="refAuthor">Ferguson, P.</span> and <span class="refAuthor">D. Senie</span>, <span class="refTitle">"Network Ingress Filtering: Defeating Denial of Service Attacks which employ IP Source Address Spoofing"</span>, <span class="seriesInfo">BCP 38</span>, <span class="seriesInfo">RFC 2827</span>, <span class="seriesInfo">DOI 10.17487/RFC2827</span>, <time datetime="2000-05" class="refDate">May 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2827">https://www.rfc-editor.org/rfc/rfc2827</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC5869">[RFC5869]</dt>
         <dd>
 <span class="refAuthor">Krawczyk, H.</span> and <span class="refAuthor">P. Eronen</span>, <span class="refTitle">"HMAC-based Extract-and-Expand Key Derivation Function (HKDF)"</span>, <span class="seriesInfo">RFC 5869</span>, <span class="seriesInfo">DOI 10.17487/RFC5869</span>, <time datetime="2010-05" class="refDate">May 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5869">https://www.rfc-editor.org/rfc/rfc5869</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC6105">[RFC6105]</dt>
-        <dd>
-<span class="refAuthor">Levy-Abegnoli, E.</span>, <span class="refAuthor">Van de Velde, G.</span>, <span class="refAuthor">Popoviciu, C.</span>, and <span class="refAuthor">J. Mohacsi</span>, <span class="refTitle">"IPv6 Router Advertisement Guard"</span>, <span class="seriesInfo">RFC 6105</span>, <span class="seriesInfo">DOI 10.17487/RFC6105</span>, <time datetime="2011-02" class="refDate">February 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6105">https://www.rfc-editor.org/rfc/rfc6105</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC6620">[RFC6620]</dt>
-        <dd>
-<span class="refAuthor">Nordmark, E.</span>, <span class="refAuthor">Bagnulo, M.</span>, and <span class="refAuthor">E. Levy-Abegnoli</span>, <span class="refTitle">"FCFS SAVI: First-Come, First-Served Source Address Validation Improvement for Locally Assigned IPv6 Addresses"</span>, <span class="seriesInfo">RFC 6620</span>, <span class="seriesInfo">DOI 10.17487/RFC6620</span>, <time datetime="2012-05" class="refDate">May 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6620">https://www.rfc-editor.org/rfc/rfc6620</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC7513">[RFC7513]</dt>
-        <dd>
-<span class="refAuthor">Bi, J.</span>, <span class="refAuthor">Wu, J.</span>, <span class="refAuthor">Yao, G.</span>, and <span class="refAuthor">F. Baker</span>, <span class="refTitle">"Source Address Validation Improvement (SAVI) Solution for DHCP"</span>, <span class="seriesInfo">RFC 7513</span>, <span class="seriesInfo">DOI 10.17487/RFC7513</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7513">https://www.rfc-editor.org/rfc/rfc7513</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7839">[RFC7839]</dt>
         <dd>
