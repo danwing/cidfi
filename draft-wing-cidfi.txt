@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 3 June 2024                                               Nokia
+Expires: 4 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         1 December 2023
+                                                         2 December 2023
 
 
                        CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 June 2024.
+   This Internet-Draft will expire on 4 June 2024.
 
 Copyright Notice
 
@@ -661,7 +661,7 @@ Table of Contents
    secret from the CNE (steps 1-2) then later sending the nonce and HMAC
    in the same UDP 4-tuple towards the QUIC server (step 4).  This
    message flow shows an initial QUIC handshake for simplicity (steps 3
-   and 9) but a QUIC connection migration (Section 9 of [QUIC]) can also
+   and 8) but a QUIC connection migration (Section 9 of [QUIC]) can also
    occur and the CIDFI messages might appear before QUIC packets appear.
 
        QUIC                            CIDFI-aware            QUIC
