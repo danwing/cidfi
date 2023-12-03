@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-30T01:14:44.489135+00:00",
+  "timestamp": "2023-12-03T01:18:32.102179+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -364,6 +364,22 @@
           "updatedAt": "2023-11-29T21:12:25Z"
         }
       ]
+    },
+    {
+      "number": 51,
+      "id": "I_kwDOKCXv8854RIwR",
+      "title": "identify related packets",
+      "url": "https://github.com/danwing/cidfi/issues/51",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Could/should we signal 'related' packets with certain CIDs, with the intent the network tries to deliver all or none of them.  For example a 3000 byte payload that needs to be split into 2-3 packets and is only useful if all packets are received.\r\n\r\nThis could be signaled as a bundle of CIDs which should are 'related', e.g., CID 123, 373, 673.  (Note the CIDs are still randomly-chosen and have no natural relationship to each other)\r\n",
+      "createdAt": "2023-11-30T02:33:34Z",
+      "updatedAt": "2023-11-30T02:33:34Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -379,7 +395,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-08-04T07:52:34Z",
-      "updatedAt": "2023-08-15T16:10:27Z",
+      "updatedAt": "2023-12-01T15:36:09Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "de0f756fa56645af6f10f62faa460d142cf3512c",
@@ -419,7 +435,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-08-15T06:21:30Z",
-      "updatedAt": "2023-08-15T16:14:36Z",
+      "updatedAt": "2023-12-01T15:36:11Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "8bd20745412b579a96fbe6c47b8cabf66828d707",
@@ -621,7 +637,7 @@
       "labels": [],
       "body": "- remove redundancy in ART WG title\n- appendix discussion on TCP, SCTP, RTP, and other UDP protocols\n",
       "createdAt": "2023-08-19T18:57:28Z",
-      "updatedAt": "2023-08-19T19:22:27Z",
+      "updatedAt": "2023-12-01T15:36:02Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "5b7c2183e680dc55d2e496b074ff96d81a8c6815",
@@ -649,7 +665,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-09-01T14:41:33Z",
-      "updatedAt": "2023-09-06T02:34:56Z",
+      "updatedAt": "2023-12-01T15:36:25Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "403e5376172f6f8aa82cac5245c8a660f35dddda",
@@ -691,7 +707,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-09-08T07:15:14Z",
-      "updatedAt": "2023-09-08T15:38:01Z",
+      "updatedAt": "2023-12-01T15:36:24Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "02b5e311149078bc203f8d3a44ef4f995af9cb10",
@@ -842,7 +858,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-09-13T00:56:57Z",
-      "updatedAt": "2023-09-13T00:57:51Z",
+      "updatedAt": "2023-12-01T15:35:59Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "04341c3572f3671a806997b00e6983763075bc04",
@@ -2129,25 +2145,35 @@
       "id": "PR_kwDOKCXv885f_uP8",
       "title": "Update security considerations section and update text for clarity",
       "url": "https://github.com/danwing/cidfi/pull/43",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tireddy2",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-11-21T09:16:31Z",
-      "updatedAt": "2023-11-29T20:47:50Z",
+      "updatedAt": "2023-12-02T01:36:48Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
-      "baseRefOid": "602c0125c6d257b180f7f9cd711a05d1be2a28ef",
+      "baseRefOid": "93208651ed3e7e6022e63a6e89b9e154ae28e04a",
       "headRepository": "danwing/cidfi",
       "headRefName": "tireddy2-patch-2",
-      "headRefOid": "ff4de4b2682e91fa870288a8663bb24edc27ac9b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "a208c34f0e4a313aec741d40c5aa32603bc95d37",
+      "closedAt": "2023-12-02T01:36:47Z",
+      "mergedAt": "2023-12-02T01:36:47Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "127c1f5373c4f37a4931b8c34ade32d36ae22ad2"
+      },
+      "comments": [
+        {
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> > A valid HMAC can only be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.\r\n> \r\n> The attacker doesn't need the HMAC key -- they can just see the STUN packet with the HMAC output from the victim. So I'm not sure \"only\" in the original sentence is accurate. I would say it's the only way for the attacker to get the HMAC key. But obtaining the HMAC key is not the only way for the attacker to perform an attack on the STUN message.\r\n\r\nAgreed, fixed text by removing \"only\". ",
+          "createdAt": "2023-12-01T13:05:03Z",
+          "updatedAt": "2023-12-01T13:05:03Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKCXv885nzkk6",
@@ -2485,6 +2511,32 @@
           "createdAt": "2023-11-29T20:47:50Z",
           "updatedAt": "2023-11-29T20:47:50Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885o7ifC",
+          "commit": {
+            "abbreviatedOid": "a208c34"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-01T19:25:27Z",
+          "updatedAt": "2023-12-01T19:25:27Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885o8uns",
+          "commit": {
+            "abbreviatedOid": "a208c34"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-02T01:36:41Z",
+          "updatedAt": "2023-12-02T01:36:41Z",
+          "comments": []
         }
       ]
     },
@@ -2493,24 +2545,314 @@
       "id": "PR_kwDOKCXv885gt1xb",
       "title": "clarify QUIC Initial isn't necessary; in fact QUIC messages aren't necessary",
       "url": "https://github.com/danwing/cidfi/pull/49",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "I added steps to the diagram so the text can talk about them, too.",
       "createdAt": "2023-11-29T21:42:15Z",
-      "updatedAt": "2023-11-29T21:44:34Z",
+      "updatedAt": "2023-12-01T19:15:48Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "602c0125c6d257b180f7f9cd711a05d1be2a28ef",
       "headRepository": "danwing/cidfi",
       "headRefName": "remove_initial",
       "headRefOid": "3e33d0278160baf51e94669cc4d5fdb0dad22c4a",
+      "closedAt": "2023-12-01T19:15:06Z",
+      "mergedAt": "2023-12-01T19:15:06Z",
+      "mergedBy": null,
+      "mergeCommit": {
+        "oid": "93208651ed3e7e6022e63a6e89b9e154ae28e04a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885o7fMl",
+          "commit": {
+            "abbreviatedOid": "3e33d02"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-01T19:15:48Z",
+          "updatedAt": "2023-12-01T19:15:48Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "```suggestion\r\n3 and 8) but a QUIC connection migration ({{Section 9 of QUIC}}) can\r\n```",
+              "createdAt": "2023-12-01T19:15:48Z",
+              "updatedAt": "2023-12-01T19:15:48Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 50,
+      "id": "PR_kwDOKCXv885guyjz",
+      "title": "TSVWG (rather than ART)",
+      "url": "https://github.com/danwing/cidfi/pull/50",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-30T02:13:55Z",
+      "updatedAt": "2023-12-01T19:15:04Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "602c0125c6d257b180f7f9cd711a05d1be2a28ef",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "transport",
+      "headRefOid": "08ae34c85aefab34aa0de44a66066ada19a8ba9b",
+      "closedAt": "2023-12-01T19:15:03Z",
+      "mergedAt": "2023-12-01T19:15:03Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "93208651ed3e7e6022e63a6e89b9e154ae28e04a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885ot0--",
+          "commit": {
+            "abbreviatedOid": "08ae34c"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-30T08:02:44Z",
+          "updatedAt": "2023-11-30T08:02:44Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885o7euc",
+          "commit": {
+            "abbreviatedOid": "08ae34c"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-01T19:14:15Z",
+          "updatedAt": "2023-12-01T19:14:15Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 52,
+      "id": "PR_kwDOKCXv885g5f7s",
+      "title": "Document as a Generic Framework",
+      "url": "https://github.com/danwing/cidfi/pull/52",
+      "state": "OPEN",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-01T13:20:31Z",
+      "updatedAt": "2023-12-02T01:21:07Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "c34fd18d58959309be4b95591391fc74a56f4ed5",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-3",
+      "headRefOid": "f966045d0cef2fc2cc17e8a12f1b38960038ad10",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885o6EE5",
+          "commit": {
+            "abbreviatedOid": "f85e9a1"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "I slightly tweaked Tiru's wording, and added forward reference to the Appendix.",
+          "createdAt": "2023-12-01T15:34:26Z",
+          "updatedAt": "2023-12-01T15:34:26Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885o7fow",
+          "commit": {
+            "abbreviatedOid": "f85e9a1"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-01T19:17:11Z",
+          "updatedAt": "2023-12-01T19:17:12Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "```suggestion\r\nThe document is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol (see {{extending}}). To illustrate the framework's applicability this document focuses on QUIC transport and application protocols using DTLS.\r\n```",
+              "createdAt": "2023-12-01T19:17:11Z",
+              "updatedAt": "2023-12-01T19:17:12Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885o7iJg",
+          "commit": {
+            "abbreviatedOid": "f85e9a1"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-01T19:24:20Z",
+          "updatedAt": "2023-12-01T19:24:20Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "It is better to echo this in the title, then. No?",
+              "createdAt": "2023-12-01T19:24:20Z",
+              "updatedAt": "2023-12-01T19:24:20Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885o8t0Q",
+          "commit": {
+            "abbreviatedOid": "f85e9a1"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-02T01:21:07Z",
+          "updatedAt": "2023-12-02T01:21:07Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "I adjusted the title in this PR.  See how it feels.",
+              "createdAt": "2023-12-02T01:21:07Z",
+              "updatedAt": "2023-12-02T01:21:07Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 53,
+      "id": "PR_kwDOKCXv885g7eLF",
+      "title": "minor fix",
+      "url": "https://github.com/danwing/cidfi/pull/53",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-01T19:19:03Z",
+      "updatedAt": "2023-12-02T01:17:16Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "93208651ed3e7e6022e63a6e89b9e154ae28e04a",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-1",
+      "headRefOid": "a8d242c4638ece308451c390bd5dbdf5dc47d244",
+      "closedAt": "2023-12-02T01:17:15Z",
+      "mergedAt": "2023-12-02T01:17:15Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "090fd41b7af788ce9382a293df1a9692de8a8840"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885o8tk-",
+          "commit": {
+            "abbreviatedOid": "a8d242c"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-02T01:17:09Z",
+          "updatedAt": "2023-12-02T01:17:09Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 54,
+      "id": "PR_kwDOKCXv885g7fXJ",
+      "title": "uni or bidirectional metadata signals",
+      "url": "https://github.com/danwing/cidfi/pull/54",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-01T19:23:09Z",
+      "updatedAt": "2023-12-02T01:17:45Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "93208651ed3e7e6022e63a6e89b9e154ae28e04a",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-2",
+      "headRefOid": "9b6632301062390b286e5834fb866182b3eb1382",
+      "closedAt": "2023-12-02T01:17:44Z",
+      "mergedAt": "2023-12-02T01:17:44Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "5b50b14c737c5d519e99d2c436525f38886dd90b"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885o8tm7",
+          "commit": {
+            "abbreviatedOid": "9b66323"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-02T01:17:39Z",
+          "updatedAt": "2023-12-02T01:17:39Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 55,
+      "id": "PR_kwDOKCXv885g8nUh",
+      "title": "adjust step number that Med suggested",
+      "url": "https://github.com/danwing/cidfi/pull/55",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-02T01:16:37Z",
+      "updatedAt": "2023-12-02T01:16:44Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "93208651ed3e7e6022e63a6e89b9e154ae28e04a",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "adjust_step_number",
+      "headRefOid": "4600b7c02dc4f068fa4f1bcf24d18926fd76bc27",
+      "closedAt": "2023-12-02T01:16:43Z",
+      "mergedAt": "2023-12-02T01:16:43Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "88b15f3ddd45ec0a92414188516884aa15c44274"
+      },
       "comments": [],
       "reviews": []
     }
