@@ -1344,11 +1344,6 @@ Table of Contents
               UDP", BCP 127, RFC 4787, DOI 10.17487/RFC4787, January
               2007, <https://www.rfc-editor.org/rfc/rfc4787>.
 
-   [RFC6105]  Levy-Abegnoli, E., Van de Velde, G., Popoviciu, C., and J.
-              Mohacsi, "IPv6 Router Advertisement Guard", RFC 6105,
-              DOI 10.17487/RFC6105, February 2011,
-              <https://www.rfc-editor.org/rfc/rfc6105>.
-
    [RFC6620]  Nordmark, E., Bagnulo, M., and E. Levy-Abegnoli, "FCFS
               SAVI: First-Come, First-Served Source Address Validation
               Improvement for Locally Assigned IPv6 Addresses",
@@ -1475,6 +1470,11 @@ Table of Contents
               Key Derivation Function (HKDF)", RFC 5869,
               DOI 10.17487/RFC5869, May 2010,
               <https://www.rfc-editor.org/rfc/rfc5869>.
+
+   [RFC6105]  Levy-Abegnoli, E., Van de Velde, G., Popoviciu, C., and J.
+              Mohacsi, "IPv6 Router Advertisement Guard", RFC 6105,
+              DOI 10.17487/RFC6105, February 2011,
+              <https://www.rfc-editor.org/rfc/rfc6105>.
 
    [RFC7839]  Bhandari, S., Gundavelli, S., Grayson, M., Volz, B., and
               J. Korhonen, "Access-Network-Identifier Option in DHCP",
