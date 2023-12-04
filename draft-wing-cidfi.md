@@ -767,6 +767,9 @@ shown below with "|" denoting concatenation.
   HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
 ~~~~~
 
+When there are multiple CIDFI Network Elements on the network,
+multiple CIDFI-NONE attributes are sent in a single STUN Indication
+message.
 
 ## Initial Metadata Exchange {#initial-metadata-exchange}
 
