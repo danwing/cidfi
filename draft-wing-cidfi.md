@@ -649,12 +649,9 @@ the single STUN indication contains a CIDFI-NONCE attribute from each of
 them.  This message is discarded by the QUIC server.
 
 
-{{flow-diag}} shows a summarized message flow obtaining
-the nonce and HMAC secret from the CNE (steps 1-2) then later
-sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server (step 4).
-This message flow shows an initial QUIC handshake for simplicity (steps
-3 and 8) but a QUIC connection migration ({{Section 9 of QUIC}}) can
-also occur and the CIDFI messages might appear before QUIC packets appear.
+{{flow-diag-attach}} shows a summarized message flow obtaining
+the nonce and HMAC secret from the CNE (steps 1-2) which is performed
+on network attach.
 
 ~~~~~ aasvg
  QUIC                            CIDFI-aware            QUIC
@@ -665,24 +662,47 @@ client                           edge router           server
   |  2. HTTPS: Ok.  nonce=12345        |                  |
   |<-----------------------------------+                  |
   |                                    |                  |
-  :                                    :                  :
+~~~~~
+{: #flow-diag-attach title="Example of Flow Exhange" artwork-align="center"}
+
+
+Later, when connecting to a new QUIC or DTLS server, the client
+determines if there are on-path CIDFI Network Elements by sending the
+nonce and HMAC in the same UDP 4-tuple as the QUIC or DTLS connect
+(step 2).  If a CIDFI Network Element is present it processes the STUN
+Indication and sends a response to the client over HTTP using the
+HTTP channel established above.
+
+
+~~~~~ aasvg
+ QUIC                            CIDFI-aware            QUIC
+client                           edge router           server
   |                                    |                  |
-  |  3. QUIC Initial, transport parameter=CIDFI           |
+  |  1. QUIC Initial, transport parameter=CIDFI           |
   +------------------------------------------------------>|
-  |  4. STUN Indication, nonce=12345, hmac=e8FEc          |
+  |  2. STUN Indication, nonce=12345, hmac=e8FEc          |
   +------------------------------------------------------>|
-  |                                    |           5. discarded
   |                                    |                  |
-  |                 6. "I saw my nonce, HMAC is valid"    |
+  |                                    |           3. discarded
   |                                    |                  |
-  |  7. HTTPS: "Map DCID=xyz as high importance"          |
+  |                 4. "I saw my nonce, HMAC is valid"    |
+  |                                    |                  |
+  |  5. Valid STUN Indication processed|                  |
+  |<-----------------------------------+                  |
+  |                                    |                  |
+  |  6. HTTPS: "Map DCID=xyz as high importance"          |
   +----------------------------------->|                  |
-  |  8. QUIC Initial, transport parameter=CIDFI           |
+  |  7. QUIC Initial, transport parameter=CIDFI           |
   |<------------------------------------------------------+
-  |  9. HTTPS: Ok                      |                  |
+  |  8. HTTPS: Ok                      |                  |
   |<-----------------------------------+                  |
 ~~~~~
-{: #flow-diag title="Example of Flow Exhange" artwork-align="center"}
+{: #flow-diag-connect title="Example of Flow to New Server" artwork-align="center"}
+
+> Note the above message
+flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
+but because of QUIC connection migration ({{Section 9 of QUIC}}) the
+QUIC messages might appear later.
 
 The short header's Destination Connection ID (DCID) can be 0 bytes or
 as short as 8 bits, so multiple QUIC clients are likely to use the
