@@ -695,14 +695,20 @@ their own UDP 4-tuple, the STUN Indication message allows a CNE
 to distinguish each QUIC client's UDP 4-tuple.
 
 To reduce CIDFI setup time the client STUN Indication MAY be sent at
-the same time as the QUIC Initial packet ({{Section 17.2.2 of QUIC}}), which is encouraged
-if the client remembers the server supports CIDFI (0-RTT).
+the same time as it establishes connection with the QUIC or DTLS server.
 
 To prevent replay attacks, the Nonce is usable only for authenticating
 one UDP 4-tuple.  When the connection is migrated ({{Section 9 of
 QUIC}}) the CNE won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
 CIDFI procedures at the beginning ({{attach}}).
+
+After the CIDFI Network Element receives the STUN Indication it
+informs the client by sending an HTTP message to the client.  Details TBD.
+
+As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
+Network Elements near the client, the client MAY reduce traffic to the
+server by modulating the IP TTL of its STUN Indication messages.
 
 Processing continues with the next step.
 
@@ -947,6 +953,9 @@ processing with any discovered CNEs.
 
 > todo: include discussion of {{DTLS-CID}} client and discussion
 of its ICE interaction, if any?
+
+
+
 
 
 # Details of Metadata Exchanged {#metadata-exchanged}
