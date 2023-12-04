@@ -1,5 +1,5 @@
 ---
-title: "CID Flow Indicator (CIDFI)"
+title: "Framework for CID Flow Indicator (CIDFI)"
 abbrev: "CIDFI"
 category: std
 
@@ -132,7 +132,6 @@ intentional and reactive management policies.  With
 optional server support individual packets can receive differentiated
 service. The proposed approach covers both directions of a flow.
 
-
 --- middle
 
 # Introduction
@@ -210,6 +209,10 @@ Metadata exhanges can occur in one single direction or both directions of a flow
     |                             |                         |
 ~~~~~
 {: #design-approaches artwork-align="center" title="Candidate Design Approaches"}
+
+The document is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol (see {{extending}}). To illustrate the framework's applicability this document focuses on QUIC transport and application protocols using DTLS.
+
+# Overview
 
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
