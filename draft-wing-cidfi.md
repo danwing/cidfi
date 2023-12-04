@@ -470,11 +470,13 @@ CIDFI-aware network elements, service-cidfi and wi-fi.
    "cidfi":[
       {
          "cidfinode":"service-cidfi.example.net",
+         "min-ttl":3,
          "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       },
       {
          "cidfinode":"wi-fi.example.net",
+         "min-ttl":2,
          "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       }
@@ -640,14 +642,17 @@ To ensure that the client messages to a CNE
 pertain only to the client's own UDP 4-tuple, the client sends the
 CIDFI nonce protected by the HMAC secret it obtained from
 {{client-authorizes}} over the QUIC UDP 4-tuple it is using with the
-QUIC server.  The ability to transmit that packet on the same UDP
+QUIC server over the path that involves that CNE. The ability to transmit that packet on the same UDP
 4-tuple as the QUIC connection indicates ownership of that IP address
-and UDP port.  The nonce and HMAC are sent in a {{!STUN=RFC8489}} indication (STUN
+and UDP port number.  The nonce and HMAC are sent in a {{!STUN=RFC8489}} indication (STUN
 class of 0b01) containing one or more CIDFI-NONCE attributes
 ({{iana-stun}}).  If there are multiple CNEs
 the single STUN indication contains a CIDFI-NONCE attribute from each of
-them.  This message is discarded by the QUIC server.
+them.  This message is discarded, if received, by the QUIC server.
 
+In order to avoid overloading servers, the client may set the TTL/Hop Limit
+to a value that allows to cross the CNE, but then dicarded before reaching the server.
+For example, the host sets the TTL to "min-ttl" that is returned during CNE discovery.
 
 {{flow-diag}} shows a summarized message flow obtaining
 the nonce and HMAC secret from the CNE (steps 1-2) then later
