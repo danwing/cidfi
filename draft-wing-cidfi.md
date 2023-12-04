@@ -1241,7 +1241,7 @@ in the "STUN Attributes" registry available at {{IANA-STUN}}.
 
 ## New Provisioning Domain Additional Information Key {#iana-pvd}
 
-This document requests IANA to register two new JSON keys in the
+This document requests IANA to register a new JSON key in the
 Provisioning Domains Additional Information registry at {{IANA-PVD}}:
 
 ~~~~~
@@ -1252,13 +1252,18 @@ Example: ["cidfinode": "service.example.net", "cidfipathauth":
           "/authpath", "cidfimetadata": "/meta"]
 ~~~~~
 
-Additionally, in the following cidfi keys are to be registered:
+Additionally, this document registers the following cidfi keys:
 
 ~~~~~
 JSON key: cidfinode
 Description: FQDN of CIDFI node
 Type: string
 Example: service.example.net
+
+JSON key: min-ttl
+Description: The minimum TTL or Hop Limit to reach a CNE
+Type: Unsigned integer
+Example: 5
 
 JSON key: cidfipathauth
 Description: authentication and authorization path for CIDFI
@@ -1277,7 +1282,7 @@ example: "/metadata"
 
 # Extending CIDFI to Other Protocols {#extending}
 
-CIDFI can be extended to other protocols including TCP, SCTP, RTP and SRTP,
+CIDFI can be extended to other protocols including TCP, SCTP, RTP, and SRTP,
 and bespoke UDP protocols.
 
 An extension to each protocol is described below which retains the
