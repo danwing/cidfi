@@ -3246,7 +3246,7 @@ in the "STUN Attributes" registry available at <span>[<a href="#IANA-STUN" class
         <h3 id="name-new-provisioning-domain-add">
 <a href="#section-15.6" class="section-number selfRef">15.6. </a><a href="#name-new-provisioning-domain-add" class="section-name selfRef">New Provisioning Domain Additional Information Key</a>
         </h3>
-<p id="section-15.6-1">This document requests IANA to register two new JSON keys in the
+<p id="section-15.6-1">This document requests IANA to register a new JSON key in the
 Provisioning Domains Additional Information registry at <span>[<a href="#IANA-PVD" class="cite xref">IANA-PVD</a>]</span>:<a href="#section-15.6-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-15.6-2">
 <pre>
@@ -3257,13 +3257,18 @@ Example: ["cidfinode": "service.example.net", "cidfipathauth":
           "/authpath", "cidfimetadata": "/meta"]
 </pre><a href="#section-15.6-2" class="pilcrow">¶</a>
 </div>
-<p id="section-15.6-3">Additionally, in the following cidfi keys are to be registered:<a href="#section-15.6-3" class="pilcrow">¶</a></p>
+<p id="section-15.6-3">Additionally, this document registers the following cidfi keys:<a href="#section-15.6-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-15.6-4">
 <pre>
 JSON key: cidfinode
 Description: FQDN of CIDFI node
 Type: string
 Example: service.example.net
+
+JSON key: min-ttl
+Description: The minimum TTL or Hop Limit to reach a CNE
+Type: Unsigned integer
+Example: 5
 
 JSON key: cidfipathauth
 Description: authentication and authorization path for CIDFI
@@ -3460,7 +3465,7 @@ example: "/metadata"
       <h2 id="name-extending-cidfi-to-other-pr">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-extending-cidfi-to-other-pr" class="section-name selfRef">Extending CIDFI to Other Protocols</a>
       </h2>
-<p id="appendix-A-1">CIDFI can be extended to other protocols including TCP, SCTP, RTP and SRTP,
+<p id="appendix-A-1">CIDFI can be extended to other protocols including TCP, SCTP, RTP, and SRTP,
 and bespoke UDP protocols.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2">An extension to each protocol is described below which retains the
 ability of the client to prove its ownership of the 5-tuple to a CNE.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
