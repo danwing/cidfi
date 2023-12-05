@@ -1252,7 +1252,11 @@ Example: ["cidfinode": "service.example.net", "cidfipathauth":
           "/authpath", "cidfimetadata": "/meta"]
 ~~~~~
 
-Additionally, this document registers the following cidfi keys:
+Additionally, this document requests creating a new registry, entitled "CIDFI JSON Keys" under
+the Provisioning Domains Additional Information registry group {{IANA-PVD}}.
+The policy for assigning new entries in this registry is Expert Review {{Section 4.5 of !RFC8126}}.
+The structure of this registry is identical to the Provisioning Domains Additional Information registry group.
+The initial content of this registry is provided below:
 
 ~~~~~
 JSON key: cidfinode
