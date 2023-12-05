@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 6 June 2024</td>
+<td class="center">Expires 7 June 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-wing-cidfi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-12-04" class="published">4 December 2023</time>
+<time datetime="2023-12-05" class="published">5 December 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-06-06">6 June 2024</time></dd>
+<dd class="expires"><time datetime="2024-06-07">7 June 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1136,7 +1136,7 @@ service. The proposed approach covers both directions of a flow.<a href="#sectio
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1400,7 +1400,7 @@ prefer the use of alternate paths, offload a network).<a href="#section-1-3" cla
 and share metadata between hosts, networks, and servers. This document adheres to
 the client-centric metadata sharing approach because it preserves privacy and also
 takes advantage of clients having a full view on their available network attachments.
-Metadata exhanges can occur in one single direction or both directions of a flows.<a href="#section-1-4" class="pilcrow">¶</a></p>
+Metadata exchanges can occur in one single direction or both directions of a flows.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <span id="name-candidate-design-approaches"></span><div id="design-approaches">
 <figure id="figure-1">
         <div id="section-1-5.1">
@@ -1982,7 +1982,7 @@ These are described in the following sub-sections.<a href="#section-5-2" class="
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-dns-svcb-records" class="section-name selfRef">DNS SVCB Records</a>
         </h3>
 <p id="section-5.1-1">This document defines a new DNS Service Binding parameter "cidfi-aware" in
-<a href="#iana-svcb" class="auto internal xref">Section 15.4</a> and a new Special-Use Domain Name "cifi.arpa" in
+<a href="#iana-svcb" class="auto internal xref">Section 15.4</a> and a new Special-Use Domain Name "cidfi.arpa" in
 <a href="#iana-sudn" class="auto internal xref">Section 15.3</a>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">The local network is configured to respond to DNS SVCB
 <span>[<a href="#RFC9460" class="cite xref">RFC9460</a>]</span> queries with ServiceMode (<span><a href="https://rfc-editor.org/rfc/rfc9460#section-2.4.3" class="relref">Section 2.4.3</a> of [<a href="#RFC9460" class="cite xref">RFC9460</a>]</span>) for "_cidfi-aware.cidfi.arpa" with
@@ -2267,7 +2267,7 @@ sending the nonce and HMAC in the same UDP 4-tuple towards the QUIC server (step
 This message flow shows an initial QUIC handshake for simplicity (steps
 3 and 8) but a QUIC connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) can
 also occur and the CIDFI messages might appear before QUIC packets appear.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
-<span id="name-example-of-flow-exhange"></span><div id="flow-diag">
+<span id="name-example-of-flow-exchange"></span><div id="flow-diag">
 <figure id="figure-6">
           <div id="section-7.2-3.1">
             <div class="alignCenter art-svg artwork" id="section-7.2-3.1.1">
@@ -2360,7 +2360,7 @@ also occur and the CIDFI messages might appear before QUIC packets appear.<a hre
 </div>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-example-of-flow-exhange" class="selfRef">Example of Flow Exhange</a>
+<a href="#name-example-of-flow-exchange" class="selfRef">Example of Flow Exchange</a>
           </figcaption></figure>
 </div>
 <p id="section-7.2-4">The short header's Destination Connection ID (DCID) can be 0 bytes or
@@ -2550,7 +2550,7 @@ highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="au
                   <text x="176" y="84">CIDFI</text>
                   <text x="228" y="84">router</text>
                   <text x="268" y="84">to</text>
-                  <text x="320" y="84">partipate</text>
+                  <text x="328" y="84">participate</text>
                   <text x="68" y="116">HTTPS:</text>
                   <text x="112" y="116">Ok.</text>
                   <text x="184" y="116">nonce=12345</text>
@@ -2621,7 +2621,7 @@ communication delay, it allows the user at the client to authorize
 the metadata communication about its own incoming (and outgoing) traffic.<a href="#section-7.3.1-1" class="pilcrow">¶</a></p>
 <p id="section-7.3.1-2">The communication from the client to the server are using a CIDFI-dedicated
 QUIC stream over the same QUIC connection as their primary communication (<a href="#ex-comm" class="auto internal xref">Figure 9</a>).<a href="#section-7.3.1-2" class="pilcrow">¶</a></p>
-<span id="name-example-of-cidif-communicat"></span><div id="ex-comm">
+<span id="name-example-of-cidfi-communicat"></span><div id="ex-comm">
 <figure id="figure-9">
             <div id="section-7.3.1-3.1">
               <div class="alignCenter art-svg artwork" id="section-7.3.1-3.1.1">
@@ -2684,7 +2684,7 @@ QUIC stream over the same QUIC connection as their primary communication (<a hre
 </div>
 </div>
 <figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
-<a href="#name-example-of-cidif-communicat" class="selfRef">Example of CIDIF Communication</a>
+<a href="#name-example-of-cidfi-communicat" class="selfRef">Example of CIDFI Communication</a>
             </figcaption></figure>
 </div>
 <p id="section-7.3.1-4">To each of the network elements authorized by the client, the client
@@ -2702,7 +2702,7 @@ which is intended to influence the sender's traffic rate (such as
 improving or reducing fidelity of the audio or video).  In <a href="#ex-comm-metadata" class="auto internal xref">Figure 10</a>,
 the CNE informs the client of reduced bandwidth and the
 client informs the server using CIDFI.<a href="#section-7.3.2-1" class="pilcrow">¶</a></p>
-<span id="name-example-of-cidifi-communica"></span><div id="ex-comm-metadata">
+<span id="name-example-of-cidfi-communicati"></span><div id="ex-comm-metadata">
 <figure id="figure-10">
             <div id="section-7.3.2-2.1">
               <div class="alignCenter art-svg artwork" id="section-7.3.2-2.1.1">
@@ -2751,7 +2751,7 @@ client informs the server using CIDFI.<a href="#section-7.3.2-1" class="pilcrow"
 </div>
 </div>
 <figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
-<a href="#name-example-of-cidifi-communica" class="selfRef">Example of CIDIFI Communication with Metadata Sharing</a>
+<a href="#name-example-of-cidfi-communicati" class="selfRef">Example of CIDFI Communication with Metadata Sharing</a>
             </figcaption></figure>
 </div>
 <p id="section-7.3.2-3">The communication from the client to the server is using a CIDFI-dedicated
