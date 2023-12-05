@@ -701,7 +701,7 @@ client                           edge router           server
 
 > Note that the above message
 flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
-but because of QUIC connection migration ({{Section 9 of QUIC}}) the
+but, because of QUIC connection migration ({{Section 9 of QUIC}}), the
 QUIC messages might appear later.
 
 The short header's Destination Connection ID (DCID) can be 0 bytes or
