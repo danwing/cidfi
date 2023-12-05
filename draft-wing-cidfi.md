@@ -699,7 +699,7 @@ client                           edge router           server
 ~~~~~
 {: #flow-diag-connect title="Example of Flow to New Server" artwork-align="center"}
 
-> Note the above message
+> Note that the above message
 flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
 but because of QUIC connection migration ({{Section 9 of QUIC}}) the
 QUIC messages might appear later.
