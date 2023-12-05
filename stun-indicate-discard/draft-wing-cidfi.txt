@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 6 June 2024                                               Nokia
+Expires: 7 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         4 December 2023
+                                                         5 December 2023
 
 
                 Framework for CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 June 2024.
+   This Internet-Draft will expire on 7 June 2024.
 
 Copyright Notice
 
@@ -1273,6 +1273,19 @@ Table of Contents
    This document requests IANA to register the new DNS SVCB "_cidfi-
    aware" in the "DNS Service Bindings (SVCB)" registry available at
    [IANA-SVCB].
+
+   The document also requests IANA to register the following service
+   parameter in the "Service Parameter Keys (SvcParamKeys)" registry
+   [IANA-SVCB]:
+
+   Number:  TBD
+
+   Name:  min-ttl
+
+   Meaning: :The minimum IPv4 TTL or IPv6 Hop Limit to use for a
+   connection.
+
+   Reference:  This-Document
 
 15.5.  New STUN Attribute
 
