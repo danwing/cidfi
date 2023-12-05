@@ -163,7 +163,7 @@ prefer the use of alternate paths, offload a network).
 and share metadata between hosts, networks, and servers. This document adheres to
 the client-centric metadata sharing approach because it preserves privacy and also
 takes advantage of clients having a full view on their available network attachments.
-Metadata exhanges can occur in one single direction or both directions of a flows.
+Metadata exchanges can occur in one single direction or both directions of a flows.
 
 
 ~~~~~ aasvg
@@ -425,7 +425,7 @@ These are described in the following sub-sections.
 ## DNS SVCB Records
 
 This document defines a new DNS Service Binding parameter "cidfi-aware" in
-{{iana-svcb}} and a new Special-Use Domain Name "cifi.arpa" in
+{{iana-svcb}} and a new Special-Use Domain Name "cidfi.arpa" in
 {{iana-sudn}}.
 
 The local network is configured to respond to DNS SVCB
@@ -682,7 +682,7 @@ client                           edge router           server
   |  9. HTTPS: Ok                      |                  |
   |<-----------------------------------+                  |
 ~~~~~
-{: #flow-diag title="Example of Flow Exhange" artwork-align="center"}
+{: #flow-diag title="Example of Flow Exchange" artwork-align="center"}
 
 The short header's Destination Connection ID (DCID) can be 0 bytes or
 as short as 8 bits, so multiple QUIC clients are likely to use the
@@ -787,7 +787,7 @@ highlighted in the simplified message flow in {{ex-lost-nonce}}.
                                  CIDFI-aware            QUIC
 client                           edge router           server
   |                                    |                  |
-  |  HTTPS: Enroll CIDFI router to partipate              |
+  |  HTTPS: Enroll CIDFI router to participate            |
   +----------------------------------->|                  |
   |  HTTPS: Ok.  nonce=12345           |                  |
   |<-----------------------------------+                  |
@@ -851,7 +851,7 @@ client     Wi-Fi Access Point    edge router           server
   |  QUIC CIDFI stream: Ok             |                  |
   +------------------------------------------------------>|
 ~~~~~
-{: #ex-comm Title artwork-align="center" title="Example of CIDIF Communication"}
+{: #ex-comm Title artwork-align="center" title="Example of CIDFI Communication"}
 
 To each of the network elements authorized by the client, the client
 sends the mappings of the server's transmitted Destination CIDs to
@@ -878,7 +878,7 @@ client     Wi-Fi Access Point    edge router     server
   |  Ok              |                 |            |
   +----------------------------------->|            |
 ~~~~~
-{: #ex-comm-metadata Title artwork-align="center" title="Example of CIDIFI Communication with Metadata Sharing"}
+{: #ex-comm-metadata Title artwork-align="center" title="Example of CIDFI Communication with Metadata Sharing"}
 
 The communication from the client to the server is using a CIDFI-dedicated
 QUIC stream over the same QUIC connection as their primary communication.
