@@ -1234,6 +1234,22 @@ Register new special-use domain name cidfi.arpa for DNS SVCB discovery.
 This document requests IANA to register the new DNS SVCB "_cidfi-aware" in
 the "DNS Service Bindings (SVCB)" registry available at {{IANA-SVCB}}.
 
+The document also requests IANA to register the following service parameter
+in the "Service Parameter Keys (SvcParamKeys)" registry {{IANA-SVCB}}:
+
+Number:
+: TBD
+
+Name:
+: min-ttl
+
+Meaning:
+:The minimum IPv4 TTL or IPv6 Hop Limit to use for a connection.
+
+Reference:
+: This-Document
+
+
 ## New STUN Attribute {#iana-stun}
 
 This document requests IANA to register the new STUN attribute "CIDFI-NONCE"
