@@ -768,7 +768,7 @@ shown below with "|" denoting concatenation.
 ~~~~~
 
 When there are multiple CIDFI Network Elements on the network,
-multiple CIDFI-NONE attributes are sent in a single STUN Indication
+multiple CIDFI-NONCE attributes are sent in a single STUN Indication
 message.
 
 ## Initial Metadata Exchange {#initial-metadata-exchange}
