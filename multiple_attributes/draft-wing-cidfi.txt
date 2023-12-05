@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 6 June 2024                                               Nokia
+Expires: 7 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         4 December 2023
+                                                         5 December 2023
 
 
                 Framework for CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 June 2024.
+   This Internet-Draft will expire on 7 June 2024.
 
 Copyright Notice
 
@@ -781,7 +781,7 @@ Table of Contents
      HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
 
    When there are multiple CIDFI Network Elements on the network,
-   multiple CIDFI-NONE attributes are sent in a single STUN Indication
+   multiple CIDFI-NONCE attributes are sent in a single STUN Indication
    message.
 
 7.3.  Initial Metadata Exchange
