@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-03T01:18:32.102179+00:00",
+  "timestamp": "2023-12-05T01:15:53.329551+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -377,7 +377,31 @@
       "labels": [],
       "body": "Could/should we signal 'related' packets with certain CIDs, with the intent the network tries to deliver all or none of them.  For example a 3000 byte payload that needs to be split into 2-3 packets and is only useful if all packets are received.\r\n\r\nThis could be signaled as a bundle of CIDs which should are 'related', e.g., CID 123, 373, 673.  (Note the CIDs are still randomly-chosen and have no natural relationship to each other)\r\n",
       "createdAt": "2023-11-30T02:33:34Z",
-      "updatedAt": "2023-11-30T02:33:34Z",
+      "updatedAt": "2023-12-04T14:40:11Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'm afraid that the more we require sophisticated state handling, the more it will be challenging to convince the network operators to implement CIDFI.",
+          "createdAt": "2023-12-04T14:40:10Z",
+          "updatedAt": "2023-12-04T14:40:10Z"
+        }
+      ]
+    },
+    {
+      "number": 57,
+      "id": "I_kwDOKCXv8854o8qs",
+      "title": "Operational/Manageability Considerations",
+      "url": "https://github.com/danwing/cidfi/issues/57",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Adding a placeholder here\r\n\r\n",
+      "createdAt": "2023-12-04T14:33:03Z",
+      "updatedAt": "2023-12-04T14:33:03Z",
       "closedAt": null,
       "comments": []
     }
@@ -2649,24 +2673,26 @@
       "id": "PR_kwDOKCXv885g5f7s",
       "title": "Document as a Generic Framework",
       "url": "https://github.com/danwing/cidfi/pull/52",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tireddy2",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-12-01T13:20:31Z",
-      "updatedAt": "2023-12-02T01:21:07Z",
+      "updatedAt": "2023-12-04T05:00:34Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "c34fd18d58959309be4b95591391fc74a56f4ed5",
       "headRepository": "danwing/cidfi",
       "headRefName": "tireddy2-patch-3",
       "headRefOid": "f966045d0cef2fc2cc17e8a12f1b38960038ad10",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-12-04T05:00:33Z",
+      "mergedAt": "2023-12-04T05:00:33Z",
+      "mergedBy": "tireddy2",
+      "mergeCommit": {
+        "oid": "c190183b22da5fe6df30cfdc90f14994b73749cb"
+      },
       "comments": [],
       "reviews": [
         {
@@ -2853,6 +2879,145 @@
       "mergeCommit": {
         "oid": "88b15f3ddd45ec0a92414188516884aa15c44274"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 56,
+      "id": "PR_kwDOKCXv885hBy9V",
+      "title": "tweak TTL/Hop Limit for ownership messages",
+      "url": "https://github.com/danwing/cidfi/pull/56",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Add a provision for the control of the forwarding scope of the ownership message. The goal is to avoid overloading servers.",
+      "createdAt": "2023-12-04T09:13:22Z",
+      "updatedAt": "2023-12-04T14:30:06Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "c190183b22da5fe6df30cfdc90f14994b73749cb",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "stun-indicate-discard",
+      "headRefOid": "41f2c7ceafc7b1ac4f074c0839f1614ad9de4bff",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885pDYTO",
+          "commit": {
+            "abbreviatedOid": "2ba102f"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-04T14:11:27Z",
+          "updatedAt": "2023-12-04T14:12:17Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "You will have to update the {#iana-pvd} registry with the new JSON key \"min-ttl\". ",
+              "createdAt": "2023-12-04T14:11:27Z",
+              "updatedAt": "2023-12-04T14:12:17Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pDhK5",
+          "commit": {
+            "abbreviatedOid": "41f2c7c"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-04T14:26:51Z",
+          "updatedAt": "2023-12-04T14:26:51Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "Thanks, Tiru. Done.",
+              "createdAt": "2023-12-04T14:26:51Z",
+              "updatedAt": "2023-12-04T14:26:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pDi7R",
+          "commit": {
+            "abbreviatedOid": "41f2c7c"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-04T14:30:06Z",
+          "updatedAt": "2023-12-04T14:30:06Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "When updating the IANA section, I think that \"Additionally, in the following cidfi keys are to be registered:\" is about creating a new subregistry not adding these keys to the existing registry",
+              "createdAt": "2023-12-04T14:30:06Z",
+              "updatedAt": "2023-12-04T14:30:19Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 58,
+      "id": "PR_kwDOKCXv885hFf-k",
+      "title": "client does TTL",
+      "url": "https://github.com/danwing/cidfi/pull/58",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "My suggestion for client-centric choosing of TTL",
+      "createdAt": "2023-12-04T18:14:11Z",
+      "updatedAt": "2023-12-04T22:15:02Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "c190183b22da5fe6df30cfdc90f14994b73749cb",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "ttl",
+      "headRefOid": "3bfd7b61775df73eb08d74c32b7b94ae245a4968",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 59,
+      "id": "PR_kwDOKCXv885hG-GY",
+      "title": "clarify multiple CIDFI-Nonce attributes can appear in a single STUN Indication",
+      "url": "https://github.com/danwing/cidfi/pull/59",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-04T22:21:51Z",
+      "updatedAt": "2023-12-04T22:21:52Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "39c6f3bc9cf6f69ffe18be0f4b88475660b2a40a",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "multiple_attributes",
+      "headRefOid": "a3f220ef6ba56ae5828f6ff987e0740e8a4f4a94",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
