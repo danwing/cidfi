@@ -729,7 +729,7 @@ informs the client by sending an HTTP message to the client.  Details TBD.
 
 As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
 Network Elements near the client, the client MAY reduce traffic to the
-server by modulating the IP TTL of its STUN Indication messages. The client SHOULD set TTL/Hop Limit to "min-ttl". The client MAY use other values (e.g., explicit configuration, inferred from probe messages).
+server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages. The client SHOULD set TTL/Hop Limit to "min-ttl". The client MAY use other values (e.g., explicit configuration, inferred from probe messages).
 
 Processing continues with the next step.
 
@@ -768,6 +768,9 @@ shown below with "|" denoting concatenation.
   HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
 ~~~~~
 
+When there are multiple CIDFI Network Elements on the network,
+multiple CIDFI-NONCE attributes are sent in a single STUN Indication
+message.
 
 ## Initial Metadata Exchange {#initial-metadata-exchange}
 
@@ -1132,6 +1135,22 @@ metadata.
 The client then sends that information to the server in the CIDFI-dedicated
 QUIC stream associated with that same Connection ID.
 
+# Privacy Considerations
+
+## Privacy-Aware Metadata Sharing in Network Relationships
+
+If the network operator and the server have a business relationship,
+the server can sign or attest the metadata using, e.g., JSON Web Token (JWT) {{?RFC7519}} or CBOR Web Token (CWT) {{?RFC8392}}. The
+attested metadata will be sent from the server to the client. The client
+will decide whether to convey the attested metadata to the CNE, considering
+privacy reasons, as it may reveal the identity of the server to the network.
+The client may use any local policy or involve the end-user in the decision-making process regarding
+whether to reveal the identity of the server to the network or not.
+If the attested metadata is sent to the CNE from the client, the attestation
+will be utilized by the CNE, acting as a Relying Party (e.g., {{Section 7.1 of ?RFC9334}}), to determine the
+level of trust it wishes to place in the attested metadata. The relying party
+may choose to trust or not trust the attestation.
+
 # Discussion Points
 
 This section discusses known issues that would benefit from wider discussion.
@@ -1203,6 +1222,17 @@ signal cannot be relied upon due to network disconnect, battery
 depletion, and suchlike.
 
 > TODO: Probably want keepalives on client->CNE communication. To be assessed.
+
+# API Integration for QUIC Stream and Packet-Level Prioritization
+
+For each QUIC stream requiring differentiated service, the QUIC stack can
+map that stream to a different Destination CID. The application-level code
+would require an API to instruct the QUIC stack that a particular stream
+needs differentiated service. Similarly, if the application-level code seeks
+differentiated service for packets within a stream (e.g., prioritizing P-frames
+over I-Frames in a video stream), it would need an API to inform the QUIC stack
+that different packets within the QUIC stream require differentiated services
+and to map these packets to different Destination CIDs.
 
 # Security Considerations
 
