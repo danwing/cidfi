@@ -2417,7 +2417,7 @@ CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">
 informs the client by sending an HTTP message to the client.  Details TBD.<a href="#section-7.2-11" class="pilcrow">¶</a></p>
 <p id="section-7.2-12">As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
 Network Elements near the client, the client <span class="bcp14">MAY</span> reduce traffic to the
-server by modulating the IP TTL of its STUN Indication messages.<a href="#section-7.2-12" class="pilcrow">¶</a></p>
+server by modulating the IP TTL of its STUN Indication messages. The client <span class="bcp14">SHOULD</span> set TTL/Hop Limit to "min-ttl". The client <span class="bcp14">MAY</span> use other values (e.g., explicit configuration, inferred from probe messages).<a href="#section-7.2-12" class="pilcrow">¶</a></p>
 <p id="section-7.2-13">Processing continues with the next step.<a href="#section-7.2-13" class="pilcrow">¶</a></p>
 <div id="stun-cidfi-nonce-attribute">
 <section id="section-7.2.1">
