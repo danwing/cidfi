@@ -1148,9 +1148,10 @@ Table of Contents
    involve the end-user in the decision-making process regarding whether
    to reveal the identity of the server to the network or not.  If the
    attested metadata is sent to the CNE from the client, the attestation
-   will be utilized by the CNE, acting as a Relying Party, to determine
-   the level of trust it wishes to place in the attested metadata.  The
-   relying party may choose to trust or not trust the attestation.
+   will be utilized by the CNE, acting as a Relying Party (e.g.,
+   Section 7.1 of [RFC9334]), to determine the level of trust it wishes
+   to place in the attested metadata.  The relying party may choose to
+   trust or not trust the attestation.
 
 13.  Discussion Points
 
@@ -1544,6 +1545,11 @@ Table of Contents
               Datagram Extension to QUIC", RFC 9221,
               DOI 10.17487/RFC9221, March 2022,
               <https://www.rfc-editor.org/rfc/rfc9221>.
+
+   [RFC9334]  Birkholz, H., Thaler, D., Richardson, M., Smith, N., and
+              W. Pan, "Remote ATtestation procedureS (RATS)
+              Architecture", RFC 9334, DOI 10.17487/RFC9334, January
+              2023, <https://www.rfc-editor.org/rfc/rfc9334>.
 
    [RTP]      Schulzrinne, H., Casner, S., Frederick, R., and V.
               Jacobson, "RTP: A Transport Protocol for Real-Time
