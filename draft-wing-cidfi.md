@@ -163,7 +163,7 @@ prefer the use of alternate paths, offload a network).
 and share metadata between hosts, networks, and servers. This document adheres to
 the client-centric metadata sharing approach because it preserves privacy and also
 takes advantage of clients having a full view on their available network attachments.
-Metadata exhanges can occur in one single direction or both directions of a flows.
+Metadata exchanges can occur in one single direction or both directions of a flows.
 
 
 ~~~~~ aasvg
@@ -425,7 +425,7 @@ These are described in the following sub-sections.
 ## DNS SVCB Records
 
 This document defines a new DNS Service Binding parameter "cidfi-aware" in
-{{iana-svcb}} and a new Special-Use Domain Name "cifi.arpa" in
+{{iana-svcb}} and a new Special-Use Domain Name "cidfi.arpa" in
 {{iana-sudn}}.
 
 The local network is configured to respond to DNS SVCB
@@ -704,6 +704,7 @@ flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
 but because of QUIC connection migration ({{Section 9 of QUIC}}) the
 QUIC messages might appear later.
 
+
 The short header's Destination Connection ID (DCID) can be 0 bytes or
 as short as 8 bits, so multiple QUIC clients are likely to use the
 same incoming Destination CID on their own UDP 4-tuple. The STUN
@@ -813,7 +814,7 @@ highlighted in the simplified message flow in {{ex-lost-nonce}}.
                                  CIDFI-aware            QUIC
 client                           edge router           server
   |                                    |                  |
-  |  HTTPS: Enroll CIDFI router to partipate              |
+  |  HTTPS: Enroll CIDFI router to participate            |
   +----------------------------------->|                  |
   |  HTTPS: Ok.  nonce=12345           |                  |
   |<-----------------------------------+                  |
@@ -877,7 +878,7 @@ client     Wi-Fi Access Point    edge router           server
   |  QUIC CIDFI stream: Ok             |                  |
   +------------------------------------------------------>|
 ~~~~~
-{: #ex-comm Title artwork-align="center" title="Example of CIDIF Communication"}
+{: #ex-comm Title artwork-align="center" title="Example of CIDFI Communication"}
 
 To each of the network elements authorized by the client, the client
 sends the mappings of the server's transmitted Destination CIDs to
@@ -904,7 +905,7 @@ client     Wi-Fi Access Point    edge router     server
   |  Ok              |                 |            |
   +----------------------------------->|            |
 ~~~~~
-{: #ex-comm-metadata Title artwork-align="center" title="Example of CIDIFI Communication with Metadata Sharing"}
+{: #ex-comm-metadata Title artwork-align="center" title="Example of CIDFI Communication with Metadata Sharing"}
 
 The communication from the client to the server is using a CIDFI-dedicated
 QUIC stream over the same QUIC connection as their primary communication.
@@ -1225,7 +1226,7 @@ Spoofing Attacks:
 : For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.
 : If the client does not support CIDFI, the attacker can influence the packet treatment of the victim's UDP 4-tuple.
 : If the client implements CIDFI, a CIDFI network element can identify an IP address spoofing attack. Concretely, the CNE will receive two HTTPS connections describing the same DCID; one connection from the attacker and another one from the victim. The CNE will then issue unique Nonces and HMACs to both the attacker and victim, and both the attacker and victim should send the STUN Indication on that same UDP 4-tuple. Such an event should trigger an alarm on the CNE. In this scenario, it is recommended that both the attacker and the victim be denied CIDFI access.
-: The spoofing of a victim's IP address is prevented by the network using network ingress filtering ({{!RFC2827}}, {{!RFC7513}}, {{!RFC6105}}, and/or {{!RFC6620}}).
+: The spoofing of a victim's IP address is prevented by the network using network ingress filtering ({{!RFC2827}}, {{!RFC7513}}, {{?RFC6105}}, and/or {{!RFC6620}}).
 
 On-Path Attacks:
 : An on-path attacker can observe the victim's Discovery Packet, block it, and then forward the packet within the attacker's 5-tuple. Subsequently, the on-path attacker can 'steal' the victim's CIDFI control from the victim's UDP 4-tuple, causing the victim's CIDFI signaling for that UDP 4-tuple to influence the attacker's UDP 4-tuple.
