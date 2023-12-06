@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 7 June 2024                                               Nokia
+Expires: 8 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         5 December 2023
+                                                         6 December 2023
 
 
                 Framework for CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 June 2024.
+   This Internet-Draft will expire on 8 June 2024.
 
 Copyright Notice
 
@@ -1304,7 +1304,13 @@ Table of Contents
    Example: ["cidfinode": "service.example.net", "cidfipathauth":
              "/authpath", "cidfimetadata": "/meta"]
 
-   Additionally, this document registers the following cidfi keys:
+   Additionally, this document requests creating a new registry,
+   entitled "CIDFI JSON Keys" under the Provisioning Domains Additional
+   Information registry group [IANA-PVD].  The policy for assigning new
+   entries in this registry is Expert Review Section 4.5 of [RFC8126].
+   The structure of this registry is identical to the Provisioning
+   Domains Additional Information registry group.  The initial content
+   of this registry is provided below:
 
    JSON key: cidfinode
    Description: FQDN of CIDFI node
@@ -1385,6 +1391,11 @@ Table of Contents
               Validation Improvement (SAVI) Solution for DHCP",
               RFC 7513, DOI 10.17487/RFC7513, May 2015,
               <https://www.rfc-editor.org/rfc/rfc7513>.
+
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8126>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
