@@ -1135,7 +1135,9 @@ metadata.
 The client then sends that information to the server in the CIDFI-dedicated
 QUIC stream associated with that same Connection ID.
 
-# Privacy-Aware Metadata Sharing in Network Relationships
+# Privacy Considerations
+
+## Privacy-Aware Metadata Sharing in Network Relationships
 
 If the network operator and the server have a business relationship,
 the server can sign or attest the metadata using, e.g., JSON Web Token (JWT) {{?RFC7519}} or CBOR Web Token (CWT) {{?RFC8392}}. The
