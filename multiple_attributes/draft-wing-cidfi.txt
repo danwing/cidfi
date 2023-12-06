@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 7 June 2024                                               Nokia
+Expires: 8 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         5 December 2023
+                                                         6 December 2023
 
 
                 Framework for CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 June 2024.
+   This Internet-Draft will expire on 8 June 2024.
 
 Copyright Notice
 
@@ -744,7 +744,8 @@ Table of Contents
 
    As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
    Network Elements near the client, the client MAY reduce traffic to
-   the server by modulating the IP TTL of its STUN Indication messages.
+   the server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN
+   Indication messages.
 
    Processing continues with the next step.
 
