@@ -728,7 +728,7 @@ informs the client by sending an HTTP message to the client.  Details TBD.
 
 As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
 Network Elements near the client, the client MAY reduce traffic to the
-server by modulating the IP TTL of its STUN Indication messages.
+server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages.
 
 Processing continues with the next step.
 
