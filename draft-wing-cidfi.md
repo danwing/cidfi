@@ -729,7 +729,7 @@ informs the client by sending an HTTP message to the client.  Details TBD.
 
 As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
 Network Elements near the client, the client MAY reduce traffic to the
-server by modulating the IP TTL of its STUN Indication messages.
+server by modulating the IP TTL of its STUN Indication messages. The client SHOULD set TTL/Hop Limit to "min-ttl". The client MAY use other values (e.g., explicit configuration, inferred from probe messages).
 
 Processing continues with the next step.
 
