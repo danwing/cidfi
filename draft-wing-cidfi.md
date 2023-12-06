@@ -1138,7 +1138,7 @@ QUIC stream associated with that same Connection ID.
 # Privacy-Aware Metadata Sharing in Network Relationships
 
 If the network operator and the server have a business relationship,
-the server can sign or attest the metadata using JWT or CWT. The
+the server can sign or attest the metadata using, e.g., JSON Web Token (JWT) {{?RFC7519}} or CBOR Web Token (CWT) {{?RFC8392}}. The
 attested metadata will be sent from the server to the client. The client
 will decide whether to convey the attested metadata to the CNE, considering
 privacy reasons, as it may reveal the identity of the server to the network.
