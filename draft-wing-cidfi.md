@@ -1142,7 +1142,7 @@ the server can sign or attest the metadata using, e.g., JSON Web Token (JWT) {{?
 attested metadata will be sent from the server to the client. The client
 will decide whether to convey the attested metadata to the CNE, considering
 privacy reasons, as it may reveal the identity of the server to the network.
-The client may involve the end-user in the decision-making process regarding
+The client may use any local policy or involve the end-user in the decision-making process regarding
 whether to reveal the identity of the server to the network or not.
 If the attested metadata is sent to the CNE from the client, the attestation
 will be utilized by the CNE, acting as a Relying Party, to determine the
