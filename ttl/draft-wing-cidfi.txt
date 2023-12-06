@@ -497,11 +497,13 @@ Table of Contents
               "cidfi":[
                  {
                     "cidfinode":"service-cidfi.example.net",
+                    "min-ttl":3,
                     "cidfipathauth":"/path-auth-query{?cidfi}",
                     "cidfimetadata":"/cidfi-metadata"
                  },
                  {
                     "cidfinode":"wi-fi.example.net",
+                    "min-ttl":2,
                     "cidfipathauth":"/path-auth-query{?cidfi}",
                     "cidfimetadata":"/cidfi-metadata"
                  }
@@ -663,13 +665,19 @@ Table of Contents
    To ensure that the client messages to a CNE pertain only to the
    client's own UDP 4-tuple, the client sends the CIDFI nonce protected
    by the HMAC secret it obtained from Section 6.2 over the QUIC UDP
-   4-tuple it is using with the QUIC server.  The ability to transmit
-   that packet on the same UDP 4-tuple as the QUIC connection indicates
-   ownership of that IP address and UDP port.  The nonce and HMAC are
-   sent in a [STUN] indication (STUN class of 0b01) containing one or
-   more CIDFI-NONCE attributes (Section 17.5).  If there are multiple
-   CNEs the single STUN indication contains a CIDFI-NONCE attribute from
-   each of them.  This message is discarded by the QUIC server.
+   4-tuple it is using with the QUIC server over the path that involves
+   that CNE.  The ability to transmit that packet on the same UDP
+   4-tuple as the QUIC connection indicates ownership of that IP address
+   and UDP port number.  The nonce and HMAC are sent in a [STUN]
+   indication (STUN class of 0b01) containing one or more CIDFI-NONCE
+   attributes (Section 17.5).  If there are multiple CNEs the single
+   STUN indication contains a CIDFI-NONCE attribute from each of them.
+   This message is discarded, if received, by the QUIC server.
+
+   In order to avoid overloading servers, the client may set the TTL/Hop
+   Limit to a value that allows to cross the CNE, but then dicarded
+   before reaching the server.  For example, the host sets the TTL to
+   "min-ttl" that is returned during CNE discovery.
 
    Figure 6 shows a summarized message flow obtaining the nonce and HMAC
    secret from the CNE (steps 1-2) which is performed on network attach.
@@ -1330,6 +1338,19 @@ Table of Contents
    aware" in the "DNS Service Bindings (SVCB)" registry available at
    [IANA-SVCB].
 
+   The document also requests IANA to register the following service
+   parameter in the "Service Parameter Keys (SvcParamKeys)" registry
+   [IANA-SVCB]:
+
+   Number:  TBD
+
+   Name:  min-ttl
+
+   Meaning: :The minimum IPv4 TTL or IPv6 Hop Limit to use for a
+   connection.
+
+   Reference:  This-Document
+
 17.5.  New STUN Attribute
 
    This document requests IANA to register the new STUN attribute
@@ -1338,7 +1359,7 @@ Table of Contents
 
 17.6.  New Provisioning Domain Additional Information Key
 
-   This document requests IANA to register two new JSON keys in the
+   This document requests IANA to register a new JSON key in the
    Provisioning Domains Additional Information registry at [IANA-PVD]:
 
    JSON key: cidfi
@@ -1347,12 +1368,23 @@ Table of Contents
    Example: ["cidfinode": "service.example.net", "cidfipathauth":
              "/authpath", "cidfimetadata": "/meta"]
 
-   Additionally, in the following cidfi keys are to be registered:
+   Additionally, this document requests creating a new registry,
+   entitled "CIDFI JSON Keys" under the Provisioning Domains Additional
+   Information registry group [IANA-PVD].  The policy for assigning new
+   entries in this registry is Expert Review Section 4.5 of [RFC8126].
+   The structure of this registry is identical to the Provisioning
+   Domains Additional Information registry group.  The initial content
+   of this registry is provided below:
 
    JSON key: cidfinode
    Description: FQDN of CIDFI node
    Type: string
    Example: service.example.net
+
+   JSON key: min-ttl
+   Description: The minimum TTL or Hop Limit to reach a CNE
+   Type: Unsigned integer
+   Example: 5
 
    JSON key: cidfipathauth
    Description: authentication and authorization path for CIDFI
@@ -1418,6 +1450,11 @@ Table of Contents
               Validation Improvement (SAVI) Solution for DHCP",
               RFC 7513, DOI 10.17487/RFC7513, May 2015,
               <https://www.rfc-editor.org/rfc/rfc7513>.
+
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8126>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1588,8 +1625,8 @@ Table of Contents
 
 Appendix A.  Extending CIDFI to Other Protocols
 
-   CIDFI can be extended to other protocols including TCP, SCTP, RTP and
-   SRTP, and bespoke UDP protocols.
+   CIDFI can be extended to other protocols including TCP, SCTP, RTP,
+   and SRTP, and bespoke UDP protocols.
 
    An extension to each protocol is described below which retains the
    ability of the client to prove its ownership of the 5-tuple to a CNE.
