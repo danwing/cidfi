@@ -1145,7 +1145,7 @@ privacy reasons, as it may reveal the identity of the server to the network.
 The client may use any local policy or involve the end-user in the decision-making process regarding
 whether to reveal the identity of the server to the network or not.
 If the attested metadata is sent to the CNE from the client, the attestation
-will be utilized by the CNE, acting as a Relying Party, to determine the
+will be utilized by the CNE, acting as a Relying Party (e.g., {{Section 7.1 of ?RFC9334}}), to determine the
 level of trust it wishes to place in the attested metadata. The relying party
 may choose to trust or not trust the attestation.
 
