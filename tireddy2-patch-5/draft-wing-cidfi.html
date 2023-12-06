@@ -1282,7 +1282,12 @@ service. The proposed approach covers both directions of a flow.<a href="#sectio
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-privacy-aware-metadata-shar" class="internal xref">Privacy-Aware Metadata Sharing in Network Relationships</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-privacy-aware-metadata-shar" class="internal xref">Privacy-Aware Metadata Sharing in Network Relationships</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
             <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-discussion-points" class="internal xref">Discussion Points</a></p>
@@ -3063,12 +3068,17 @@ QUIC stream associated with that same Connection ID.<a href="#section-11.2-3" cl
 </div>
 </section>
 </div>
-<div id="privacy-aware-metadata-sharing-in-network-relationships">
+<div id="privacy-considerations">
 <section id="section-12">
-      <h2 id="name-privacy-aware-metadata-shar">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-privacy-aware-metadata-shar" class="section-name selfRef">Privacy-Aware Metadata Sharing in Network Relationships</a>
+      <h2 id="name-privacy-considerations">
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
       </h2>
-<p id="section-12-1">If the network operator and the server have a business relationship,
+<div id="privacy-aware-metadata-sharing-in-network-relationships">
+<section id="section-12.1">
+        <h3 id="name-privacy-aware-metadata-shar">
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-privacy-aware-metadata-shar" class="section-name selfRef">Privacy-Aware Metadata Sharing in Network Relationships</a>
+        </h3>
+<p id="section-12.1-1">If the network operator and the server have a business relationship,
 the server can sign or attest the metadata using, e.g., JSON Web Token (JWT) <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> or CBOR Web Token (CWT) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>. The
 attested metadata will be sent from the server to the client. The client
 will decide whether to convey the attested metadata to the CNE, considering
@@ -3078,7 +3088,9 @@ whether to reveal the identity of the server to the network or not.
 If the attested metadata is sent to the CNE from the client, the attestation
 will be utilized by the CNE, acting as a Relying Party (e.g., <span><a href="https://rfc-editor.org/rfc/rfc9334#section-7.1" class="relref">Section 7.1</a> of [<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>), to determine the
 level of trust it wishes to place in the attested metadata. The relying party
-may choose to trust or not trust the attestation.<a href="#section-12-1" class="pilcrow">¶</a></p>
+may choose to trust or not trust the attestation.<a href="#section-12.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="discussion-points">

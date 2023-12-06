@@ -112,7 +112,8 @@ Table of Contents
        11.1.1.  Mapping Metadata Parameters to DCIDs
        11.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
      11.2.  CIDFI-aware Network Element to Server
-   12. Privacy-Aware Metadata Sharing in Network Relationships
+   12. Privacy Considerations
+     12.1.  Privacy-Aware Metadata Sharing in Network Relationships
    13. Discussion Points
      13.1.  Client versus Server Signaling CID-to-importance Mapping
      13.2.  Overhead of QUIC DCID Packet Examination
@@ -1136,7 +1137,9 @@ Table of Contents
    The client then sends that information to the server in the CIDFI-
    dedicated QUIC stream associated with that same Connection ID.
 
-12.  Privacy-Aware Metadata Sharing in Network Relationships
+12.  Privacy Considerations
+
+12.1.  Privacy-Aware Metadata Sharing in Network Relationships
 
    If the network operator and the server have a business relationship,
    the server can sign or attest the metadata using, e.g., JSON Web
