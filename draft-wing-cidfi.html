@@ -2045,11 +2045,13 @@ CIDFI-aware network elements, service-cidfi and wi-fi.<a href="#section-5.2-2" c
    "cidfi":[
       {
          "cidfinode":"service-cidfi.example.net",
+         "min-ttl":3,
          "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       },
       {
          "cidfinode":"wi-fi.example.net",
+         "min-ttl":2,
          "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       }
@@ -2265,20 +2267,23 @@ this CIDFI-dedicated stream as described in <a href="#initial-metadata-exchange"
 pertain only to the client's own UDP 4-tuple, the client sends the
 CIDFI nonce protected by the HMAC secret it obtained from
 <a href="#client-authorizes" class="auto internal xref">Section 6.2</a> over the QUIC UDP 4-tuple it is using with the
-QUIC server.  The ability to transmit that packet on the same UDP
+QUIC server over the path that involves that CNE. The ability to transmit that packet on the same UDP
 4-tuple as the QUIC connection indicates ownership of that IP address
-and UDP port.  The nonce and HMAC are sent in a <span>[<a href="#STUN" class="cite xref">STUN</a>]</span> indication (STUN
+and UDP port number.  The nonce and HMAC are sent in a <span>[<a href="#STUN" class="cite xref">STUN</a>]</span> indication (STUN
 class of 0b01) containing one or more CIDFI-NONCE attributes
 (<a href="#iana-stun" class="auto internal xref">Section 17.5</a>).  If there are multiple CNEs
 the single STUN indication contains a CIDFI-NONCE attribute from each of
-them.  This message is discarded by the QUIC server.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
-<p id="section-7.2-2"><a href="#flow-diag-attach" class="auto internal xref">Figure 6</a> shows a summarized message flow obtaining
+them.  This message is discarded, if received, by the QUIC server.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">In order to avoid overloading servers, the client may set the TTL/Hop Limit
+to a value that allows to cross the CNE, but then dicarded before reaching the server.
+For example, the host sets the TTL to "min-ttl" that is returned during CNE discovery.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.2-3"><a href="#flow-diag-attach" class="auto internal xref">Figure 6</a> shows a summarized message flow obtaining
 the nonce and HMAC secret from the CNE (steps 1-2) which is performed
-on network attach.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+on network attach.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
 <span id="name-example-of-flow-exhange"></span><div id="flow-diag-attach">
 <figure id="figure-6">
-          <div id="section-7.2-3.1">
-            <div class="alignCenter art-svg artwork" id="section-7.2-3.1.1">
+          <div id="section-7.2-4.1">
+            <div class="alignCenter art-svg artwork" id="section-7.2-4.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="160" width="496" viewBox="0 0 496 160" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 24,64 L 24,144" fill="none" stroke="black"></path>
                 <path d="M 320,96 L 320,144" fill="none" stroke="black"></path>
@@ -2308,23 +2313,23 @@ on network attach.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
                   <text x="136" y="116">Ok.</text>
                   <text x="208" y="116">nonce=12345</text>
                 </g>
-              </svg><a href="#section-7.2-3.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-7.2-4.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
 <a href="#name-example-of-flow-exhange" class="selfRef">Example of Flow Exhange</a>
           </figcaption></figure>
 </div>
-<p id="section-7.2-4">Later, when connecting to a new QUIC or DTLS server, the client
+<p id="section-7.2-5">Later, when connecting to a new QUIC or DTLS server, the client
 determines if there are on-path CIDFI Network Elements by sending the
 nonce and HMAC in the same UDP 4-tuple as the QUIC or DTLS connect
 (step 2).  If a CIDFI Network Element is present it processes the STUN
 Indication and sends a response to the client over HTTP using the
-HTTP channel established above.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
+HTTP channel established above.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
 <span id="name-example-of-flow-to-new-serv"></span><div id="flow-diag-connect">
 <figure id="figure-7">
-          <div id="section-7.2-5.1">
-            <div class="alignCenter art-svg artwork" id="section-7.2-5.1.1">
+          <div id="section-7.2-6.1">
+            <div class="alignCenter art-svg artwork" id="section-7.2-6.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="368" width="512" viewBox="0 0 512 368" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 24,64 L 24,352" fill="none" stroke="black"></path>
                 <path d="M 320,136 L 320,176" fill="none" stroke="black"></path>
@@ -2395,7 +2400,7 @@ HTTP channel established above.<a href="#section-7.2-4" class="pilcrow">¶</a></
                   <text x="92" y="340">HTTPS:</text>
                   <text x="132" y="340">Ok</text>
                 </g>
-              </svg><a href="#section-7.2-5.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-7.2-6.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
@@ -2403,33 +2408,33 @@ HTTP channel established above.<a href="#section-7.2-4" class="pilcrow">¶</a></
           </figcaption></figure>
 </div>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-7.2-6.1">
-            <p id="section-7.2-6.1.1">Note that the above message
+<li class="normal ulEmpty" id="section-7.2-7.1">
+            <p id="section-7.2-7.1.1">Note that the above message
 flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
 but, because of QUIC connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>), the
-QUIC messages might appear later.<a href="#section-7.2-6.1.1" class="pilcrow">¶</a></p>
+QUIC messages might appear later.<a href="#section-7.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-7.2-7">The short header's Destination Connection ID (DCID) can be 0 bytes or
+<p id="section-7.2-8">The short header's Destination Connection ID (DCID) can be 0 bytes or
 as short as 8 bits, so multiple QUIC clients are likely to use the
 same incoming Destination CID on their own UDP 4-tuple. The STUN
 Indication message allows the CIDFI network element to distinguish
-each QUIC client's UDP 4-tuple.<a href="#section-7.2-7" class="pilcrow">¶</a></p>
-<p id="section-7.2-8">Because multiple QUIC clients may use the same incoming Destination CID on
+each QUIC client's UDP 4-tuple.<a href="#section-7.2-8" class="pilcrow">¶</a></p>
+<p id="section-7.2-9">Because multiple QUIC clients may use the same incoming Destination CID on
 their own UDP 4-tuple, the STUN Indication message allows a CNE
-to distinguish each QUIC client's UDP 4-tuple.<a href="#section-7.2-8" class="pilcrow">¶</a></p>
-<p id="section-7.2-9">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
-the same time as it establishes connection with the QUIC or DTLS server.<a href="#section-7.2-9" class="pilcrow">¶</a></p>
-<p id="section-7.2-10">To prevent replay attacks, the Nonce is usable only for authenticating
+to distinguish each QUIC client's UDP 4-tuple.<a href="#section-7.2-9" class="pilcrow">¶</a></p>
+<p id="section-7.2-10">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
+the same time as it establishes connection with the QUIC or DTLS server.<a href="#section-7.2-10" class="pilcrow">¶</a></p>
+<p id="section-7.2-11">To prevent replay attacks, the Nonce is usable only for authenticating
 one UDP 4-tuple.  When the connection is migrated (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the CNE won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
-CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 6</a>).<a href="#section-7.2-10" class="pilcrow">¶</a></p>
-<p id="section-7.2-11">After the CIDFI Network Element receives the STUN Indication it
-informs the client by sending an HTTP message to the client.  Details TBD.<a href="#section-7.2-11" class="pilcrow">¶</a></p>
-<p id="section-7.2-12">As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
+CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 6</a>).<a href="#section-7.2-11" class="pilcrow">¶</a></p>
+<p id="section-7.2-12">After the CIDFI Network Element receives the STUN Indication it
+informs the client by sending an HTTP message to the client.  Details TBD.<a href="#section-7.2-12" class="pilcrow">¶</a></p>
+<p id="section-7.2-13">As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
 Network Elements near the client, the client <span class="bcp14">MAY</span> reduce traffic to the
-server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages.<a href="#section-7.2-12" class="pilcrow">¶</a></p>
-<p id="section-7.2-13">Processing continues with the next step.<a href="#section-7.2-13" class="pilcrow">¶</a></p>
+server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages.<a href="#section-7.2-13" class="pilcrow">¶</a></p>
+<p id="section-7.2-14">Processing continues with the next step.<a href="#section-7.2-14" class="pilcrow">¶</a></p>
 <div id="stun-cidfi-nonce-attribute">
 <section id="section-7.2.1">
           <h4 id="name-stun-cidfi-nonce-attribute">
@@ -3319,6 +3324,29 @@ in the "QUIC Transport Parameters" registry under the "QUIC" registry group avai
         </h3>
 <p id="section-17.4-1">This document requests IANA to register the new DNS SVCB "_cidfi-aware" in
 the "DNS Service Bindings (SVCB)" registry available at <span>[<a href="#IANA-SVCB" class="cite xref">IANA-SVCB</a>]</span>.<a href="#section-17.4-1" class="pilcrow">¶</a></p>
+<p id="section-17.4-2">The document also requests IANA to register the following service parameter
+in the "Service Parameter Keys (SvcParamKeys)" registry <span>[<a href="#IANA-SVCB" class="cite xref">IANA-SVCB</a>]</span>:<a href="#section-17.4-2" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-17.4-3">
+          <dt id="section-17.4-3.1">Number:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.4-3.2">
+            <p id="section-17.4-3.2.1">TBD<a href="#section-17.4-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-17.4-3.3">Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.4-3.4">
+            <p id="section-17.4-3.4.1">min-ttl<a href="#section-17.4-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-17.4-4">Meaning:
+:The minimum IPv4 TTL or IPv6 Hop Limit to use for a connection.<a href="#section-17.4-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-17.4-5">
+          <dt id="section-17.4-5.1">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.4-5.2">
+            <p id="section-17.4-5.2.1">This-Document<a href="#section-17.4-5.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
 </section>
 </div>
 <div id="iana-stun">
@@ -3335,7 +3363,7 @@ in the "STUN Attributes" registry available at <span>[<a href="#IANA-STUN" class
         <h3 id="name-new-provisioning-domain-add">
 <a href="#section-17.6" class="section-number selfRef">17.6. </a><a href="#name-new-provisioning-domain-add" class="section-name selfRef">New Provisioning Domain Additional Information Key</a>
         </h3>
-<p id="section-17.6-1">This document requests IANA to register two new JSON keys in the
+<p id="section-17.6-1">This document requests IANA to register a new JSON key in the
 Provisioning Domains Additional Information registry at <span>[<a href="#IANA-PVD" class="cite xref">IANA-PVD</a>]</span>:<a href="#section-17.6-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-17.6-2">
 <pre>
@@ -3346,13 +3374,22 @@ Example: ["cidfinode": "service.example.net", "cidfipathauth":
           "/authpath", "cidfimetadata": "/meta"]
 </pre><a href="#section-17.6-2" class="pilcrow">¶</a>
 </div>
-<p id="section-17.6-3">Additionally, in the following cidfi keys are to be registered:<a href="#section-17.6-3" class="pilcrow">¶</a></p>
+<p id="section-17.6-3">Additionally, this document requests creating a new registry, entitled "CIDFI JSON Keys" under
+the Provisioning Domains Additional Information registry group <span>[<a href="#IANA-PVD" class="cite xref">IANA-PVD</a>]</span>.
+The policy for assigning new entries in this registry is Expert Review <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
+The structure of this registry is identical to the Provisioning Domains Additional Information registry group.
+The initial content of this registry is provided below:<a href="#section-17.6-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-17.6-4">
 <pre>
 JSON key: cidfinode
 Description: FQDN of CIDFI node
 Type: string
 Example: service.example.net
+
+JSON key: min-ttl
+Description: The minimum TTL or Hop Limit to reach a CNE
+Type: Unsigned integer
+Example: 5
 
 JSON key: cidfipathauth
 Description: authentication and authorization path for CIDFI
@@ -3418,6 +3455,10 @@ example: "/metadata"
 <dt id="RFC7513">[RFC7513]</dt>
         <dd>
 <span class="refAuthor">Bi, J.</span>, <span class="refAuthor">Wu, J.</span>, <span class="refAuthor">Yao, G.</span>, and <span class="refAuthor">F. Baker</span>, <span class="refTitle">"Source Address Validation Improvement (SAVI) Solution for DHCP"</span>, <span class="seriesInfo">RFC 7513</span>, <span class="seriesInfo">DOI 10.17487/RFC7513</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7513">https://www.rfc-editor.org/rfc/rfc7513</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8126">[RFC8126]</dt>
+        <dd>
+<span class="refAuthor">Cotton, M.</span>, <span class="refAuthor">Leiba, B.</span>, and <span class="refAuthor">T. Narten</span>, <span class="refTitle">"Guidelines for Writing an IANA Considerations Section in RFCs"</span>, <span class="seriesInfo">BCP 26</span>, <span class="seriesInfo">RFC 8126</span>, <span class="seriesInfo">DOI 10.17487/RFC8126</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8126">https://www.rfc-editor.org/rfc/rfc8126</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
@@ -3561,7 +3602,7 @@ example: "/metadata"
       <h2 id="name-extending-cidfi-to-other-pr">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-extending-cidfi-to-other-pr" class="section-name selfRef">Extending CIDFI to Other Protocols</a>
       </h2>
-<p id="appendix-A-1">CIDFI can be extended to other protocols including TCP, SCTP, RTP and SRTP,
+<p id="appendix-A-1">CIDFI can be extended to other protocols including TCP, SCTP, RTP, and SRTP,
 and bespoke UDP protocols.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2">An extension to each protocol is described below which retains the
 ability of the client to prove its ownership of the 5-tuple to a CNE.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
