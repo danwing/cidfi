@@ -470,11 +470,13 @@ CIDFI-aware network elements, service-cidfi and wi-fi.
    "cidfi":[
       {
          "cidfinode":"service-cidfi.example.net",
+         "min-ttl":3,
          "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       },
       {
          "cidfinode":"wi-fi.example.net",
+         "min-ttl":2,
          "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       }
@@ -640,14 +642,17 @@ To ensure that the client messages to a CNE
 pertain only to the client's own UDP 4-tuple, the client sends the
 CIDFI nonce protected by the HMAC secret it obtained from
 {{client-authorizes}} over the QUIC UDP 4-tuple it is using with the
-QUIC server.  The ability to transmit that packet on the same UDP
+QUIC server over the path that involves that CNE. The ability to transmit that packet on the same UDP
 4-tuple as the QUIC connection indicates ownership of that IP address
-and UDP port.  The nonce and HMAC are sent in a {{!STUN=RFC8489}} indication (STUN
+and UDP port number.  The nonce and HMAC are sent in a {{!STUN=RFC8489}} indication (STUN
 class of 0b01) containing one or more CIDFI-NONCE attributes
 ({{iana-stun}}).  If there are multiple CNEs
 the single STUN indication contains a CIDFI-NONCE attribute from each of
-them.  This message is discarded by the QUIC server.
+them.  This message is discarded, if received, by the QUIC server.
 
+In order to avoid overloading servers, the client may set the TTL/Hop Limit
+to a value that allows to cross the CNE, but then dicarded before reaching the server.
+For example, the host sets the TTL to "min-ttl" that is returned during CNE discovery.
 
 {{flow-diag-attach}} shows a summarized message flow obtaining
 the nonce and HMAC secret from the CNE (steps 1-2) which is performed
@@ -1289,6 +1294,22 @@ Register new special-use domain name cidfi.arpa for DNS SVCB discovery.
 This document requests IANA to register the new DNS SVCB "_cidfi-aware" in
 the "DNS Service Bindings (SVCB)" registry available at {{IANA-SVCB}}.
 
+The document also requests IANA to register the following service parameter
+in the "Service Parameter Keys (SvcParamKeys)" registry {{IANA-SVCB}}:
+
+Number:
+: TBD
+
+Name:
+: min-ttl
+
+Meaning:
+:The minimum IPv4 TTL or IPv6 Hop Limit to use for a connection.
+
+Reference:
+: This-Document
+
+
 ## New STUN Attribute {#iana-stun}
 
 This document requests IANA to register the new STUN attribute "CIDFI-NONCE"
@@ -1296,7 +1317,7 @@ in the "STUN Attributes" registry available at {{IANA-STUN}}.
 
 ## New Provisioning Domain Additional Information Key {#iana-pvd}
 
-This document requests IANA to register two new JSON keys in the
+This document requests IANA to register a new JSON key in the
 Provisioning Domains Additional Information registry at {{IANA-PVD}}:
 
 ~~~~~
@@ -1307,13 +1328,22 @@ Example: ["cidfinode": "service.example.net", "cidfipathauth":
           "/authpath", "cidfimetadata": "/meta"]
 ~~~~~
 
-Additionally, in the following cidfi keys are to be registered:
+Additionally, this document requests creating a new registry, entitled "CIDFI JSON Keys" under
+the Provisioning Domains Additional Information registry group {{IANA-PVD}}.
+The policy for assigning new entries in this registry is Expert Review {{Section 4.5 of !RFC8126}}.
+The structure of this registry is identical to the Provisioning Domains Additional Information registry group.
+The initial content of this registry is provided below:
 
 ~~~~~
 JSON key: cidfinode
 Description: FQDN of CIDFI node
 Type: string
 Example: service.example.net
+
+JSON key: min-ttl
+Description: The minimum TTL or Hop Limit to reach a CNE
+Type: Unsigned integer
+Example: 5
 
 JSON key: cidfipathauth
 Description: authentication and authorization path for CIDFI
@@ -1332,7 +1362,7 @@ example: "/metadata"
 
 # Extending CIDFI to Other Protocols {#extending}
 
-CIDFI can be extended to other protocols including TCP, SCTP, RTP and SRTP,
+CIDFI can be extended to other protocols including TCP, SCTP, RTP, and SRTP,
 and bespoke UDP protocols.
 
 An extension to each protocol is described below which retains the
