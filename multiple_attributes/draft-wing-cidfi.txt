@@ -170,7 +170,7 @@ Table of Contents
    document adheres to the client-centric metadata sharing approach
    because it preserves privacy and also takes advantage of clients
    having a full view on their available network attachments.  Metadata
-   exhanges can occur in one single direction or both directions of a
+   exchanges can occur in one single direction or both directions of a
    flows.
 
    (1)  Proxied Connection
@@ -452,7 +452,7 @@ Table of Contents
 5.1.  DNS SVCB Records
 
    This document defines a new DNS Service Binding parameter "cidfi-
-   aware" in Section 15.4 and a new Special-Use Domain Name "cifi.arpa"
+   aware" in Section 15.4 and a new Special-Use Domain Name "cidfi.arpa"
    in Section 15.3.
 
    The local network is configured to respond to DNS SVCB [RFC9460]
@@ -830,7 +830,7 @@ Table of Contents
                                        CIDFI-aware            QUIC
       client                           edge router           server
         |                                    |                  |
-        |  HTTPS: Enroll CIDFI router to partipate              |
+        |  HTTPS: Enroll CIDFI router to participate            |
         +----------------------------------->|                  |
         |  HTTPS: Ok.  nonce=12345           |                  |
         |<-----------------------------------+                  |
@@ -894,7 +894,7 @@ Table of Contents
          |  QUIC CIDFI stream: Ok             |                  |
          +------------------------------------------------------>|
 
-                 Figure 10: Example of CIDIF Communication
+                 Figure 10: Example of CIDFI Communication
 
    To each of the network elements authorized by the client, the client
    sends the mappings of the server's transmitted Destination CIDs to
@@ -920,7 +920,7 @@ Table of Contents
             |  Ok              |                 |            |
             +----------------------------------->|            |
 
-      Figure 11: Example of CIDIFI Communication with Metadata Sharing
+      Figure 11: Example of CIDFI Communication with Metadata Sharing
 
    The communication from the client to the server is using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
@@ -1372,11 +1372,6 @@ Table of Contents
               UDP", BCP 127, RFC 4787, DOI 10.17487/RFC4787, January
               2007, <https://www.rfc-editor.org/rfc/rfc4787>.
 
-   [RFC6105]  Levy-Abegnoli, E., Van de Velde, G., Popoviciu, C., and J.
-              Mohacsi, "IPv6 Router Advertisement Guard", RFC 6105,
-              DOI 10.17487/RFC6105, February 2011,
-              <https://www.rfc-editor.org/rfc/rfc6105>.
-
    [RFC6620]  Nordmark, E., Bagnulo, M., and E. Levy-Abegnoli, "FCFS
               SAVI: First-Come, First-Served Source Address Validation
               Improvement for Locally Assigned IPv6 Addresses",
@@ -1503,6 +1498,11 @@ Table of Contents
               Key Derivation Function (HKDF)", RFC 5869,
               DOI 10.17487/RFC5869, May 2010,
               <https://www.rfc-editor.org/rfc/rfc5869>.
+
+   [RFC6105]  Levy-Abegnoli, E., Van de Velde, G., Popoviciu, C., and J.
+              Mohacsi, "IPv6 Router Advertisement Guard", RFC 6105,
+              DOI 10.17487/RFC6105, February 2011,
+              <https://www.rfc-editor.org/rfc/rfc6105>.
 
    [RFC7839]  Bhandari, S., Gundavelli, S., Grayson, M., Volz, B., and
               J. Korhonen, "Access-Network-Identifier Option in DHCP",
