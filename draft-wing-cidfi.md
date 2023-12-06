@@ -1174,6 +1174,17 @@ depletion, and suchlike.
 
 > TODO: Probably want keepalives on client->CNE communication. To be assessed.
 
+# API Integration for QUIC Stream and Packet-Level Prioritization
+
+For each QUIC stream requiring differentiated service, the QUIC stack can
+map that stream to a different Destination CID. The application-level code
+would require an API to instruct the QUIC stack that a particular stream
+needs differentiated service. Similarly, if the application-level code seeks
+differentiated service for packets within a stream (e.g., prioritizing P-frames
+over I-Frames in a video stream), it would need an API to inform the QUIC stack
+that different packets within the QUIC stream require differentiated services
+and to map these packets to different Destination CIDs.
+
 # Security Considerations
 
 Because the sender's QUIC Destination Connection ID is mapped to
