@@ -1135,6 +1135,20 @@ metadata.
 The client then sends that information to the server in the CIDFI-dedicated
 QUIC stream associated with that same Connection ID.
 
+# Privacy-Aware Metadata Sharing in Network Relationships
+
+If the network operator and the server have a business relationship,
+the server can sign or attest the metadata using JWT or CWT. The
+attested metadata will be sent from the server to the client. The client
+will decide whether to convey the attested metadata to the CNE, considering
+privacy reasons, as it may reveal the identity of the server to the network.
+The client may involve the end-user in the decision-making process regarding
+whether to reveal the identity of the server to the network or not.
+If the attested metadata is sent to the CNE from the client, the attestation
+will be utilized by the CNE, acting as a Relying Party, to determine the
+level of trust it wishes to place in the attested metadata. The relying party
+may choose to trust or not trust the attestation.
+
 # Discussion Points
 
 This section discusses known issues that would benefit from wider discussion.
