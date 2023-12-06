@@ -3069,7 +3069,7 @@ QUIC stream associated with that same Connection ID.<a href="#section-11.2-3" cl
 <a href="#section-12" class="section-number selfRef">12. </a><a href="#name-privacy-aware-metadata-shar" class="section-name selfRef">Privacy-Aware Metadata Sharing in Network Relationships</a>
       </h2>
 <p id="section-12-1">If the network operator and the server have a business relationship,
-the server can sign or attest the metadata using JWT or CWT. The
+the server can sign or attest the metadata using, e.g., JSON Web Token (JWT) <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> or CBOR Web Token (CWT) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>. The
 attested metadata will be sent from the server to the client. The client
 will decide whether to convey the attested metadata to the CNE, considering
 privacy reasons, as it may reveal the identity of the server to the network.
@@ -3486,9 +3486,17 @@ example: "/metadata"
         <dd>
 <span class="refAuthor">Levy-Abegnoli, E.</span>, <span class="refAuthor">Van de Velde, G.</span>, <span class="refAuthor">Popoviciu, C.</span>, and <span class="refAuthor">J. Mohacsi</span>, <span class="refTitle">"IPv6 Router Advertisement Guard"</span>, <span class="seriesInfo">RFC 6105</span>, <span class="seriesInfo">DOI 10.17487/RFC6105</span>, <time datetime="2011-02" class="refDate">February 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6105">https://www.rfc-editor.org/rfc/rfc6105</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC7519">[RFC7519]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7519">https://www.rfc-editor.org/rfc/rfc7519</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC7839">[RFC7839]</dt>
         <dd>
 <span class="refAuthor">Bhandari, S.</span>, <span class="refAuthor">Gundavelli, S.</span>, <span class="refAuthor">Grayson, M.</span>, <span class="refAuthor">Volz, B.</span>, and <span class="refAuthor">J. Korhonen</span>, <span class="refTitle">"Access-Network-Identifier Option in DHCP"</span>, <span class="seriesInfo">RFC 7839</span>, <span class="seriesInfo">DOI 10.17487/RFC7839</span>, <time datetime="2016-06" class="refDate">June 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7839">https://www.rfc-editor.org/rfc/rfc7839</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8392">[RFC8392]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"CBOR Web Token (CWT)"</span>, <span class="seriesInfo">RFC 8392</span>, <span class="seriesInfo">DOI 10.17487/RFC8392</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8392">https://www.rfc-editor.org/rfc/rfc8392</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8517">[RFC8517]</dt>
         <dd>
