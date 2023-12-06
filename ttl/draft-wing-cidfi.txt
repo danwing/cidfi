@@ -112,25 +112,28 @@ Table of Contents
        11.1.1.  Mapping Metadata Parameters to DCIDs
        11.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
      11.2.  CIDFI-aware Network Element to Server
-   12. Discussion Points
-     12.1.  Client versus Server Signaling CID-to-importance Mapping
-     12.2.  Overhead of QUIC DCID Packet Examination
-     12.3.  Interaction with Wi-Fi Packet Aggregation
-     12.4.  Overhead of Mapping CIDs to Packet Metadata
-     12.5.  Improve CIDFI Initialization Time
-     12.6.  Primary QUIC Channel CID Change
-   13. State Maintenance
-   14. Security Considerations
-   15. IANA Considerations
-     15.1.  New QUIC Transport Parameter
-     15.2.  New Well-known URI "cidfi-aware"
-     15.3.  New Special-use Domain Name
-     15.4.  New DNS Service Binding (SVCB)
-     15.5.  New STUN Attribute
-     15.6.  New Provisioning Domain Additional Information Key
-   16. References
-     16.1.  Normative References
-     16.2.  Informative References
+   12. Privacy Considerations
+     12.1.  Privacy-Aware Metadata Sharing in Network Relationships
+   13. Discussion Points
+     13.1.  Client versus Server Signaling CID-to-importance Mapping
+     13.2.  Overhead of QUIC DCID Packet Examination
+     13.3.  Interaction with Wi-Fi Packet Aggregation
+     13.4.  Overhead of Mapping CIDs to Packet Metadata
+     13.5.  Improve CIDFI Initialization Time
+     13.6.  Primary QUIC Channel CID Change
+   14. State Maintenance
+   15. API Integration for QUIC Stream and Packet-Level Prioritization
+   16. Security Considerations
+   17. IANA Considerations
+     17.1.  New QUIC Transport Parameter
+     17.2.  New Well-known URI "cidfi-aware"
+     17.3.  New Special-use Domain Name
+     17.4.  New DNS Service Binding (SVCB)
+     17.5.  New STUN Attribute
+     17.6.  New Provisioning Domain Additional Information Key
+   18. References
+     18.1.  Normative References
+     18.2.  Informative References
    Appendix A.  Extending CIDFI to Other Protocols
      A.1.  TCP
      A.2.  SCTP
@@ -452,8 +455,8 @@ Table of Contents
 5.1.  DNS SVCB Records
 
    This document defines a new DNS Service Binding parameter "cidfi-
-   aware" in Section 15.4 and a new Special-Use Domain Name "cidfi.arpa"
-   in Section 15.3.
+   aware" in Section 17.4 and a new Special-Use Domain Name "cidfi.arpa"
+   in Section 17.3.
 
    The local network is configured to respond to DNS SVCB [RFC9460]
    queries with ServiceMode (Section 2.4.3 of [RFC9460]) for "_cidfi-
@@ -630,7 +633,7 @@ Table of Contents
 7.1.  Client Learns Server Supports CIDFI
 
    On initial connection to a QUIC server, the client includes a new
-   QUIC transport parameter CIDFI (Section 15.1) which is remembered for
+   QUIC transport parameter CIDFI (Section 17.1) which is remembered for
    0-RTT.
 
    If the server does not indicate CIDFI support, the client can still
@@ -664,7 +667,7 @@ Table of Contents
    that packet on the same UDP 4-tuple as the QUIC connection indicates
    ownership of that IP address and UDP port.  The nonce and HMAC are
    sent in a [STUN] indication (STUN class of 0b01) containing one or
-   more CIDFI-NONCE attributes (Section 15.5).  If there are multiple
+   more CIDFI-NONCE attributes (Section 17.5).  If there are multiple
    CNEs the single STUN indication contains a CIDFI-NONCE attribute from
    each of them.  This message is discarded by the QUIC server.
 
@@ -744,10 +747,10 @@ Table of Contents
 
    As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
    Network Elements near the client, the client MAY reduce traffic to
-   the server by modulating the IP TTL of its STUN Indication messages.
-   The client SHOULD set TTL/Hop Limit to "min-ttl".  The client MAY use
-   other values (e.g., explicit configuration, inferred from probe
-   messages).
+   the server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN
+   Indication messages.  The client SHOULD set TTL/Hop Limit to "min-
+   ttl".  The client MAY use other values (e.g., explicit configuration,
+   inferred from probe messages).
 
    Processing continues with the next step.
 
@@ -782,6 +785,10 @@ Table of Contents
    shown below with "|" denoting concatenation.
 
      HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
+
+   When there are multiple CIDFI Network Elements on the network,
+   multiple CIDFI-NONCE attributes are sent in a single STUN Indication
+   message.
 
 7.3.  Initial Metadata Exchange
 
@@ -1133,18 +1140,37 @@ Table of Contents
    The client then sends that information to the server in the CIDFI-
    dedicated QUIC stream associated with that same Connection ID.
 
-12.  Discussion Points
+12.  Privacy Considerations
+
+12.1.  Privacy-Aware Metadata Sharing in Network Relationships
+
+   If the network operator and the server have a business relationship,
+   the server can sign or attest the metadata using, e.g., JSON Web
+   Token (JWT) [RFC7519] or CBOR Web Token (CWT) [RFC8392].  The
+   attested metadata will be sent from the server to the client.  The
+   client will decide whether to convey the attested metadata to the
+   CNE, considering privacy reasons, as it may reveal the identity of
+   the server to the network.  The client may use any local policy or
+   involve the end-user in the decision-making process regarding whether
+   to reveal the identity of the server to the network or not.  If the
+   attested metadata is sent to the CNE from the client, the attestation
+   will be utilized by the CNE, acting as a Relying Party (e.g.,
+   Section 7.1 of [RFC9334]), to determine the level of trust it wishes
+   to place in the attested metadata.  The relying party may choose to
+   trust or not trust the attestation.
+
+13.  Discussion Points
 
    This section discusses known issues that would benefit from wider
    discussion.
 
-12.1.  Client versus Server Signaling CID-to-importance Mapping
+13.1.  Client versus Server Signaling CID-to-importance Mapping
 
    Need to evaluate number of round trips (and other overhead) of client
    signaling CID-to-importance mapping or server signaling CID-to-
    importance mapping.
 
-12.2.  Overhead of QUIC DCID Packet Examination
+13.2.  Overhead of QUIC DCID Packet Examination
 
    If CID-to-importance metadata was signaled by the server as described
    in Section 7.3.1, the CNE have to examine the UDP payload of each
@@ -1152,7 +1178,7 @@ Table of Contents
    connection.  This is somewhat assuaged by the STUN nonce transmitted
    which may well be an easier signal to identify.
 
-12.3.  Interaction with Wi-Fi Packet Aggregation
+13.3.  Interaction with Wi-Fi Packet Aggregation
 
    Per-packet metadata influences transmission of that packet but may
    well conflict with some Wi-Fi optimizations (e.g.,
@@ -1160,7 +1186,7 @@ Table of Contents
 
    This impact needs further study.
 
-12.4.  Overhead of Mapping CIDs to Packet Metadata
+13.4.  Overhead of Mapping CIDs to Packet Metadata
 
    Network Elements have to maintain a mapping between each UDP 4-tuple
    and QUIC CID and its DSCP code point.  This also needs updating
@@ -1171,12 +1197,12 @@ Table of Contents
    meaning of those QUIC CIDs.  It also requires all networks to agree
    on the meaning of those QUIC CIDs.
 
-12.5.  Improve CIDFI Initialization Time
+13.5.  Improve CIDFI Initialization Time
 
    Find approaches to further reduce network communications to start
    CIDFI.
 
-12.6.  Primary QUIC Channel CID Change
+13.6.  Primary QUIC Channel CID Change
 
    Because the CIDFI network element, QUIC server, and QUIC client all
    cooperate to share the primary QUIC connection's Destination CID,
@@ -1188,7 +1214,7 @@ Table of Contents
    network attach and which DCIDs are for a migrated connection.
    Probably belongs in the QUIC transport parameter signaling?
 
-13.  State Maintenance
+14.  State Maintenance
 
    A CNE can safely remove state after UDP inactivity timeout
    Section 4.3 of [RFC4787].  The CIDFI client MUST re-signal its CNE(s)
@@ -1201,7 +1227,19 @@ Table of Contents
       TODO: Probably want keepalives on client->CNE communication.  To
       be assessed.
 
-14.  Security Considerations
+15.  API Integration for QUIC Stream and Packet-Level Prioritization
+
+   For each QUIC stream requiring differentiated service, the QUIC stack
+   can map that stream to a different Destination CID.  The application-
+   level code would require an API to instruct the QUIC stack that a
+   particular stream needs differentiated service.  Similarly, if the
+   application-level code seeks differentiated service for packets
+   within a stream (e.g., prioritizing P-frames over I-Frames in a video
+   stream), it would need an API to inform the QUIC stack that different
+   packets within the QUIC stream require differentiated services and to
+   map these packets to different Destination CIDs.
+
+16.  Security Considerations
 
    Because the sender's QUIC Destination Connection ID is mapped to
    packet importance, and the DCID remains the same for many packets, an
@@ -1260,9 +1298,9 @@ Table of Contents
       do a lot more damage by blocking or rate-limiting the victim's
       traffic.
 
-15.  IANA Considerations
+17.  IANA Considerations
 
-15.1.  New QUIC Transport Parameter
+17.1.  New QUIC Transport Parameter
 
    This document requests IANA to register the following new permanent
    QUIC transport parameter in the "QUIC Transport Parameters" registry
@@ -1276,29 +1314,29 @@ Table of Contents
 
                   Table 1: New QUIC Transport Parameter
 
-15.2.  New Well-known URI "cidfi-aware"
+17.2.  New Well-known URI "cidfi-aware"
 
    This document requests IANA to register the new well-known URI
    "cidfi" in the "Well-Known URIs" registry available at [IANA-WKU].
 
-15.3.  New Special-use Domain Name
+17.3.  New Special-use Domain Name
 
    Register new special-use domain name cidfi.arpa for DNS SVCB
    discovery.
 
-15.4.  New DNS Service Binding (SVCB)
+17.4.  New DNS Service Binding (SVCB)
 
    This document requests IANA to register the new DNS SVCB "_cidfi-
    aware" in the "DNS Service Bindings (SVCB)" registry available at
    [IANA-SVCB].
 
-15.5.  New STUN Attribute
+17.5.  New STUN Attribute
 
    This document requests IANA to register the new STUN attribute
    "CIDFI-NONCE" in the "STUN Attributes" registry available at
    [IANA-STUN].
 
-15.6.  New Provisioning Domain Additional Information Key
+17.6.  New Provisioning Domain Additional Information Key
 
    This document requests IANA to register two new JSON keys in the
    Provisioning Domains Additional Information registry at [IANA-PVD]:
@@ -1326,9 +1364,9 @@ Table of Contents
    type: string
    example: "/metadata"
 
-16.  References
+18.  References
 
-16.1.  Normative References
+18.1.  Normative References
 
    [CBOR]     Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
@@ -1406,7 +1444,7 @@ Table of Contents
               Utilities for NAT (STUN)", RFC 8489, DOI 10.17487/RFC8489,
               February 2020, <https://www.rfc-editor.org/rfc/rfc8489>.
 
-16.2.  Informative References
+18.2.  Informative References
 
    [cryptex]  Uberti, J., Jennings, C., and S. Murillo, "Completely
               Encrypting RTP Header Extensions and Contributing
@@ -1502,10 +1540,18 @@ Table of Contents
               DOI 10.17487/RFC6105, February 2011,
               <https://www.rfc-editor.org/rfc/rfc6105>.
 
+   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
+              <https://www.rfc-editor.org/rfc/rfc7519>.
+
    [RFC7839]  Bhandari, S., Gundavelli, S., Grayson, M., Volz, B., and
               J. Korhonen, "Access-Network-Identifier Option in DHCP",
               RFC 7839, DOI 10.17487/RFC7839, June 2016,
               <https://www.rfc-editor.org/rfc/rfc7839>.
+
+   [RFC8392]  Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
+              "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392,
+              May 2018, <https://www.rfc-editor.org/rfc/rfc8392>.
 
    [RFC8517]  Dolson, D., Ed., Snellman, J., Boucadair, M., Ed., and C.
               Jacquenet, "An Inventory of Transport-Centric Functions
@@ -1517,6 +1563,11 @@ Table of Contents
               Datagram Extension to QUIC", RFC 9221,
               DOI 10.17487/RFC9221, March 2022,
               <https://www.rfc-editor.org/rfc/rfc9221>.
+
+   [RFC9334]  Birkholz, H., Thaler, D., Richardson, M., Smith, N., and
+              W. Pan, "Remote ATtestation procedureS (RATS)
+              Architecture", RFC 9334, DOI 10.17487/RFC9334, January
+              2023, <https://www.rfc-editor.org/rfc/rfc9334>.
 
    [RTP]      Schulzrinne, H., Casner, S., Frederick, R., and V.
               Jacobson, "RTP: A Transport Protocol for Real-Time
