@@ -163,7 +163,7 @@ prefer the use of alternate paths, offload a network).
 and share metadata between hosts, networks, and servers. This document adheres to
 the client-centric metadata sharing approach because it preserves privacy and also
 takes advantage of clients having a full view on their available network attachments.
-Metadata exchanges can occur in one single direction or both directions of a flows.
+Metadata exhanges can occur in one single direction or both directions of a flows.
 
 
 ~~~~~ aasvg
@@ -425,7 +425,7 @@ These are described in the following sub-sections.
 ## DNS SVCB Records
 
 This document defines a new DNS Service Binding parameter "cidfi-aware" in
-{{iana-svcb}} and a new Special-Use Domain Name "cidfi.arpa" in
+{{iana-svcb}} and a new Special-Use Domain Name "cifi.arpa" in
 {{iana-sudn}}.
 
 The local network is configured to respond to DNS SVCB
@@ -470,11 +470,13 @@ CIDFI-aware network elements, service-cidfi and wi-fi.
    "cidfi":[
       {
          "cidfinode":"service-cidfi.example.net",
+         "min-ttl":3,
          "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       },
       {
          "cidfinode":"wi-fi.example.net",
+         "min-ttl":2,
          "cidfipathauth":"/path-auth-query{?cidfi}",
          "cidfimetadata":"/cidfi-metadata"
       }
@@ -640,14 +642,17 @@ To ensure that the client messages to a CNE
 pertain only to the client's own UDP 4-tuple, the client sends the
 CIDFI nonce protected by the HMAC secret it obtained from
 {{client-authorizes}} over the QUIC UDP 4-tuple it is using with the
-QUIC server.  The ability to transmit that packet on the same UDP
+QUIC server over the path that involves that CNE. The ability to transmit that packet on the same UDP
 4-tuple as the QUIC connection indicates ownership of that IP address
-and UDP port.  The nonce and HMAC are sent in a {{!STUN=RFC8489}} indication (STUN
+and UDP port number.  The nonce and HMAC are sent in a {{!STUN=RFC8489}} indication (STUN
 class of 0b01) containing one or more CIDFI-NONCE attributes
 ({{iana-stun}}).  If there are multiple CNEs
 the single STUN indication contains a CIDFI-NONCE attribute from each of
-them.  This message is discarded by the QUIC server.
+them.  This message is discarded, if received, by the QUIC server.
 
+In order to avoid overloading servers, the client may set the TTL/Hop Limit
+to a value that allows to cross the CNE, but then dicarded before reaching the server.
+For example, the host sets the TTL to "min-ttl" that is returned during CNE discovery.
 
 {{flow-diag}} shows a summarized message flow obtaining
 the nonce and HMAC secret from the CNE (steps 1-2) then later
@@ -682,7 +687,7 @@ client                           edge router           server
   |  9. HTTPS: Ok                      |                  |
   |<-----------------------------------+                  |
 ~~~~~
-{: #flow-diag title="Example of Flow Exchange" artwork-align="center"}
+{: #flow-diag title="Example of Flow Exhange" artwork-align="center"}
 
 The short header's Destination Connection ID (DCID) can be 0 bytes or
 as short as 8 bits, so multiple QUIC clients are likely to use the
@@ -787,7 +792,7 @@ highlighted in the simplified message flow in {{ex-lost-nonce}}.
                                  CIDFI-aware            QUIC
 client                           edge router           server
   |                                    |                  |
-  |  HTTPS: Enroll CIDFI router to participate            |
+  |  HTTPS: Enroll CIDFI router to partipate              |
   +----------------------------------->|                  |
   |  HTTPS: Ok.  nonce=12345           |                  |
   |<-----------------------------------+                  |
@@ -851,7 +856,7 @@ client     Wi-Fi Access Point    edge router           server
   |  QUIC CIDFI stream: Ok             |                  |
   +------------------------------------------------------>|
 ~~~~~
-{: #ex-comm Title artwork-align="center" title="Example of CIDFI Communication"}
+{: #ex-comm Title artwork-align="center" title="Example of CIDIF Communication"}
 
 To each of the network elements authorized by the client, the client
 sends the mappings of the server's transmitted Destination CIDs to
@@ -878,7 +883,7 @@ client     Wi-Fi Access Point    edge router     server
   |  Ok              |                 |            |
   +----------------------------------->|            |
 ~~~~~
-{: #ex-comm-metadata Title artwork-align="center" title="Example of CIDFI Communication with Metadata Sharing"}
+{: #ex-comm-metadata Title artwork-align="center" title="Example of CIDIFI Communication with Metadata Sharing"}
 
 The communication from the client to the server is using a CIDFI-dedicated
 QUIC stream over the same QUIC connection as their primary communication.
@@ -1174,6 +1179,17 @@ depletion, and suchlike.
 
 > TODO: Probably want keepalives on client->CNE communication. To be assessed.
 
+# API Integration for QUIC Stream and Packet-Level Prioritization
+
+For each QUIC stream requiring differentiated service, the QUIC stack can
+map that stream to a different Destination CID. The application-level code
+would require an API to instruct the QUIC stack that a particular stream
+needs differentiated service. Similarly, if the application-level code seeks
+ differentiated service for packets within a stream (e.g., prioritizing P-frames
+over I-Frames in a video stream), it would need an API to inform the QUIC stack
+that different packets within the QUIC stream require differentiated services
+and to map these packets to different Destination CIDs.
+
 # Security Considerations
 
 Because the sender's QUIC Destination Connection ID is mapped to
@@ -1196,7 +1212,7 @@ Spoofing Attacks:
 : For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.
 : If the client does not support CIDFI, the attacker can influence the packet treatment of the victim's UDP 4-tuple.
 : If the client implements CIDFI, a CIDFI network element can identify an IP address spoofing attack. Concretely, the CNE will receive two HTTPS connections describing the same DCID; one connection from the attacker and another one from the victim. The CNE will then issue unique Nonces and HMACs to both the attacker and victim, and both the attacker and victim should send the STUN Indication on that same UDP 4-tuple. Such an event should trigger an alarm on the CNE. In this scenario, it is recommended that both the attacker and the victim be denied CIDFI access.
-: The spoofing of a victim's IP address is prevented by the network using network ingress filtering ({{!RFC2827}}, {{!RFC7513}}, {{?RFC6105}}, and/or {{!RFC6620}}).
+: The spoofing of a victim's IP address is prevented by the network using network ingress filtering ({{!RFC2827}}, {{!RFC7513}}, {{!RFC6105}}, and/or {{!RFC6620}}).
 
 On-Path Attacks:
 : An on-path attacker can observe the victim's Discovery Packet, block it, and then forward the packet within the attacker's 5-tuple. Subsequently, the on-path attacker can 'steal' the victim's CIDFI control from the victim's UDP 4-tuple, causing the victim's CIDFI signaling for that UDP 4-tuple to influence the attacker's UDP 4-tuple.
@@ -1229,6 +1245,22 @@ Register new special-use domain name cidfi.arpa for DNS SVCB discovery.
 This document requests IANA to register the new DNS SVCB "_cidfi-aware" in
 the "DNS Service Bindings (SVCB)" registry available at {{IANA-SVCB}}.
 
+The document also requests IANA to register the following service parameter
+in the "Service Parameter Keys (SvcParamKeys)" registry {{IANA-SVCB}}:
+
+Number:
+: TBD
+
+Name:
+: min-ttl
+
+Meaning:
+:The minimum IPv4 TTL or IPv6 Hop Limit to use for a connection.
+
+Reference:
+: This-Document
+
+
 ## New STUN Attribute {#iana-stun}
 
 This document requests IANA to register the new STUN attribute "CIDFI-NONCE"
@@ -1236,7 +1268,7 @@ in the "STUN Attributes" registry available at {{IANA-STUN}}.
 
 ## New Provisioning Domain Additional Information Key {#iana-pvd}
 
-This document requests IANA to register two new JSON keys in the
+This document requests IANA to register a new JSON key in the
 Provisioning Domains Additional Information registry at {{IANA-PVD}}:
 
 ~~~~~
@@ -1247,13 +1279,18 @@ Example: ["cidfinode": "service.example.net", "cidfipathauth":
           "/authpath", "cidfimetadata": "/meta"]
 ~~~~~
 
-Additionally, in the following cidfi keys are to be registered:
+Additionally, this document registers the following cidfi keys:
 
 ~~~~~
 JSON key: cidfinode
 Description: FQDN of CIDFI node
 Type: string
 Example: service.example.net
+
+JSON key: min-ttl
+Description: The minimum TTL or Hop Limit to reach a CNE
+Type: Unsigned integer
+Example: 5
 
 JSON key: cidfipathauth
 Description: authentication and authorization path for CIDFI
@@ -1272,7 +1309,7 @@ example: "/metadata"
 
 # Extending CIDFI to Other Protocols {#extending}
 
-CIDFI can be extended to other protocols including TCP, SCTP, RTP and SRTP,
+CIDFI can be extended to other protocols including TCP, SCTP, RTP, and SRTP,
 and bespoke UDP protocols.
 
 An extension to each protocol is described below which retains the
