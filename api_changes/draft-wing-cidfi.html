@@ -3203,12 +3203,12 @@ depletion, and suchlike.<a href="#section-14-1" class="pilcrow">¶</a></p>
       <h2 id="name-api-integration-for-quic-st">
 <a href="#section-15" class="section-number selfRef">15. </a><a href="#name-api-integration-for-quic-st" class="section-name selfRef">API Integration for QUIC Stream and Packet-Level Prioritization</a>
       </h2>
-<p id="section-15-1">For each QUIC or DTLS stream requiring differentiated service, the QUIC stack can
+<p id="section-15-1">For each QUIC or DTLS stream requiring differentiated service, the QUIC or DTLS stack can
 map that stream to a different Destination CID. The application-level code
-would require an API to instruct the QUIC stack that a particular stream
+would require an API to instruct the QUIC or DTLS stack that a particular stream
 needs differentiated service. Similarly, if the application-level code seeks
 differentiated service for packets within a stream (e.g., prioritizing P-frames
-over I-Frames in a video stream), it would need an API to inform the QUIC stack
+over I-Frames in a video stream), it would need an API to inform the QUIC or DTLS stack
 that different packets within the QUIC stream require differentiated services
 and to map these packets to different Destination CIDs.<a href="#section-15-1" class="pilcrow">¶</a></p>
 <p id="section-15-2">Where packet-level differentiation is not desired, such API enhancements
