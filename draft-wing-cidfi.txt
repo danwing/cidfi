@@ -122,17 +122,18 @@ Table of Contents
      13.5.  Improve CIDFI Initialization Time
      13.6.  Primary QUIC Channel CID Change
    14. State Maintenance
-   15. Security Considerations
-   16. IANA Considerations
-     16.1.  New QUIC Transport Parameter
-     16.2.  New Well-known URI "cidfi-aware"
-     16.3.  New Special-use Domain Name
-     16.4.  New DNS Service Binding (SVCB)
-     16.5.  New STUN Attribute
-     16.6.  New Provisioning Domain Additional Information Key
-   17. References
-     17.1.  Normative References
-     17.2.  Informative References
+   15. API Integration for QUIC Stream and Packet-Level Prioritization
+   16. Security Considerations
+   17. IANA Considerations
+     17.1.  New QUIC Transport Parameter
+     17.2.  New Well-known URI "cidfi-aware"
+     17.3.  New Special-use Domain Name
+     17.4.  New DNS Service Binding (SVCB)
+     17.5.  New STUN Attribute
+     17.6.  New Provisioning Domain Additional Information Key
+   18. References
+     18.1.  Normative References
+     18.2.  Informative References
    Appendix A.  Extending CIDFI to Other Protocols
      A.1.  TCP
      A.2.  SCTP
@@ -454,8 +455,8 @@ Table of Contents
 5.1.  DNS SVCB Records
 
    This document defines a new DNS Service Binding parameter "cidfi-
-   aware" in Section 16.4 and a new Special-Use Domain Name "cidfi.arpa"
-   in Section 16.3.
+   aware" in Section 17.4 and a new Special-Use Domain Name "cidfi.arpa"
+   in Section 17.3.
 
    The local network is configured to respond to DNS SVCB [RFC9460]
    queries with ServiceMode (Section 2.4.3 of [RFC9460]) for "_cidfi-
@@ -632,7 +633,7 @@ Table of Contents
 7.1.  Client Learns Server Supports CIDFI
 
    On initial connection to a QUIC server, the client includes a new
-   QUIC transport parameter CIDFI (Section 16.1) which is remembered for
+   QUIC transport parameter CIDFI (Section 17.1) which is remembered for
    0-RTT.
 
    If the server does not indicate CIDFI support, the client can still
@@ -666,7 +667,7 @@ Table of Contents
    that packet on the same UDP 4-tuple as the QUIC connection indicates
    ownership of that IP address and UDP port.  The nonce and HMAC are
    sent in a [STUN] indication (STUN class of 0b01) containing one or
-   more CIDFI-NONCE attributes (Section 16.5).  If there are multiple
+   more CIDFI-NONCE attributes (Section 17.5).  If there are multiple
    CNEs the single STUN indication contains a CIDFI-NONCE attribute from
    each of them.  This message is discarded by the QUIC server.
 
@@ -1224,7 +1225,19 @@ Table of Contents
       TODO: Probably want keepalives on client->CNE communication.  To
       be assessed.
 
-15.  Security Considerations
+15.  API Integration for QUIC Stream and Packet-Level Prioritization
+
+   For each QUIC stream requiring differentiated service, the QUIC stack
+   can map that stream to a different Destination CID.  The application-
+   level code would require an API to instruct the QUIC stack that a
+   particular stream needs differentiated service.  Similarly, if the
+   application-level code seeks differentiated service for packets
+   within a stream (e.g., prioritizing P-frames over I-Frames in a video
+   stream), it would need an API to inform the QUIC stack that different
+   packets within the QUIC stream require differentiated services and to
+   map these packets to different Destination CIDs.
+
+16.  Security Considerations
 
    Because the sender's QUIC Destination Connection ID is mapped to
    packet importance, and the DCID remains the same for many packets, an
@@ -1283,9 +1296,9 @@ Table of Contents
       do a lot more damage by blocking or rate-limiting the victim's
       traffic.
 
-16.  IANA Considerations
+17.  IANA Considerations
 
-16.1.  New QUIC Transport Parameter
+17.1.  New QUIC Transport Parameter
 
    This document requests IANA to register the following new permanent
    QUIC transport parameter in the "QUIC Transport Parameters" registry
@@ -1299,29 +1312,29 @@ Table of Contents
 
                   Table 1: New QUIC Transport Parameter
 
-16.2.  New Well-known URI "cidfi-aware"
+17.2.  New Well-known URI "cidfi-aware"
 
    This document requests IANA to register the new well-known URI
    "cidfi" in the "Well-Known URIs" registry available at [IANA-WKU].
 
-16.3.  New Special-use Domain Name
+17.3.  New Special-use Domain Name
 
    Register new special-use domain name cidfi.arpa for DNS SVCB
    discovery.
 
-16.4.  New DNS Service Binding (SVCB)
+17.4.  New DNS Service Binding (SVCB)
 
    This document requests IANA to register the new DNS SVCB "_cidfi-
    aware" in the "DNS Service Bindings (SVCB)" registry available at
    [IANA-SVCB].
 
-16.5.  New STUN Attribute
+17.5.  New STUN Attribute
 
    This document requests IANA to register the new STUN attribute
    "CIDFI-NONCE" in the "STUN Attributes" registry available at
    [IANA-STUN].
 
-16.6.  New Provisioning Domain Additional Information Key
+17.6.  New Provisioning Domain Additional Information Key
 
    This document requests IANA to register two new JSON keys in the
    Provisioning Domains Additional Information registry at [IANA-PVD]:
@@ -1349,9 +1362,9 @@ Table of Contents
    type: string
    example: "/metadata"
 
-17.  References
+18.  References
 
-17.1.  Normative References
+18.1.  Normative References
 
    [CBOR]     Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
@@ -1429,7 +1442,7 @@ Table of Contents
               Utilities for NAT (STUN)", RFC 8489, DOI 10.17487/RFC8489,
               February 2020, <https://www.rfc-editor.org/rfc/rfc8489>.
 
-17.2.  Informative References
+18.2.  Informative References
 
    [cryptex]  Uberti, J., Jennings, C., and S. Murillo, "Completely
               Encrypting RTP Header Extensions and Contributing
