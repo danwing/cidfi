@@ -724,9 +724,9 @@ Table of Contents
 
                   Figure 7: Example of Flow to New Server
 
-      Note that the above message flow shows an initial QUIC handshake
-      for simplicity (steps 1 and 7) but, because of QUIC connection
-      migration (Section 9 of [QUIC]), the QUIC messages might appear
+      Note the above message flow shows an initial QUIC handshake for
+      simplicity (steps 1 and 7) but because of QUIC connection
+      migration (Section 9 of [QUIC]) the QUIC messages might appear
       later.
 
    The short header's Destination Connection ID (DCID) can be 0 bytes or
@@ -756,7 +756,9 @@ Table of Contents
    As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
    Network Elements near the client, the client MAY reduce traffic to
    the server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN
-   Indication messages.
+   Indication messages.  The client SHOULD set TTL/Hop Limit to "min-
+   ttl".  The client MAY use other values (e.g., explicit configuration,
+   inferred from probe messages).
 
    Processing continues with the next step.
 

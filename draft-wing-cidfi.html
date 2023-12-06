@@ -2409,9 +2409,9 @@ HTTP channel established above.<a href="#section-7.2-5" class="pilcrow">¶</a></
 </div>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-7.2-7.1">
-            <p id="section-7.2-7.1.1">Note that the above message
+            <p id="section-7.2-7.1.1">Note the above message
 flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
-but, because of QUIC connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>), the
+but because of QUIC connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the
 QUIC messages might appear later.<a href="#section-7.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
@@ -2433,7 +2433,7 @@ CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">
 informs the client by sending an HTTP message to the client.  Details TBD.<a href="#section-7.2-12" class="pilcrow">¶</a></p>
 <p id="section-7.2-13">As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
 Network Elements near the client, the client <span class="bcp14">MAY</span> reduce traffic to the
-server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages.<a href="#section-7.2-13" class="pilcrow">¶</a></p>
+server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages. The client <span class="bcp14">SHOULD</span> set TTL/Hop Limit to "min-ttl". The client <span class="bcp14">MAY</span> use other values (e.g., explicit configuration, inferred from probe messages).<a href="#section-7.2-13" class="pilcrow">¶</a></p>
 <p id="section-7.2-14">Processing continues with the next step.<a href="#section-7.2-14" class="pilcrow">¶</a></p>
 <div id="stun-cidfi-nonce-attribute">
 <section id="section-7.2.1">
