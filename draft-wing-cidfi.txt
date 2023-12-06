@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 7 June 2024                                               Nokia
+Expires: 8 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         5 December 2023
+                                                         6 December 2023
 
 
                 Framework for CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 June 2024.
+   This Internet-Draft will expire on 8 June 2024.
 
 Copyright Notice
 
@@ -669,38 +669,54 @@ Table of Contents
    each of them.  This message is discarded by the QUIC server.
 
    Figure 6 shows a summarized message flow obtaining the nonce and HMAC
-   secret from the CNE (steps 1-2) then later sending the nonce and HMAC
-   in the same UDP 4-tuple towards the QUIC server (step 4).  This
-   message flow shows an initial QUIC handshake for simplicity (steps 3
-   and 8) but a QUIC connection migration (Section 9 of [QUIC]) can also
-   occur and the CIDFI messages might appear before QUIC packets appear.
+   secret from the CNE (steps 1-2) which is performed on network attach.
+
+        QUIC                            CIDFI-aware            QUIC
+       client                           edge router           server
+         |                                    |                  |
+         |  1. HTTPS: Enroll CIDFI router to participate         |
+         +----------------------------------->|                  |
+         |  2. HTTPS: Ok.  nonce=12345        |                  |
+         |<-----------------------------------+                  |
+         |                                    |                  |
+
+                     Figure 6: Example of Flow Exhange
+
+   Later, when connecting to a new QUIC or DTLS server, the client
+   determines if there are on-path CIDFI Network Elements by sending the
+   nonce and HMAC in the same UDP 4-tuple as the QUIC or DTLS connect
+   (step 2).  If a CIDFI Network Element is present it processes the
+   STUN Indication and sends a response to the client over HTTP using
+   the HTTP channel established above.
 
        QUIC                            CIDFI-aware            QUIC
       client                           edge router           server
         |                                    |                  |
-        |  1. HTTPS: Enroll CIDFI router to participate         |
-        +----------------------------------->|                  |
-        |  2. HTTPS: Ok.  nonce=12345        |                  |
+        |  1. QUIC Initial, transport parameter=CIDFI           |
+        +------------------------------------------------------>|
+        |  2. STUN Indication, nonce=12345, hmac=e8FEc          |
+        +------------------------------------------------------>|
+        |                                    |                  |
+        |                                    |           3. discarded
+        |                                    |                  |
+        |                 4. "I saw my nonce, HMAC is valid"    |
+        |                                    |                  |
+        |  5. Valid STUN Indication processed|                  |
         |<-----------------------------------+                  |
         |                                    |                  |
-        :                                    :                  :
-        |                                    |                  |
-        |  3. QUIC Initial, transport parameter=CIDFI           |
-        +------------------------------------------------------>|
-        |  4. STUN Indication, nonce=12345, hmac=e8FEc          |
-        +------------------------------------------------------>|
-        |                                    |           5. discarded
-        |                                    |                  |
-        |                 6. "I saw my nonce, HMAC is valid"    |
-        |                                    |                  |
-        |  7. HTTPS: "Map DCID=xyz as high importance"          |
+        |  6. HTTPS: "Map DCID=xyz as high importance"          |
         +----------------------------------->|                  |
-        |  8. QUIC Initial, transport parameter=CIDFI           |
+        |  7. QUIC Initial, transport parameter=CIDFI           |
         |<------------------------------------------------------+
-        |  9. HTTPS: Ok                      |                  |
+        |  8. HTTPS: Ok                      |                  |
         |<-----------------------------------+                  |
 
-                     Figure 6: Example of Flow Exchange
+                  Figure 7: Example of Flow to New Server
+
+      Note that the above message flow shows an initial QUIC handshake
+      for simplicity (steps 1 and 7) but, because of QUIC connection
+      migration (Section 9 of [QUIC]), the QUIC messages might appear
+      later.
 
    The short header's Destination Connection ID (DCID) can be 0 bytes or
    as short as 8 bits, so multiple QUIC clients are likely to use the
@@ -713,9 +729,8 @@ Table of Contents
    CNE to distinguish each QUIC client's UDP 4-tuple.
 
    To reduce CIDFI setup time the client STUN Indication MAY be sent at
-   the same time as the QUIC Initial packet (Section 17.2.2 of [QUIC]),
-   which is encouraged if the client remembers the server supports CIDFI
-   (0-RTT).
+   the same time as it establishes connection with the QUIC or DTLS
+   server.
 
    To prevent replay attacks, the Nonce is usable only for
    authenticating one UDP 4-tuple.  When the connection is migrated
@@ -723,11 +738,20 @@ Table of Contents
    newly-migrated connection.  The client will have to restart CIDFI
    procedures at the beginning (Section 6).
 
+   After the CIDFI Network Element receives the STUN Indication it
+   informs the client by sending an HTTP message to the client.  Details
+   TBD.
+
+   As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
+   Network Elements near the client, the client MAY reduce traffic to
+   the server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN
+   Indication messages.
+
    Processing continues with the next step.
 
 7.2.1.  STUN CIDFI-NONCE Attribute
 
-   The format of the STUN CIDFI-NONCE attribute is shown in Figure 7.
+   The format of the STUN CIDFI-NONCE attribute is shown in Figure 8.
 
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -747,7 +771,7 @@ Table of Contents
      |                                                               |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-               Figure 7: Format of STUN CIDFI-NONCE Attribute
+               Figure 8: Format of STUN CIDFI-NONCE Attribute
 
    The nonce is 128 bits obtained from the CIDFI network element.  The
    HMAC-output field is computed per [RFC5869] using the CIDFI network
@@ -756,6 +780,10 @@ Table of Contents
    shown below with "|" denoting concatenation.
 
      HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
+
+   When there are multiple CIDFI Network Elements on the network,
+   multiple CIDFI-NONCE attributes are sent in a single STUN Indication
+   message.
 
 7.3.  Initial Metadata Exchange
 
@@ -797,7 +825,7 @@ Table of Contents
    UDP 4-tuple.  The client then sends a new STUN message with that new
    nonce value and send a new HTTPS mapping request(s).  This
    interaction is highlighted in the simplified message flow in
-   Figure 8.
+   Figure 9.
 
                                        CIDFI-aware            QUIC
       client                           edge router           server
@@ -829,7 +857,7 @@ Table of Contents
         |  Ok                                |                  |
         |<-----------------------------------+                  |
 
-          Figure 8: Example of a Client Re-transmitting Lost Nonce
+          Figure 9: Example of a Client Re-transmitting Lost Nonce
 
    After the initial metadata is exchanged, processing continues with
    ongoing host-to-network and network-to-host updates as described in
@@ -847,7 +875,7 @@ Table of Contents
 
    The communication from the client to the server are using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
-   communication (Figure 9).
+   communication (Figure 10).
 
                       CIDFI-aware       CIDFI-aware
        client     Wi-Fi Access Point    edge router           server
@@ -866,7 +894,7 @@ Table of Contents
          |  QUIC CIDFI stream: Ok             |                  |
          +------------------------------------------------------>|
 
-                  Figure 9: Example of CIDFI Communication
+                 Figure 10: Example of CIDFI Communication
 
    To each of the network elements authorized by the client, the client
    sends the mappings of the server's transmitted Destination CIDs to
@@ -876,7 +904,7 @@ Table of Contents
 
    The CNE sends network performance information to the server which is
    intended to influence the sender's traffic rate (such as improving or
-   reducing fidelity of the audio or video).  In Figure 10, the CNE
+   reducing fidelity of the audio or video).  In Figure 11, the CNE
    informs the client of reduced bandwidth and the client informs the
    server using CIDFI.
 
@@ -892,7 +920,7 @@ Table of Contents
             |  Ok              |                 |            |
             +----------------------------------->|            |
 
-      Figure 10: Example of CIDFI Communication with Metadata Sharing
+      Figure 11: Example of CIDFI Communication with Metadata Sharing
 
    The communication from the client to the server is using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
@@ -1003,7 +1031,7 @@ Table of Contents
 
    Over the CIDFI-dedicated QUIC stream, the server sends mapping
    information to the client when then propagates that information to
-   each of the CNEs.  An example is shown in Figure 11.
+   each of the CNEs.  An example is shown in Figure 12.
 
    {
       "metadata-parameters":[
@@ -1042,9 +1070,9 @@ Table of Contents
       ]
    }
 
-                Figure 11: Example JSON for Flow Importance
+                Figure 12: Example JSON for Flow Importance
 
-      Note: Figure 11 lists sample attributes and they will be discussed
+      Note: Figure 12 lists sample attributes and they will be discussed
       in detail in a separate document.
 
 11.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
@@ -1064,7 +1092,7 @@ Table of Contents
    information to the client when then propagates that information to
    each of the CNEs.
 
-   An example is shown in Figure 12.
+   An example is shown in Figure 13.
 
    {
       "dscp":[
@@ -1091,7 +1119,7 @@ Table of Contents
       ]
    }
 
-                  Figure 12: Example JSON for DSCP Mapping
+                  Figure 13: Example JSON for DSCP Mapping
 
 11.2.  CIDFI-aware Network Element to Server
 
