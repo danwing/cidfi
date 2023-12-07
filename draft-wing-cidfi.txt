@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 8 June 2024                                               Nokia
+Expires: 9 June 2024                                               Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         6 December 2023
+                                                         7 December 2023
 
 
                 Framework for CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 June 2024.
+   This Internet-Draft will expire on 9 June 2024.
 
 Copyright Notice
 
@@ -1237,15 +1237,23 @@ Table of Contents
 
 15.  API Integration for QUIC Stream and Packet-Level Prioritization
 
-   For each QUIC stream requiring differentiated service, the QUIC stack
-   can map that stream to a different Destination CID.  The application-
-   level code would require an API to instruct the QUIC stack that a
-   particular stream needs differentiated service.  Similarly, if the
-   application-level code seeks differentiated service for packets
-   within a stream (e.g., prioritizing P-frames over I-Frames in a video
-   stream), it would need an API to inform the QUIC stack that different
-   packets within the QUIC stream require differentiated services and to
-   map these packets to different Destination CIDs.
+   For each QUIC or DTLS stream requiring differentiated service, the
+   QUIC or DTLS stack can map that stream to a different Destination
+   CID.  The application-level code would require an API to instruct the
+   QUIC or DTLS stack that a particular stream needs differentiated
+   service.  Similarly, if the application-level code seeks
+   differentiated service for packets within a stream (e.g.,
+   prioritizing P-frames over I-Frames in a video stream), it would need
+   an API to inform the QUIC or DTLS stack that different packets within
+   the QUIC stream require differentiated services and to map these
+   packets to different Destination CIDs.
+
+   *Where packet-level differentiation is not desired, such API
+   enhancements are not needed*.  In that situation, the CIDFI-aware
+   client and CIDFI-aware network elements can utilize bandwidth
+   information to optimize their video streaming usage and their
+   interactive audio/video streams, without the benefit of packet-level
+   differentiation.
 
 16.  Security Considerations
 
