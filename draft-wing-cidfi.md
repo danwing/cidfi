@@ -1239,7 +1239,7 @@ over I-Frames in a video stream), it would need an API to inform the QUIC or DTL
 that different packets within the QUIC stream require differentiated services
 and to map these packets to different Destination CIDs.
 
-Where packet-level differentiation is not desired, such API enhancements
+**Where packet-level differentiation is not desired, such API enhancements
 are not needed.  In that situation, the CIDFI-aware client and CIDFI-aware
 network elements can utilize bandwidth information to optimize their video
 streaming usage and their interactive audio/video streams, without the
