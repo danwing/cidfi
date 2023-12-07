@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-05T01:15:53.329551+00:00",
+  "timestamp": "2023-12-07T01:15:20.060570+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -402,6 +402,22 @@
       "body": "Adding a placeholder here\r\n\r\n",
       "createdAt": "2023-12-04T14:33:03Z",
       "updatedAt": "2023-12-04T14:33:03Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 65,
+      "id": "I_kwDOKCXv88543bvM",
+      "title": "cidfipathauth and cidfimetadata also svcparam?",
+      "url": "https://github.com/danwing/cidfi/issues/65",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "see #56 ",
+      "createdAt": "2023-12-06T06:57:14Z",
+      "updatedAt": "2023-12-06T06:57:14Z",
       "closedAt": null,
       "comments": []
     }
@@ -2887,24 +2903,26 @@
       "id": "PR_kwDOKCXv885hBy9V",
       "title": "tweak TTL/Hop Limit for ownership messages",
       "url": "https://github.com/danwing/cidfi/pull/56",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "boucadair",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Add a provision for the control of the forwarding scope of the ownership message. The goal is to avoid overloading servers.",
       "createdAt": "2023-12-04T09:13:22Z",
-      "updatedAt": "2023-12-04T14:30:06Z",
+      "updatedAt": "2023-12-06T16:38:44Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
-      "baseRefOid": "c190183b22da5fe6df30cfdc90f14994b73749cb",
+      "baseRefOid": "d4cea566f245b0bef99195470e42c9610323b521",
       "headRepository": "danwing/cidfi",
       "headRefName": "stun-indicate-discard",
-      "headRefOid": "41f2c7ceafc7b1ac4f074c0839f1614ad9de4bff",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "1837188e71981942d9d9f431f993cb77c7dedea8",
+      "closedAt": "2023-12-06T16:38:43Z",
+      "mergedAt": "2023-12-06T16:38:43Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "1784619f13689b092889d194e399fc7e7060c90f"
+      },
       "comments": [],
       "reviews": [
         {
@@ -2966,6 +2984,145 @@
               "updatedAt": "2023-12-04T14:30:19Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pI_OB",
+          "commit": {
+            "abbreviatedOid": "41f2c7c"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-05T04:58:53Z",
+          "updatedAt": "2023-12-05T04:58:53Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJIPa",
+          "commit": {
+            "abbreviatedOid": "41f2c7c"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-05T05:37:02Z",
+          "updatedAt": "2023-12-05T05:37:06Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "\"min-ttl\" also needs to be added to the DNS SVCB Records section and we need to add entries to the SVCB Service Parameters registry accordingly.",
+              "createdAt": "2023-12-05T05:37:02Z",
+              "updatedAt": "2023-12-05T05:37:07Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJg3U",
+          "commit": {
+            "abbreviatedOid": "2ba102f"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-05T07:09:05Z",
+          "updatedAt": "2023-12-05T07:09:05Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "created a separate PR for the new sub registry: https://github.com/danwing/cidfi/pull/62 ",
+              "createdAt": "2023-12-05T07:09:05Z",
+              "updatedAt": "2023-12-05T07:09:05Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJ13v",
+          "commit": {
+            "abbreviatedOid": "44200c8"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-05T07:46:40Z",
+          "updatedAt": "2023-12-05T07:46:41Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "Agree. Done.",
+              "createdAt": "2023-12-05T07:46:40Z",
+              "updatedAt": "2023-12-05T07:46:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pTVmO",
+          "commit": {
+            "abbreviatedOid": "44200c8"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T05:29:05Z",
+          "updatedAt": "2023-12-06T05:29:09Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "We will also have to add cidfipathauth and cidfimetadata.",
+              "createdAt": "2023-12-06T05:29:05Z",
+              "updatedAt": "2023-12-06T05:29:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pTvGM",
+          "commit": {
+            "abbreviatedOid": "44200c8"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T06:56:08Z",
+          "updatedAt": "2023-12-06T06:56:08Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "We will need to consider the sync the attributes between the various registries but we also need to make sure that we are not overloading SVCB. Will create an issue for this + not implement more changes as part of this PR.",
+              "createdAt": "2023-12-06T06:56:08Z",
+              "updatedAt": "2023-12-06T06:56:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pEnmi",
+          "commit": {
+            "abbreviatedOid": "1837188"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-04T16:04:39Z",
+          "updatedAt": "2023-12-06T16:38:26Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "A neat idea, but I don't see how the CIDFI server or PvD would know the number of router hops with all the NATs and routers in my home network.  Can we reduce the fragility of this idea with a discovery mechanism operated by the client?",
+              "createdAt": "2023-12-04T16:04:39Z",
+              "updatedAt": "2023-12-06T16:38:26Z"
+            },
+            {
+              "originalPosition": 4,
+              "body": "An idea:  the document doesn't say it right now, but if the CIDFI Network Element sent a message to the client after receiving and validating the STUN message, the client can determine TTL by starting with TTL=1, 2, etc., until the CIDFI Network Element says \"I got it, thanks!\"\r\n\r\nSee #58 ",
+              "createdAt": "2023-12-04T16:14:03Z",
+              "updatedAt": "2023-12-06T16:38:26Z"
+            }
+          ]
         }
       ]
     },
@@ -2974,21 +3131,397 @@
       "id": "PR_kwDOKCXv885hFf-k",
       "title": "client does TTL",
       "url": "https://github.com/danwing/cidfi/pull/58",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "My suggestion for client-centric choosing of TTL",
       "createdAt": "2023-12-04T18:14:11Z",
-      "updatedAt": "2023-12-04T22:15:02Z",
+      "updatedAt": "2023-12-06T16:57:06Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
-      "baseRefOid": "c190183b22da5fe6df30cfdc90f14994b73749cb",
+      "baseRefOid": "1784619f13689b092889d194e399fc7e7060c90f",
       "headRepository": "danwing/cidfi",
       "headRefName": "ttl",
-      "headRefOid": "3bfd7b61775df73eb08d74c32b7b94ae245a4968",
-      "closedAt": null,
+      "headRefOid": "8da0665303d684e55d4b8673b56309549ff06f57",
+      "closedAt": "2023-12-06T16:57:05Z",
+      "mergedAt": "2023-12-06T16:57:05Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "2ad4d863989da0ca88122826245aa02b9071d012"
+      },
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "On Dec 4, 2023, at 9:33\u202fPM, Tirumaleswar Reddy ***@***.***> wrote:\ufeff\r\n@tireddy2 commented on this pull request.\r\n\r\n\r\n\r\nIn draft-wing-cidfi.md:\r\n>  \r\n To prevent replay attacks, the Nonce is usable only for authenticating\r\n one UDP 4-tuple.  When the connection is migrated ({{Section 9 of\r\n QUIC}}) the CNE won't apply any CIDFI behavior to\r\n that newly-migrated connection.  The client will have to restart\r\n CIDFI procedures at the beginning ({{attach}}).\r\n \r\n+After the CIDFI Network Element receives the STUN Indication it\r\n+informs the client by sending an HTTP message to the client.  Details TBD.\r\n+\r\n+As the proof of ownership of its UDP 4-tuple is only useful to CIDFI\r\n+Network Elements near the client, the client MAY reduce traffic to the\r\n+server by modulating the IP TTL of its STUN Indication messages.\r\n+\r\n\r\nWe may want to clarify that the client sets the IP TTL based on the 'min-ttl' value. If the network does not provide the 'min-ttl' value, the client will need to use traceroute to the CNE to determine the IP TTL.It doesn\u2019t need to traceroute (*). \u00a0I don\u2019t want to get into the details of the mechanics in the draft. It is not critical to the system operation whatsoever. \u00a0System works without this optimization.\u00a0(*) after joining the network it can increment the TTL until it receives the \u201chey, I saw your STUN Indication\u201d from the CNE. \u00a0We could even add a field to the STUN Indication so that field\u2019s value gets reflected back to the client (in the HTTP control channel) so the client can flood several STUN Indications quickly.-d\r\n\r\n\u2014Reply to this email directly, view it on GitHub, or unsubscribe.You are receiving this because you authored the thread.Message ID: ***@***.***>",
+          "createdAt": "2023-12-05T19:51:46Z",
+          "updatedAt": "2023-12-05T19:51:46Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885pJDST",
+          "commit": {
+            "abbreviatedOid": "3bfd7b6"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-05T05:14:02Z",
+          "updatedAt": "2023-12-05T05:14:02Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJHX6",
+          "commit": {
+            "abbreviatedOid": "3bfd7b6"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-05T05:32:45Z",
+          "updatedAt": "2023-12-05T05:32:51Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "We may want to clarify that the client sets the IP TTL based on the 'min-ttl' value. If the network does not provide the 'min-ttl' value, the client will need to use traceroute to the CNE to determine the IP TTL.",
+              "createdAt": "2023-12-05T05:32:46Z",
+              "updatedAt": "2023-12-05T05:32:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pTshb",
+          "commit": {
+            "abbreviatedOid": "2b8a6b9"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T06:49:43Z",
+          "updatedAt": "2023-12-06T06:49:43Z",
+          "comments": [
+            {
+              "originalPosition": 93,
+              "body": "```suggestion\r\nserver by modulating the IP TTL of its STUN Indication messages. The client SHOULD set TTL/Hop Limit to \"min-ttl\". The client MAY use other values (e.g., explicit configuration, inferred from probe messages).\r\n```",
+              "createdAt": "2023-12-06T06:49:43Z",
+              "updatedAt": "2023-12-06T06:49:43Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pYvIS",
+          "commit": {
+            "abbreviatedOid": "8da0665"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-06T16:41:51Z",
+          "updatedAt": "2023-12-06T16:42:00Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 59,
+      "id": "PR_kwDOKCXv885hG-GY",
+      "title": "clarify multiple CIDFI-Nonce attributes can appear in a single STUN Indication",
+      "url": "https://github.com/danwing/cidfi/pull/59",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-04T22:21:51Z",
+      "updatedAt": "2023-12-06T06:48:56Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "d632b8ae5482ccb7f2ff10736034f57482b6c217",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "multiple_attributes",
+      "headRefOid": "c321be872e313ebe2dd5220083acea48e2dca435",
+      "closedAt": "2023-12-06T06:48:56Z",
+      "mergedAt": "2023-12-06T06:48:56Z",
+      "mergedBy": "boucadair",
+      "mergeCommit": {
+        "oid": "d4cea566f245b0bef99195470e42c9610323b521"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885pI_kn",
+          "commit": {
+            "abbreviatedOid": "a3f220e"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-05T05:00:42Z",
+          "updatedAt": "2023-12-05T05:00:46Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Replace \"CIDFI-NONE\" with \"CIDFI-NONCE\". ",
+              "createdAt": "2023-12-05T05:00:42Z",
+              "updatedAt": "2023-12-05T05:00:46Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJqBy",
+          "commit": {
+            "abbreviatedOid": "a3f220e"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-05T07:34:07Z",
+          "updatedAt": "2023-12-05T07:34:07Z",
+          "comments": [
+            {
+              "originalPosition": 102,
+              "body": "```suggestion\r\nmultiple CIDFI-NONCE attributes are sent in a single STUN Indication\r\n```",
+              "createdAt": "2023-12-05T07:34:07Z",
+              "updatedAt": "2023-12-05T07:34:07Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJqmJ",
+          "commit": {
+            "abbreviatedOid": "217ddef"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-05T07:34:42Z",
+          "updatedAt": "2023-12-05T07:34:43Z",
+          "comments": [
+            {
+              "originalPosition": 66,
+              "body": "```suggestion\r\n> Note that the above message\r\n```",
+              "createdAt": "2023-12-05T07:34:43Z",
+              "updatedAt": "2023-12-05T07:34:43Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJrCu",
+          "commit": {
+            "abbreviatedOid": "f3291e2"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-05T07:35:10Z",
+          "updatedAt": "2023-12-05T07:35:11Z",
+          "comments": [
+            {
+              "originalPosition": 68,
+              "body": "```suggestion\r\nbut, because of QUIC connection migration ({{Section 9 of QUIC}}), the\r\n```",
+              "createdAt": "2023-12-05T07:35:10Z",
+              "updatedAt": "2023-12-05T07:35:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJtBm",
+          "commit": {
+            "abbreviatedOid": "7e91b45"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2023-12-05T07:37:21Z",
+          "updatedAt": "2023-12-05T07:39:07Z",
+          "comments": [
+            {
+              "originalPosition": 92,
+              "body": "```suggestion\r\nserver by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages.\r\n```",
+              "createdAt": "2023-12-05T07:37:21Z",
+              "updatedAt": "2023-12-05T07:39:07Z"
+            },
+            {
+              "originalPosition": 93,
+              "body": "The client SHOULD set TTL/Hop Limit to \"min-ttl\". The client MAY use other values (e.g., explicit configuration, inferred from probe messages).",
+              "createdAt": "2023-12-05T07:39:00Z",
+              "updatedAt": "2023-12-05T07:39:07Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pTsS5",
+          "commit": {
+            "abbreviatedOid": "c321be8"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-06T06:48:49Z",
+          "updatedAt": "2023-12-06T06:48:49Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 60,
+      "id": "PR_kwDOKCXv885hHqU5",
+      "title": "fix some spelling errors",
+      "url": "https://github.com/danwing/cidfi/pull/60",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-05T01:29:31Z",
+      "updatedAt": "2023-12-05T07:32:17Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "39c6f3bc9cf6f69ffe18be0f4b88475660b2a40a",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "spelling",
+      "headRefOid": "d4841396ca9d3b763828895a26905f5b324b8cb8",
+      "closedAt": "2023-12-05T07:32:16Z",
+      "mergedAt": "2023-12-05T07:32:16Z",
+      "mergedBy": "boucadair",
+      "mergeCommit": {
+        "oid": "d632b8ae5482ccb7f2ff10736034f57482b6c217"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885pI_s1",
+          "commit": {
+            "abbreviatedOid": "d484139"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-05T05:01:26Z",
+          "updatedAt": "2023-12-05T05:01:26Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885pJooB",
+          "commit": {
+            "abbreviatedOid": "d484139"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-05T07:32:09Z",
+          "updatedAt": "2023-12-05T07:32:09Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 61,
+      "id": "PR_kwDOKCXv885hHt6N",
+      "title": "adjust readme for new title",
+      "url": "https://github.com/danwing/cidfi/pull/61",
+      "state": "MERGED",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-05T01:51:40Z",
+      "updatedAt": "2023-12-05T01:51:48Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "39c6f3bc9cf6f69ffe18be0f4b88475660b2a40a",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "adjust_readme",
+      "headRefOid": "fdf3757874b27d7f6eb8a6a25d5ff77eaf80fffc",
+      "closedAt": "2023-12-05T01:51:47Z",
+      "mergedAt": "2023-12-05T01:51:47Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "c510300ec5f84916611507ef63b42ca626bb4ede"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 62,
+      "id": "PR_kwDOKCXv885hIvTu",
+      "title": "new-cidfi-pvd-registry",
+      "url": "https://github.com/danwing/cidfi/pull/62",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-05T07:08:15Z",
+      "updatedAt": "2023-12-06T06:52:29Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "stun-indicate-discard",
+      "baseRefOid": "41f2c7ceafc7b1ac4f074c0839f1614ad9de4bff",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "cidfi-pvd-subregistry",
+      "headRefOid": "980960c3e5fc373c95a3f45eb6d3de89696e2920",
+      "closedAt": "2023-12-06T06:52:28Z",
+      "mergedAt": "2023-12-06T06:52:28Z",
+      "mergedBy": "boucadair",
+      "mergeCommit": {
+        "oid": "df389e723bb7064253da749fe4d6a90129a9e79f"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885pTVMz",
+          "commit": {
+            "abbreviatedOid": "980960c"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-06T05:27:01Z",
+          "updatedAt": "2023-12-06T05:27:01Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 63,
+      "id": "PR_kwDOKCXv885hQ1Gc",
+      "title": "API Integration for QUIC Stream and Packet-Level Prioritization",
+      "url": "https://github.com/danwing/cidfi/pull/63",
+      "state": "CLOSED",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-06T06:39:42Z",
+      "updatedAt": "2023-12-06T06:47:01Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "d632b8ae5482ccb7f2ff10736034f57482b6c217",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-1",
+      "headRefOid": "c71dea4afd0833eb5d1cb91092564c08ee120fe6",
+      "closedAt": "2023-12-06T06:47:01Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -2996,24 +3529,238 @@
       "reviews": []
     },
     {
-      "number": 59,
-      "id": "PR_kwDOKCXv885hG-GY",
-      "title": "clarify multiple CIDFI-Nonce attributes can appear in a single STUN Indication",
-      "url": "https://github.com/danwing/cidfi/pull/59",
+      "number": 64,
+      "id": "PR_kwDOKCXv885hQ3PS",
+      "title": "API Integration for QUIC Stream and Packet-Level Prioritization",
+      "url": "https://github.com/danwing/cidfi/pull/64",
+      "state": "MERGED",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-06T06:47:28Z",
+      "updatedAt": "2023-12-06T16:35:00Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "d632b8ae5482ccb7f2ff10736034f57482b6c217",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-2",
+      "headRefOid": "9d79e5d9274f9f3bfed2e4e10a66703da73aa01e",
+      "closedAt": "2023-12-06T16:34:59Z",
+      "mergedAt": "2023-12-06T16:34:59Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "e3640177a63044ccb69cbd5be17d8c7e62dcfdc4"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885pTvvs",
+          "commit": {
+            "abbreviatedOid": "9d79e5d"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-06T06:58:27Z",
+          "updatedAt": "2023-12-06T06:58:27Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885pYrQH",
+          "commit": {
+            "abbreviatedOid": "9d79e5d"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-06T16:34:41Z",
+          "updatedAt": "2023-12-06T16:34:41Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 66,
+      "id": "PR_kwDOKCXv885hRXGg",
+      "title": "Privacy-Aware Metadata Sharing in Network Relationships",
+      "url": "https://github.com/danwing/cidfi/pull/66",
+      "state": "CLOSED",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-06T08:01:15Z",
+      "updatedAt": "2023-12-06T08:01:39Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "d4cea566f245b0bef99195470e42c9610323b521",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-3",
+      "headRefOid": "c70655e39db781a2fb21623e79c9196e6d35f788",
+      "closedAt": "2023-12-06T08:01:38Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 67,
+      "id": "PR_kwDOKCXv885hRZmd",
+      "title": "Privacy-Aware Metadata Sharing in Network Relationships",
+      "url": "https://github.com/danwing/cidfi/pull/67",
+      "state": "CLOSED",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-06T08:05:51Z",
+      "updatedAt": "2023-12-06T08:06:21Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "d4cea566f245b0bef99195470e42c9610323b521",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-4",
+      "headRefOid": "f55392365529b953347317c18b1af2815b6f3e5e",
+      "closedAt": "2023-12-06T08:06:21Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 68,
+      "id": "PR_kwDOKCXv885hRaP3",
+      "title": "Privacy-Aware Metadata Sharing in Network Relationships",
+      "url": "https://github.com/danwing/cidfi/pull/68",
+      "state": "MERGED",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-06T08:06:57Z",
+      "updatedAt": "2023-12-06T16:34:04Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "d4cea566f245b0bef99195470e42c9610323b521",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-5",
+      "headRefOid": "36a663bd059835b10d8e67bb020fc4b9d0f3ab67",
+      "closedAt": "2023-12-06T16:34:03Z",
+      "mergedAt": "2023-12-06T16:34:03Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "abf7d750bd27f47b03022241cd152dc00519e380"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885pUt70",
+          "commit": {
+            "abbreviatedOid": "7f5c3a4"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2023-12-06T09:06:09Z",
+          "updatedAt": "2023-12-06T09:09:25Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\r\nthe server can sign or attest the metadata using, e.g., JSON Web Token (JWT) {{?RFC7519}} or CBOR Web Token (CWT) {{?RFC8392}}. The\r\n```",
+              "createdAt": "2023-12-06T09:06:09Z",
+              "updatedAt": "2023-12-06T09:09:25Z"
+            },
+            {
+              "originalPosition": 11,
+              "body": "```suggestion\r\nThe client may use any local policy or involve the end-user in the decision-making process regarding\r\n```",
+              "createdAt": "2023-12-06T09:07:06Z",
+              "updatedAt": "2023-12-06T09:09:25Z"
+            },
+            {
+              "originalPosition": 14,
+              "body": "```suggestion\r\nwill be utilized by the CNE, acting as a Relying Party (e.g., {{Section 7.1 of ?RFC9334}}), to determine the\r\n```",
+              "createdAt": "2023-12-06T09:09:02Z",
+              "updatedAt": "2023-12-06T09:09:25Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pU-Tc",
+          "commit": {
+            "abbreviatedOid": "bdd90da"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-06T09:37:49Z",
+          "updatedAt": "2023-12-06T09:37:49Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKCXv885pVAHu",
+          "commit": {
+            "abbreviatedOid": "bdd90da"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T09:39:47Z",
+          "updatedAt": "2023-12-06T09:39:48Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "```suggestion\r\n# Privacy Considerations\r\n\r\n## Privacy-Aware Metadata Sharing in Network Relationships\r\n```",
+              "createdAt": "2023-12-06T09:39:47Z",
+              "updatedAt": "2023-12-06T09:39:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pYq3p",
+          "commit": {
+            "abbreviatedOid": "36a663b"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-06T16:33:56Z",
+          "updatedAt": "2023-12-06T16:33:56Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 69,
+      "id": "PR_kwDOKCXv885hWr1F",
+      "title": "make it *super* clear that API changes are only necessary for packet-\u2026",
+      "url": "https://github.com/danwing/cidfi/pull/69",
       "state": "OPEN",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
-      "body": "",
-      "createdAt": "2023-12-04T22:21:51Z",
-      "updatedAt": "2023-12-04T22:21:52Z",
+      "body": "\u2026level differentiation",
+      "createdAt": "2023-12-06T22:18:08Z",
+      "updatedAt": "2023-12-06T23:12:47Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
-      "baseRefOid": "39c6f3bc9cf6f69ffe18be0f4b88475660b2a40a",
+      "baseRefOid": "2ad4d863989da0ca88122826245aa02b9071d012",
       "headRepository": "danwing/cidfi",
-      "headRefName": "multiple_attributes",
-      "headRefOid": "a3f220ef6ba56ae5828f6ff987e0740e8a4f4a94",
+      "headRefName": "api_changes",
+      "headRefOid": "adba36894cb4fba1678bdbc3fdb26b2ce288daa7",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
