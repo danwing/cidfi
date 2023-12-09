@@ -261,15 +261,15 @@ receive CIDFI metadata for that client.
                     |                     |          |
 +------+   +------+ | +------+            |          |
 |CIDFI-|   |CIDFI-| | |CIDFI-|            |          |
-|aware |   |aware | | |aware |  +------+  |          |   +----------+
-|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |  +---------+ |
-+------+   |access| | |router|  +------+  |   |      | +--------+ | |
+|aware |   |aware | | |aware |  +------+  |          |     +--------+
+|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |   +-+------+ |
++------+   |access| | |router|  +------+  |   |      | +-+------+ | |
            |point | | +------+            |   |      | | CIDFI- | | |
-           +------+ |                     | +-+----+ | | aware  | | |
-                    |                     | |router+---+ QUIC   | | |
-+---------+         | +------+            | +-+----+ | | server | |-+
-| CIDFI-  |         | |CIDFI-|            |   |      | |        |-+
-| aware   |         | |aware |  +------+  |   |      | +--------+
+           +------+ |                     | +-+----+ | | aware  | +-+
+                    |                     | |router+---+ QUIC   +-+
++---------+         | +------+            | +-+----+ | | server |
+| CIDFI-  |         | |CIDFI-|            |   |      | +--------+
+| aware   |         | |aware |  +------+  |   |      |
 | client  +-----B-----+RAN   +--+router+------+      |
 |(handset)|         | |router|  +------+  |          |
 +---------+         | +------+            |          |
@@ -302,16 +302,20 @@ also benefit {{?I-D.ietf-avtcore-rtp-over-quic}}.
 
 CIDFI brings benefits to QUIC as that protocol is of primary interest.
 QUIC is quickly replacing HTTPS-over-TCP on many websites and content
-delivery networks because of its advantages to both end users and servers,
-supplanting TCP.  Applications can take advantage of QUIC's unreliability
-to help networks provide reasonable service to clients on constrained links,
-especially as the user transitions from a high quality wireless reception
-to lower quality reception (e.g., entering a building). That said, CIDFI
-can be extended to other protocols as discussed in {{extending}}.
+delivery networks because of its advantages to both end users and
+servers.  CIDFI can bring value to a system comprised solely of a
+CIDFI-aware client and the CIDFI-aware network elements.  By adding a
+CIDFI-aware server that supports QUIC unreliable datagrams
+{{!RFC9221}} and API integration (see {{api-integration}}), each
+packet can receive differentiated service from the network.  This is
+especially useful during user transitions from a high quality wireless
+reception to lower quality reception (e.g., entering a building).
+Additionally, CIDFI can be extended to other protocols as discussed in
+{{extending}}.
 
 ## Operation with Streaming Video
 
-Streaming video only needs to be transmitted slightly faster than the
+Incremental deployment: Streaming video only needs to be transmitted slightly faster than the
 video playout rate.  Sending the video significantly faster can waste
 bandwidth, most notably if the user abandons the video early.  Worse, as discussed in {{Section 3.10 of ?RFC8517}}, a fast download of a video that won't be viewed completely by the subscriber may lead to quick exhaustion of the user data quota. CIDFI
 helps this use-case with its network-to-host signaling which informs
@@ -319,7 +323,7 @@ the client of available bandwidth allowing the client to choose
 a compatible video stream.  This functionality does not need a CIDFI-
 aware server.
 
-With reliable transport such as TCP, the only purpose of
+Full system deployment: With reliable transport such as TCP, the only purpose of
 video key frames is the user scrolling forward/backward.  When
 video streaming uses unreliable transport ({{?RFC9221}})
 it is beneficial to differentiate keyframes from predictive
@@ -330,13 +334,13 @@ during linear playout.
 
 ## Operation with Interactive Audio/Video/Screen sharing
 
-With interactive sessions CIDFI can help determine the bandwidth
+Incremental deployment: With interactive sessions CIDFI can help determine the bandwidth
 available for the flow so the video (and screen sharing) quality and
 size can be constrained to the available bandwidth.  This benefit
 can be deployed locally with a CIDFI-aware client and CIDFI-aware
 network.
 
-When the remote peer also supports CIDFI, the remote peer can
+Full system deployment: When the remote peer also supports CIDFI, the remote peer can
 differentiate packets containing audio, video, or screen sharing.  In
 certain use-cases audio is the most important whereas in other
 use-cases screen sharing is most important.  With CIDFI, the relative
@@ -1216,7 +1220,7 @@ depletion, and suchlike.
 
 > TODO: Probably want keepalives on client->CNE communication. To be assessed.
 
-# API Integration for QUIC Stream and Packet-Level Prioritization
+# API Integration for QUIC Stream and Packet-Level Prioritization {#api-integration}
 
 For each QUIC stream requiring differentiated service, the QUIC stack can
 map that stream to a different Destination CID. The application-level code
