@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-07T01:15:20.060570+00:00",
+  "timestamp": "2023-12-10T01:19:52.066327+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -103,15 +103,15 @@
       "id": "I_kwDOKCXv8852vxQ2",
       "title": "See if csig is relevant to this work",
       "url": "https://github.com/danwing/cidfi/issues/26",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "boucadair",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://datatracker.ietf.org/doc/draft-ravi-ippm-csig/",
       "createdAt": "2023-11-14T08:30:30Z",
-      "updatedAt": "2023-11-16T05:26:49Z",
-      "closedAt": null,
+      "updatedAt": "2023-12-08T18:15:27Z",
+      "closedAt": "2023-12-08T18:15:27Z",
       "comments": [
         {
           "author": "VMatrix1900",
@@ -252,15 +252,15 @@
       "id": "I_kwDOKCXv8853jDks",
       "title": "Packet type in Figure 6",
       "url": "https://github.com/danwing/cidfi/issues/44",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "boucadair",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L672\r\n\r\nWhy is this an initial packet? This should be any QUIC packet with SCID=xyz + signaled 4-uple. No?\r\n\r\nAlso, why do we have an OK right after?",
       "createdAt": "2023-11-22T06:42:20Z",
-      "updatedAt": "2023-11-29T21:43:06Z",
-      "closedAt": null,
+      "updatedAt": "2023-12-08T18:15:53Z",
+      "closedAt": "2023-12-08T18:15:53Z",
       "comments": [
         {
           "author": "danwing",
@@ -282,6 +282,13 @@
           "body": "Fixed in PR #49 ",
           "createdAt": "2023-11-29T21:43:05Z",
           "updatedAt": "2023-11-29T21:43:05Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "https://github.com/danwing/cidfi/pull/49",
+          "createdAt": "2023-12-08T18:15:53Z",
+          "updatedAt": "2023-12-08T18:15:53Z"
         }
       ]
     },
@@ -377,7 +384,7 @@
       "labels": [],
       "body": "Could/should we signal 'related' packets with certain CIDs, with the intent the network tries to deliver all or none of them.  For example a 3000 byte payload that needs to be split into 2-3 packets and is only useful if all packets are received.\r\n\r\nThis could be signaled as a bundle of CIDs which should are 'related', e.g., CID 123, 373, 673.  (Note the CIDs are still randomly-chosen and have no natural relationship to each other)\r\n",
       "createdAt": "2023-11-30T02:33:34Z",
-      "updatedAt": "2023-12-04T14:40:11Z",
+      "updatedAt": "2023-12-08T07:36:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -386,6 +393,13 @@
           "body": "I'm afraid that the more we require sophisticated state handling, the more it will be challenging to convince the network operators to implement CIDFI.",
           "createdAt": "2023-12-04T14:40:10Z",
           "updatedAt": "2023-12-04T14:40:10Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "see also #57 ",
+          "createdAt": "2023-12-08T07:36:22Z",
+          "updatedAt": "2023-12-08T07:36:22Z"
         }
       ]
     },
@@ -401,9 +415,17 @@
       "labels": [],
       "body": "Adding a placeholder here\r\n\r\n",
       "createdAt": "2023-12-04T14:33:03Z",
-      "updatedAt": "2023-12-04T14:33:03Z",
+      "updatedAt": "2023-12-08T07:35:34Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "\"Operational\" should also include a discussion about incentives for deployment for all involved parties (with a focus on the network)",
+          "createdAt": "2023-12-08T07:35:34Z",
+          "updatedAt": "2023-12-08T07:35:34Z"
+        }
+      ]
     },
     {
       "number": 65,
@@ -3747,26 +3769,121 @@
       "id": "PR_kwDOKCXv885hWr1F",
       "title": "make it *super* clear that API changes are only necessary for packet-\u2026",
       "url": "https://github.com/danwing/cidfi/pull/69",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "danwing",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "\u2026level differentiation",
       "createdAt": "2023-12-06T22:18:08Z",
-      "updatedAt": "2023-12-06T23:12:47Z",
+      "updatedAt": "2023-12-07T16:16:33Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "2ad4d863989da0ca88122826245aa02b9071d012",
       "headRepository": "danwing/cidfi",
       "headRefName": "api_changes",
-      "headRefOid": "adba36894cb4fba1678bdbc3fdb26b2ce288daa7",
+      "headRefOid": "18ab899c0f57a5be4882e946b86968f861ed46a1",
+      "closedAt": "2023-12-07T16:16:32Z",
+      "mergedAt": "2023-12-07T16:16:32Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "4f6403228d3a5383a11e7872a0bd0dc1a55f8892"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885pdas3",
+          "commit": {
+            "abbreviatedOid": "adba368"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-07T06:36:07Z",
+          "updatedAt": "2023-12-07T06:36:12Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "I don't think it is a new API in case of DTLS, see https://datatracker.ietf.org/doc/rfc9146/. RFC9146 only allows a single CID and allows it be changed using a post-handshake messages. If we would like to use multiple CIDs with a DTLS session, we will require a new spec updating RFC9146.",
+              "createdAt": "2023-12-07T06:36:07Z",
+              "updatedAt": "2023-12-07T06:36:12Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885pdr9R",
+          "commit": {
+            "abbreviatedOid": "adba368"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-07T07:36:44Z",
+          "updatedAt": "2023-12-07T07:38:38Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "```suggestion\r\n**Where packet-level differentiation is not desired, such API enhancements\r\n```",
+              "createdAt": "2023-12-07T07:36:44Z",
+              "updatedAt": "2023-12-07T07:38:38Z"
+            },
+            {
+              "originalPosition": 17,
+              "body": "```suggestion\r\nare not needed**.  In that situation, the CIDFI-aware client and CIDFI-aware\r\n```",
+              "createdAt": "2023-12-07T07:36:55Z",
+              "updatedAt": "2023-12-07T07:38:38Z"
+            },
+            {
+              "originalPosition": 17,
+              "body": "Make it more visible to readers.",
+              "createdAt": "2023-12-07T07:37:59Z",
+              "updatedAt": "2023-12-07T07:38:38Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 70,
+      "id": "PR_kwDOKCXv885hhRCY",
+      "title": "Move DTLS CID to Appendix",
+      "url": "https://github.com/danwing/cidfi/pull/70",
+      "state": "OPEN",
+      "author": "tireddy2",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-08T12:34:40Z",
+      "updatedAt": "2023-12-09T05:26:32Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "4f6403228d3a5383a11e7872a0bd0dc1a55f8892",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "tireddy2-patch-2",
+      "headRefOid": "5e49afc35352fad5088e8e336640ce91761fdfe2",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885prLE1",
+          "commit": {
+            "abbreviatedOid": "e2571a8"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-08T18:15:01Z",
+          "updatedAt": "2023-12-08T18:15:01Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
