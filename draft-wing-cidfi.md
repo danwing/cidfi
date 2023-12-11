@@ -61,7 +61,6 @@ author:
 
 normative:
   QUIC: RFC9000
-  DTLS-CID: RFC9146
 
 informative:
 
@@ -126,7 +125,7 @@ the user experience to adapt to network's constraints and share expected applica
 differentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both.
 
 This document describes how clients can communicate with their nearby
-network elements so their QUIC and DTLS streams can be augmented with
+network elements so their QUIC streams can be augmented with
 information about network conditions and packet importance to meet both
 intentional and reactive management policies.  With
 optional server support individual packets can receive differentiated
@@ -210,16 +209,16 @@ Metadata exchanges can occur in one single direction or both directions of a flo
 ~~~~~
 {: #design-approaches artwork-align="center" title="Candidate Design Approaches"}
 
-The document is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol (see {{extending}}). To illustrate the framework's applicability this document focuses on QUIC transport and application protocols using DTLS.
+The document is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol (see {{extending}}). To illustrate the framework's applicability this document focuses on QUIC transport.
 
 # Overview
 
 This document defines CIDFI (pronounced "sid fye") which is a system
 of several protocols that allow communicating about a {{QUIC}}
-connection or a DTLS connection {{DTLS-CID}} from the network to the
-server and the server to the network.  The information exchanged
-allows the server to know about network conditions and allows the
-server to signal packet importance. The following main steps are involved in CIDFI; some of them are optional:
+connection from the network to the server and the server to the network.
+The information exchanged allows the server to know about network conditions
+and allows the server to signal packet importance. The following main steps
+are involved in CIDFI; some of them are optional:
 
 * CIDFI-awareness discovery between a host and a network.
 * Establishment of a secure association with all or a subset of CIDFI-aware
@@ -262,15 +261,15 @@ receive CIDFI metadata for that client.
                     |                     |          |
 +------+   +------+ | +------+            |          |
 |CIDFI-|   |CIDFI-| | |CIDFI-|            |          |
-|aware |   |aware | | |aware |  +------+  |          |   +----------+
-|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |  +---------+ |
-+------+   |access| | |router|  +------+  |   |      | +--------+ | |
+|aware |   |aware | | |aware |  +------+  |          |     +--------+
+|client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |   +-+------+ |
++------+   |access| | |router|  +------+  |   |      | +-+------+ | |
            |point | | +------+            |   |      | | CIDFI- | | |
-           +------+ |                     | +-+----+ | | aware  | | |
-                    |                     | |router+---+ QUIC or| | |
-+---------+         | +------+            | +-+----+ | | DTLS   | |-+
-| CIDFI-  |         | |CIDFI-|            |   |      | | server |-+
-| aware   |         | |aware |  +------+  |   |      | +--------+
+           +------+ |                     | +-+----+ | | aware  | +-+
+                    |                     | |router+---+ QUIC   +-+
++---------+         | +------+            | +-+----+ | | server |
+| CIDFI-  |         | |CIDFI-|            |   |      | +--------+
+| aware   |         | |aware |  +------+  |   |      |
 | client  +-----B-----+RAN   +--+router+------+      |
 |(handset)|         | |router|  +------+  |          |
 +---------+         | +------+            |          |
@@ -283,7 +282,7 @@ receive CIDFI metadata for that client.
 The CIDFI-aware client establishes a TLS connection with the
 CIDFI-aware network elements (Wi-Fi access point, edge router, and RAN
 router in the above diagram).  Over this connection it receives
-network performance information (n2h) and it sends mapping of (QUIC or DTLS)
+network performance information (n2h) and it sends mapping of QUIC
 Destination CIDs to packet importance (h2n).
 
 The design creates new state in the CIDFI-aware network elements for
@@ -298,25 +297,25 @@ relaying through the client.
 {{host-to-network}} describes host-to-network
 metadata signaling similar to the use cases described in {{Section 3
 of ?I-D.joras-sadcdn}}.  The host-to-network metadata signaling can
-also benefit {{?I-D.ietf-avtcore-rtp-over-quic}} and {{DTLS-CID}}.
+also benefit {{?I-D.ietf-avtcore-rtp-over-quic}}.
 
-CIDFI brings benefits to QUIC and DTLS because those protocols are of
-primary interest.  QUIC is quickly replacing HTTPS-over-TCP on many
-websites and content delivery networks because of its advantages to
-both end users and servers, supplanting TCP.  Applications can take
-advantage of QUIC's unreliability to help networks provide reasonable
-service to clients on constrained links, especially as the user
-transitions from a high quality wireless reception to lower quality
-reception (e.g., entering a building).  DTLS is used by WebRTC and
-SIP for establishing interactive real-time audio, video, and screen
-sharing, which benefit from knowing network characteristics (n2h
-signaling) and benefit from prioritizing audio over video (h2n
-signaling).  That said, CIDFI can be extended to other protocols
-as discussed in {{extending}}.
+
+CIDFI brings benefits to QUIC as that protocol is of primary interest.
+QUIC is quickly replacing HTTPS-over-TCP on many websites and content
+delivery networks because of its advantages to both end users and
+servers.  CIDFI can bring value to a system comprised solely of a
+CIDFI-aware client and the CIDFI-aware network elements.  By adding a
+CIDFI-aware server that supports QUIC unreliable datagrams
+{{!RFC9221}} and API integration (see {{api-integration}}), each
+packet can receive differentiated service from the network.  This is
+especially useful during user transitions from a high quality wireless
+reception to lower quality reception (e.g., entering a building).
+Additionally, CIDFI can be extended to other protocols as discussed in
+{{extending}}.
 
 ## Operation with Streaming Video
 
-Streaming video only needs to be transmitted slightly faster than the
+Incremental deployment: Streaming video only needs to be transmitted slightly faster than the
 video playout rate.  Sending the video significantly faster can waste
 bandwidth, most notably if the user abandons the video early.  Worse, as discussed in {{Section 3.10 of ?RFC8517}}, a fast download of a video that won't be viewed completely by the subscriber may lead to quick exhaustion of the user data quota. CIDFI
 helps this use-case with its network-to-host signaling which informs
@@ -324,7 +323,7 @@ the client of available bandwidth allowing the client to choose
 a compatible video stream.  This functionality does not need a CIDFI-
 aware server.
 
-With reliable transport such as TCP, the only purpose of
+Full system deployment: With reliable transport such as TCP, the only purpose of
 video key frames is the user scrolling forward/backward.  When
 video streaming uses unreliable transport ({{?RFC9221}})
 it is beneficial to differentiate keyframes from predictive
@@ -335,13 +334,13 @@ during linear playout.
 
 ## Operation with Interactive Audio/Video/Screen sharing
 
-With interactive sessions CIDFI can help determine the bandwidth
+Incremental deployment: With interactive sessions CIDFI can help determine the bandwidth
 available for the flow so the video (and screen sharing) quality and
 size can be constrained to the available bandwidth.  This benefit
 can be deployed locally with a CIDFI-aware client and CIDFI-aware
 network.
 
-When the remote peer also supports CIDFI, the remote peer can
+Full system deployment: When the remote peer also supports CIDFI, the remote peer can
 differentiate packets containing audio, video, or screen sharing.  In
 certain use-cases audio is the most important whereas in other
 use-cases screen sharing is most important.  With CIDFI, the relative
@@ -356,7 +355,7 @@ importance changes during a session.
 The document makes use of the following terms:
 
 CID:
-: Connection Identifier used by {{QUIC}} or {{DTLS-CID}}.
+: Connection Identifier used by {{QUIC}}.
 
 CNE:
 : CIDFI-aware Network Element, a network element that
@@ -378,7 +377,7 @@ This section highlights the design goals of this specification.
 
 Client Authorization:
 : The client authorizes each CIDFI-aware network element (CNE) to participate in CIDFI
-for each QUIC (or DTLS) flow.
+for each QUIC flow.
 
 Same Server Instance:
 : When the server also participates in CIDFI, the same QUIC connection is used for CIDFI
@@ -395,17 +394,17 @@ the QUIC communication between the client and server.
 
 Integrity:
 : Metadata sharing, including the mapping of packet importance to Destination CIDs, are
-integrity protected by QUIC (or DTLS) itself and cannot be modified by on-path
+integrity protected by QUIC itself and cannot be modified by on-path
 network elements.  The communication between client, server, and
 network elements is protected by TLS.
 : Packet metadata is communicated over a
 TLS-encrypted channel from the CIDFI client to its CIDFI-aware network elements,
-and mapped to integrity-protected QUIC (or DTLS) CIDs.
+and mapped to integrity-protected QUIC CIDs.
 
 Internet Survival:
-: The QUIC (or DTLS) communications between clients
+: The QUIC communications between clients
 and servers are not changed so CIDFI is expected to work wherever QUIC
-(or DTLS) works.  The elements involved are only the QUIC (or DTLS)
+works.  The elements involved are only the QUIC
 client and server and with the participating CIDFI-aware network elements.
 : CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
 translation (NAT64).
@@ -583,7 +582,7 @@ the client owns its UDP 4-tuple.
 
 # Client Operation on Each Connection to a Server
 
-When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-CID) server, the client:
+When a QUIC client connects to a QUIC server, the client:
 
   1. learns if the server supports CIDFI
      and obtains its mapping of transmitted Destination CIDs to metadata, described
@@ -671,9 +670,9 @@ client                           edge router           server
 {: #flow-diag-attach title="Example of Flow Exhange" artwork-align="center"}
 
 
-Later, when connecting to a new QUIC or DTLS server, the client
+Later, when connecting to a new QUIC server, the client
 determines if there are on-path CIDFI Network Elements by sending the
-nonce and HMAC in the same UDP 4-tuple as the QUIC or DTLS connect
+nonce and HMAC in the same UDP 4-tuple as the QUIC connect
 (step 2).  If a CIDFI Network Element is present it processes the STUN
 Indication and sends a response to the client over HTTP using the
 HTTP channel established above.
@@ -721,7 +720,7 @@ their own UDP 4-tuple, the STUN Indication message allows a CNE
 to distinguish each QUIC client's UDP 4-tuple.
 
 To reduce CIDFI setup time the client STUN Indication MAY be sent at
-the same time as it establishes connection with the QUIC or DTLS server.
+the same time as it establishes connection with the QUIC server.
 
 To prevent replay attacks, the Nonce is usable only for authenticating
 one UDP 4-tuple.  When the connection is migrated ({{Section 9 of
@@ -980,13 +979,6 @@ network or has received a QUIC PATH_CHALLENGE, the CIDFI-aware client
 MUST re-discover its CNEs ({{discovery}}) and continue with normal CIDFI
 processing with any discovered CNEs.
 
-> todo: include discussion of {{DTLS-CID}} client and discussion
-of its ICE interaction, if any?
-
-
-
-
-
 # Details of Metadata Exchanged {#metadata-exchanged}
 
 This section describes the metadata that can be exchanged from a
@@ -1228,14 +1220,14 @@ depletion, and suchlike.
 
 > TODO: Probably want keepalives on client->CNE communication. To be assessed.
 
-# API Integration for QUIC Stream and Packet-Level Prioritization
+# API Integration for QUIC Stream and Packet-Level Prioritization {#api-integration}
 
-For each QUIC or DTLS stream requiring differentiated service, the QUIC or DTLS stack can
+For each QUIC stream requiring differentiated service, the QUIC stack can
 map that stream to a different Destination CID. The application-level code
-would require an API to instruct the QUIC or DTLS stack that a particular stream
+would require an API to instruct the QUIC stack that a particular stream
 needs differentiated service. Similarly, if the application-level code seeks
 differentiated service for packets within a stream (e.g., prioritizing P-frames
-over I-Frames in a video stream), it would need an API to inform the QUIC or DTLS stack
+over I-Frames in a video stream), it would need an API to inform the QUIC stack
 that different packets within the QUIC stream require differentiated services
 and to map these packets to different Destination CIDs.
 
@@ -1374,6 +1366,15 @@ and bespoke UDP protocols.
 An extension to each protocol is described below which retains the
 ability of the client to prove its ownership of the 5-tuple to a CNE.
 
+## DTLS
+
+DTLS is used by WebRTC and SIP for establishing interactive real-time audio,
+video, and screen sharing, which benefit from knowing network characteristics
+(n2h signaling) and benefit from prioritizing audio over video (h2n signaling).
+{{?RFC9146}} defines an extension to add a Connection ID (CID) to the
+DTLS record layer. DTLS CID can be leveraged by CIDFI to communicate
+per-connection information from endpoint to CNE and vice-versa.
+
 ## TCP
 
 To prove ownership of the TCP 4-tuple, TCP can utilize a new TCP
@@ -1428,7 +1429,7 @@ protocol to include a connection identifier in the first several bits
 of each of their UDP packets.
 
 Alternatively, rather than modifying the application protocol it could be run
-over {{QUIC}} or {{DTLS-CID}}.
+over {{QUIC}}.
 
 
 # Acknowledgments
