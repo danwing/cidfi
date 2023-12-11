@@ -1660,7 +1660,7 @@ to help processing flows.<a href="#section-2-2.5.1" class="pilcrow">¶</a></p>
 to local network conditions.<a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-3">CIDFI does not require that all these steps are enabled. Incremental
+<p id="section-2-3"><strong>CIDFI does not require that all these steps are enabled</strong>. Incremental
 deployments may be envisaged (e.g., network and client support, network, client,
 and server support). Differentiated service can
 be provided to a flow, packets within a flow, or a combination thereof as a function
@@ -1829,21 +1829,31 @@ Additionally, CIDFI can be extended to other protocols as discussed in
         <h3 id="name-operation-with-streaming-vi">
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-operation-with-streaming-vi" class="section-name selfRef">Operation with Streaming Video</a>
         </h3>
-<p id="section-2.1-1">Incremental deployment: Streaming video only needs to be transmitted slightly faster than the
+<span class="break"></span><dl class="dlParallel" id="section-2.1-1">
+          <dt id="section-2.1-1.1">Incremental deployment:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-1.2">
+            <p id="section-2.1-1.2.1">Streaming video only needs to be transmitted slightly faster than the
 video playout rate.  Sending the video significantly faster can waste
 bandwidth, most notably if the user abandons the video early.  Worse, as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8517#section-3.10" class="relref">Section 3.10</a> of [<a href="#RFC8517" class="cite xref">RFC8517</a>]</span>, a fast download of a video that won't be viewed completely by the subscriber may lead to quick exhaustion of the user data quota. CIDFI
 helps this use-case with its network-to-host signaling which informs
 the client of available bandwidth allowing the client to choose
 a compatible video stream.  This functionality does not need a CIDFI-
-aware server.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">Full system deployment: With reliable transport such as TCP, the only purpose of
+aware server.<a href="#section-2.1-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-1.3">Full system deployment:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-1.4">
+            <p id="section-2.1-1.4.1">With reliable transport such as TCP, the only purpose of
 video key frames is the user scrolling forward/backward.  When
 video streaming uses unreliable transport (<span>[<a href="#RFC9221" class="cite xref">RFC9221</a>]</span>)
 it is beneficial to differentiate keyframes from predictive
 frames on the network especially when the network performs
 reactive policy management.  When the server also supports CIDFI,
 key frames can be differentiated which improves user experience
-during linear playout.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+during linear playout.<a href="#section-2.1-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
 </section>
 </div>
 <div id="operation-with-interactive-audiovideoscreen-sharing">
@@ -1851,17 +1861,27 @@ during linear playout.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
         <h3 id="name-operation-with-interactive-">
 <a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-operation-with-interactive-" class="section-name selfRef">Operation with Interactive Audio/Video/Screen sharing</a>
         </h3>
-<p id="section-2.2-1">Incremental deployment: With interactive sessions CIDFI can help determine the bandwidth
+<span class="break"></span><dl class="dlParallel" id="section-2.2-1">
+          <dt id="section-2.2-1.1">Incremental deployment:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.2-1.2">
+            <p id="section-2.2-1.2.1">With interactive sessions CIDFI can help determine the bandwidth
 available for the flow so the video (and screen sharing) quality and
 size can be constrained to the available bandwidth.  This benefit
 can be deployed locally with a CIDFI-aware client and CIDFI-aware
-network.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
-<p id="section-2.2-2">Full system deployment: When the remote peer also supports CIDFI, the remote peer can
+network.<a href="#section-2.2-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.2-1.3">Full system deployment:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.2-1.4">
+            <p id="section-2.2-1.4.1">When the remote peer also supports CIDFI, the remote peer can
 differentiate packets containing audio, video, or screen sharing.  In
 certain use-cases audio is the most important whereas in other
 use-cases screen sharing is most important.  With CIDFI, the relative
 importance of each packet can be differentiated as that relative
-importance changes during a session.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+importance changes during a session.<a href="#section-2.2-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
 </section>
 </div>
 </section>

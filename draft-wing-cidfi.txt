@@ -250,17 +250,18 @@ Table of Contents
    *  CIDFI-aware clients sharing of metadata with CIDFI-aware server to
       adapt to local network conditions.
 
-   CIDFI does not require that all these steps are enabled.  Incremental
-   deployments may be envisaged (e.g., network and client support,
-   network, client, and server support).  Differentiated service can be
-   provided to a flow, packets within a flow, or a combination thereof
-   as a function of the CIDFI support by various involved entities.  For
-   example, a CIDFI-aware network might share signals with clients that
-   would then trigger locally connection migration or relay the
-   information to the server (if it is CIDFI-aware) to adjust its
-   sending behavior by avoiding aggressive use of local resources or
-   using alternate paths.  Section 11 further elaborates on the
-   differentiated service that can be provided by enabling CIDFI.
+   *CIDFI does not require that all these steps are enabled*.
+   Incremental deployments may be envisaged (e.g., network and client
+   support, network, client, and server support).  Differentiated
+   service can be provided to a flow, packets within a flow, or a
+   combination thereof as a function of the CIDFI support by various
+   involved entities.  For example, a CIDFI-aware network might share
+   signals with clients that would then trigger locally connection
+   migration or relay the information to the server (if it is CIDFI-
+   aware) to adjust its sending behavior by avoiding aggressive use of
+   local resources or using alternate paths.  Section 11 further
+   elaborates on the differentiated service that can be provided by
+   enabling CIDFI.
 
    Figure 2 provides a sample network diagram of a CIDFI system showing
    two bandwidth-constrained networks (or links) depicted by "B" and
@@ -336,39 +337,41 @@ Table of Contents
 
 2.1.  Operation with Streaming Video
 
-   Incremental deployment: Streaming video only needs to be transmitted
-   slightly faster than the video playout rate.  Sending the video
-   significantly faster can waste bandwidth, most notably if the user
-   abandons the video early.  Worse, as discussed in Section 3.10 of
-   [RFC8517], a fast download of a video that won't be viewed completely
-   by the subscriber may lead to quick exhaustion of the user data
-   quota.  CIDFI helps this use-case with its network-to-host signaling
-   which informs the client of available bandwidth allowing the client
-   to choose a compatible video stream.  This functionality does not
-   need a CIDFI- aware server.
+   Incremental deployment:  Streaming video only needs to be transmitted
+      slightly faster than the video playout rate.  Sending the video
+      significantly faster can waste bandwidth, most notably if the user
+      abandons the video early.  Worse, as discussed in Section 3.10 of
+      [RFC8517], a fast download of a video that won't be viewed
+      completely by the subscriber may lead to quick exhaustion of the
+      user data quota.  CIDFI helps this use-case with its network-to-
+      host signaling which informs the client of available bandwidth
+      allowing the client to choose a compatible video stream.  This
+      functionality does not need a CIDFI- aware server.
 
-   Full system deployment: With reliable transport such as TCP, the only
-   purpose of video key frames is the user scrolling forward/backward.
-   When video streaming uses unreliable transport ([RFC9221]) it is
-   beneficial to differentiate keyframes from predictive frames on the
-   network especially when the network performs reactive policy
-   management.  When the server also supports CIDFI, key frames can be
-   differentiated which improves user experience during linear playout.
+   Full system deployment:  With reliable transport such as TCP, the
+      only purpose of video key frames is the user scrolling forward/
+      backward.  When video streaming uses unreliable transport
+      ([RFC9221]) it is beneficial to differentiate keyframes from
+      predictive frames on the network especially when the network
+      performs reactive policy management.  When the server also
+      supports CIDFI, key frames can be differentiated which improves
+      user experience during linear playout.
 
 2.2.  Operation with Interactive Audio/Video/Screen sharing
 
-   Incremental deployment: With interactive sessions CIDFI can help
-   determine the bandwidth available for the flow so the video (and
-   screen sharing) quality and size can be constrained to the available
-   bandwidth.  This benefit can be deployed locally with a CIDFI-aware
-   client and CIDFI-aware network.
+   Incremental deployment:  With interactive sessions CIDFI can help
+      determine the bandwidth available for the flow so the video (and
+      screen sharing) quality and size can be constrained to the
+      available bandwidth.  This benefit can be deployed locally with a
+      CIDFI-aware client and CIDFI-aware network.
 
-   Full system deployment: When the remote peer also supports CIDFI, the
-   remote peer can differentiate packets containing audio, video, or
-   screen sharing.  In certain use-cases audio is the most important
-   whereas in other use-cases screen sharing is most important.  With
-   CIDFI, the relative importance of each packet can be differentiated
-   as that relative importance changes during a session.
+   Full system deployment:  When the remote peer also supports CIDFI,
+      the remote peer can differentiate packets containing audio, video,
+      or screen sharing.  In certain use-cases audio is the most
+      important whereas in other use-cases screen sharing is most
+      important.  With CIDFI, the relative importance of each packet can
+      be differentiated as that relative importance changes during a
+      session.
 
 3.  Conventions and Definitions
 
