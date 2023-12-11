@@ -2432,7 +2432,10 @@ HTTP channel established above.<a href="#section-7.2-5" class="pilcrow">¶</a></
             <p id="section-7.2-7.1.1">Note the above message
 flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
 but because of QUIC connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the
-QUIC messages might appear later.<a href="#section-7.2-7.1.1" class="pilcrow">¶</a></p>
+QUIC messages might appear later.
+Also, "Map DCID=xyz as high importance" refers to a CID chosen by
+the server not the DCID used by the server to communicate with
+the client.<a href="#section-7.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-7.2-8">The short header's Destination Connection ID (DCID) can be 0 bytes or
