@@ -711,6 +711,9 @@ client                           edge router           server
 flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
 but because of QUIC connection migration ({{Section 9 of QUIC}}) the
 QUIC messages might appear later.
+> Also, "Map DCID=xyz as high importance" refers to a CID chosen by
+> the server not the DCID used by the server to communicate with
+> the client.
 
 
 The short header's Destination Connection ID (DCID) can be 0 bytes or
