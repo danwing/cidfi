@@ -5,13 +5,13 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 3 June 2024                                               Nokia
+Expires: 13 June 2024                                              Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                         1 December 2023
+                                                        11 December 2023
 
 
-                       CID Flow Indicator (CIDFI)
+                Framework for CID Flow Indicator (CIDFI)
                         draft-wing-cidfi-latest
 
 Abstract
@@ -24,7 +24,7 @@ Abstract
    the server (e.g., adaptive transmission), or both.
 
    This document describes how clients can communicate with their nearby
-   network elements so their QUIC and DTLS streams can be augmented with
+   network elements so their QUIC streams can be augmented with
    information about network conditions and packet importance to meet
    both intentional and reactive management policies.  With optional
    server support individual packets can receive differentiated service.
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 June 2024.
+   This Internet-Draft will expire on 13 June 2024.
 
 Copyright Notice
 
@@ -81,60 +81,65 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
-     1.1.  Operation with Streaming Video
-     1.2.  Operation with Interactive Audio/Video/Screen sharing
-   2.  Conventions and Definitions
-     2.1.  Notations
-   3.  Design Goals
-   4.  Network Configuration to Support CIDFI
-     4.1.  DNS SVCB Records
-     4.2.  Provisioning Domains
-     4.3.  DHCP or 3GPP PCO
-   5.  Client Operation on Network Attach or Topology Change
-     5.1.  Client Learns Local Network Supports CIDFI
-       5.1.1.  Client Learns Using DNS SVCB
-       5.1.2.  Client Learns Using Provisioning Domain
-       5.1.3.  Client Learns Using DHCP or 3GPP PCO
-     5.2.  Client Authorizes CIDFI-aware Network Elements
-   6.  Client Operation on Each Connection to a Server
-     6.1.  Client Learns Server Supports CIDFI
-     6.2.  Client Proves Ownership of its UDP 4-Tuple
-       6.2.1.  STUN CIDFI-NONCE Attribute
-     6.3.  Initial Metadata Exchange
-       6.3.1.  Host to Network Signaling
-       6.3.2.  Network to Host Signaling
-   7.  Ongoing Signaling
-   8.  Interaction with Load Balancers
-   9.  Topology Change
-   10. Details of Metadata Exchanged
-     10.1.  Server to CIDFI-aware Network Element
-       10.1.1.  Mapping Metadata Parameters to DCIDs
-       10.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
-     10.2.  CIDFI-aware Network Element to Server
-   11. Discussion Points
-     11.1.  Client versus Server Signaling CID-to-importance Mapping
-     11.2.  Overhead of QUIC DCID Packet Examination
-     11.3.  Interaction with Wi-Fi Packet Aggregation
-     11.4.  Overhead of Mapping CIDs to Packet Metadata
-     11.5.  Improve CIDFI Initialization Time
-     11.6.  Primary QUIC Channel CID Change
-   12. State Maintenance
-   13. Security Considerations
-   14. IANA Considerations
-     14.1.  New QUIC Transport Parameter
-     14.2.  New Well-known URI "cidfi-aware"
-     14.3.  New Special-use Domain Name
-     14.4.  New DNS Service Binding (SVCB)
-     14.5.  New STUN Attribute
-     14.6.  New Provisioning Domain Additional Information Key
-   15. References
-     15.1.  Normative References
-     15.2.  Informative References
+   2.  Overview
+     2.1.  Operation with Streaming Video
+     2.2.  Operation with Interactive Audio/Video/Screen sharing
+   3.  Conventions and Definitions
+     3.1.  Notations
+   4.  Design Goals
+   5.  Network Configuration to Support CIDFI
+     5.1.  DNS SVCB Records
+     5.2.  Provisioning Domains
+     5.3.  DHCP or 3GPP PCO
+   6.  Client Operation on Network Attach or Topology Change
+     6.1.  Client Learns Local Network Supports CIDFI
+       6.1.1.  Client Learns Using DNS SVCB
+       6.1.2.  Client Learns Using Provisioning Domain
+       6.1.3.  Client Learns Using DHCP or 3GPP PCO
+     6.2.  Client Authorizes CIDFI-aware Network Elements
+   7.  Client Operation on Each Connection to a Server
+     7.1.  Client Learns Server Supports CIDFI
+     7.2.  Client Proves Ownership of its UDP 4-Tuple
+       7.2.1.  STUN CIDFI-NONCE Attribute
+     7.3.  Initial Metadata Exchange
+       7.3.1.  Host to Network Signaling
+       7.3.2.  Network to Host Signaling
+   8.  Ongoing Signaling
+   9.  Interaction with Load Balancers
+   10. Topology Change
+   11. Details of Metadata Exchanged
+     11.1.  Server to CIDFI-aware Network Element
+       11.1.1.  Mapping Metadata Parameters to DCIDs
+       11.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
+     11.2.  CIDFI-aware Network Element to Server
+   12. Privacy Considerations
+     12.1.  Privacy-Aware Metadata Sharing in Network Relationships
+   13. Discussion Points
+     13.1.  Client versus Server Signaling CID-to-importance Mapping
+     13.2.  Overhead of QUIC DCID Packet Examination
+     13.3.  Interaction with Wi-Fi Packet Aggregation
+     13.4.  Overhead of Mapping CIDs to Packet Metadata
+     13.5.  Improve CIDFI Initialization Time
+     13.6.  Primary QUIC Channel CID Change
+   14. State Maintenance
+   15. API Integration for QUIC Stream and Packet-Level Prioritization
+   16. Security Considerations
+   17. IANA Considerations
+     17.1.  New QUIC Transport Parameter
+     17.2.  New Well-known URI "cidfi-aware"
+     17.3.  New Special-use Domain Name
+     17.4.  New DNS Service Binding (SVCB)
+     17.5.  New STUN Attribute
+     17.6.  New Provisioning Domain Additional Information Key
+   18. References
+     18.1.  Normative References
+     18.2.  Informative References
    Appendix A.  Extending CIDFI to Other Protocols
-     A.1.  TCP
-     A.2.  SCTP
-     A.3.  RTP and SRTP
-     A.4.  Bespoke UDP Application Protocols
+     A.1.  DTLS
+     A.2.  TCP
+     A.3.  SCTP
+     A.4.  RTP and SRTP
+     A.5.  Bespoke UDP Application Protocols
    Acknowledgments
    Authors' Addresses
 
@@ -168,7 +173,9 @@ Table of Contents
    convey and share metadata between hosts, networks, and servers.  This
    document adheres to the client-centric metadata sharing approach
    because it preserves privacy and also takes advantage of clients
-   having a full view on their available network attachments.
+   having a full view on their available network attachments.  Metadata
+   exchanges can occur in one single direction or both directions of a
+   flows.
 
    (1)  Proxied Connection
                           .--------------.                   +------+
@@ -213,13 +220,20 @@ Table of Contents
 
                    Figure 1: Candidate Design Approaches
 
+   The document is a generic framework that would function in any
+   network deployment.  This framework can be leveraged by any transport
+   protocol (see Appendix A).  To illustrate the framework's
+   applicability this document focuses on QUIC transport.
+
+2.  Overview
+
    This document defines CIDFI (pronounced "sid fye") which is a system
    of several protocols that allow communicating about a [QUIC]
-   connection or a DTLS connection [DTLS-CID] from the network to the
-   server and the server to the network.  The information exchanged
-   allows the server to know about network conditions and allows the
-   server to signal packet importance.  The following main steps are
-   involved in CIDFI; some of them are optional:
+   connection from the network to the server and the server to the
+   network.  The information exchanged allows the server to know about
+   network conditions and allows the server to signal packet importance.
+   The following main steps are involved in CIDFI; some of them are
+   optional:
 
    *  CIDFI-awareness discovery between a host and a network.
 
@@ -236,17 +250,18 @@ Table of Contents
    *  CIDFI-aware clients sharing of metadata with CIDFI-aware server to
       adapt to local network conditions.
 
-   CIDFI does not require that all these steps are enabled.  Incremental
-   deployments may be envisaged (e.g., network and client support,
-   network, client, and server support).  Differentiated service can be
-   provided to a flow, packets within a flow, or a combination thereof
-   as a function of the CIDFI support by various involved entities.  For
-   example, a CIDFI-aware network might share signals with clients that
-   would then trigger locally connection migration or relay the
-   information to the server (if it is CIDFI-aware) to adjust its
-   sending behavior by avoiding aggressive use of local resources or
-   using alternate paths.  Section 10 further elaborates on the
-   differentiated service that can be provided by enabling CIDFI.
+   *CIDFI does not require that all these steps are enabled*.
+   Incremental deployments may be envisaged (e.g., network and client
+   support, network, client, and server support).  Differentiated
+   service can be provided to a flow, packets within a flow, or a
+   combination thereof as a function of the CIDFI support by various
+   involved entities.  For example, a CIDFI-aware network might share
+   signals with clients that would then trigger locally connection
+   migration or relay the information to the server (if it is CIDFI-
+   aware) to adjust its sending behavior by avoiding aggressive use of
+   local resources or using alternate paths.  Section 11 further
+   elaborates on the differentiated service that can be provided by
+   enabling CIDFI.
 
    Figure 2 provides a sample network diagram of a CIDFI system showing
    two bandwidth-constrained networks (or links) depicted by "B" and
@@ -269,15 +284,15 @@ Table of Contents
                        |                     |          |
    +------+   +------+ | +------+            |          |
    |CIDFI-|   |CIDFI-| | |CIDFI-|            |          |
-   |aware |   |aware | | |aware |  +------+  |          |   +----------+
-   |client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |  +---------+ |
-   +------+   |access| | |router|  +------+  |   |      | +--------+ | |
+   |aware |   |aware | | |aware |  +------+  |          |     +--------+
+   |client+-B-+Wi-Fi +-B-+edge  +--+router+------+      |   +-+------+ |
+   +------+   |access| | |router|  +------+  |   |      | +-+------+ | |
               |point | | +------+            |   |      | | CIDFI- | | |
-              +------+ |                     | +-+----+ | | aware  | | |
-                       |                     | |router+---+ QUIC or| | |
-   +---------+         | +------+            | +-+----+ | | DTLS   | |-+
-   | CIDFI-  |         | |CIDFI-|            |   |      | | server |-+
-   | aware   |         | |aware |  +------+  |   |      | +--------+
+              +------+ |                     | +-+----+ | | aware  | +-+
+                       |                     | |router+---+ QUIC   +-+
+   +---------+         | +------+            | +-+----+ | | server |
+   | CIDFI-  |         | |CIDFI-|            |   |      | +--------+
+   | aware   |         | |aware |  +------+  |   |      |
    | client  +-----B-----+RAN   +--+router+------+      |
    |(handset)|         | |router|  +------+  |          |
    +---------+         | +------+            |          |
@@ -290,73 +305,75 @@ Table of Contents
    The CIDFI-aware client establishes a TLS connection with the CIDFI-
    aware network elements (Wi-Fi access point, edge router, and RAN
    router in the above diagram).  Over this connection it receives
-   network performance information (n2h) and it sends mapping of (QUIC
-   or DTLS) Destination CIDs to packet importance (h2n).
+   network performance information (n2h) and it sends mapping of QUIC
+   Destination CIDs to packet importance (h2n).
 
    The design creates new state in the CIDFI-aware network elements for
    mapping from Destination CID to the packet metadata and maintaining
    triggers to update the client if the network characteristics change,
    and to maintain a TLS channel with the client.
 
-   Section 6.3.2 describes network-to-host signaling similar to the use
+   Section 7.3.2 describes network-to-host signaling similar to the use
    case described in Section 2 of [I-D.joras-sadcdn], with metadata
    relaying through the client.
 
-   Section 6.3.1 describes host-to-network metadata signaling similar to
+   Section 7.3.1 describes host-to-network metadata signaling similar to
    the use cases described in Section 3 of [I-D.joras-sadcdn].  The
    host-to-network metadata signaling can also benefit
-   [I-D.ietf-avtcore-rtp-over-quic] and [DTLS-CID].
+   [I-D.ietf-avtcore-rtp-over-quic].
 
-   CIDFI brings benefits to QUIC and DTLS because those protocols are of
-   primary interest.  QUIC is quickly replacing HTTPS-over-TCP on many
-   websites and content delivery networks because of its advantages to
-   both end users and servers, supplanting TCP.  Applications can take
-   advantage of QUIC's unreliability to help networks provide reasonable
-   service to clients on constrained links, especially as the user
-   transitions from a high quality wireless reception to lower quality
-   reception (e.g., entering a building).  DTLS is used by WebRTC and
-   SIP for establishing interactive real-time audio, video, and screen
-   sharing, which benefit from knowing network characteristics (n2h
-   signaling) and benefit from prioritizing audio over video (h2n
-   signaling).  That said, CIDFI can be extended to other protocols as
+   CIDFI brings benefits to QUIC as that protocol is of primary
+   interest.  QUIC is quickly replacing HTTPS-over-TCP on many websites
+   and content delivery networks because of its advantages to both end
+   users and servers.  CIDFI can bring value to a system comprised
+   solely of a CIDFI-aware client and the CIDFI-aware network elements.
+   By adding a CIDFI-aware server that supports QUIC unreliable
+   datagrams [RFC9221] and API integration (see Section 15), each packet
+   can receive differentiated service from the network.  This is
+   especially useful during user transitions from a high quality
+   wireless reception to lower quality reception (e.g., entering a
+   building).  Additionally, CIDFI can be extended to other protocols as
    discussed in Appendix A.
 
-1.1.  Operation with Streaming Video
+2.1.  Operation with Streaming Video
 
-   Streaming video only needs to be transmitted slightly faster than the
-   video playout rate.  Sending the video significantly faster can waste
-   bandwidth, most notably if the user abandons the video early.  Worse,
-   as discussed in Section 3.10 of [RFC8517], a fast download of a video
-   that won't be viewed completely by the subscriber may lead to quick
-   exhaustion of the user data quota.  CIDFI helps this use-case with
-   its network-to-host signaling which informs the client of available
-   bandwidth allowing the client to choose a compatible video stream.
-   This functionality does not need a CIDFI- aware server.
+   Incremental deployment:  Streaming video only needs to be transmitted
+      slightly faster than the video playout rate.  Sending the video
+      significantly faster can waste bandwidth, most notably if the user
+      abandons the video early.  Worse, as discussed in Section 3.10 of
+      [RFC8517], a fast download of a video that won't be viewed
+      completely by the subscriber may lead to quick exhaustion of the
+      user data quota.  CIDFI helps this use-case with its network-to-
+      host signaling which informs the client of available bandwidth
+      allowing the client to choose a compatible video stream.  This
+      functionality does not need a CIDFI- aware server.
 
-   With reliable transport such as TCP, the only purpose of video key
-   frames is the user scrolling forward/backward.  When video streaming
-   uses unreliable transport ([RFC9221]) it is beneficial to
-   differentiate keyframes from predictive frames on the network
-   especially when the network performs reactive policy management.
-   When the server also supports CIDFI, key frames can be differentiated
-   which improves user experience during linear playout.
+   Full system deployment:  With reliable transport such as TCP, the
+      only purpose of video key frames is the user scrolling forward/
+      backward.  When video streaming uses unreliable transport
+      ([RFC9221]) it is beneficial to differentiate keyframes from
+      predictive frames on the network especially when the network
+      performs reactive policy management.  When the server also
+      supports CIDFI, key frames can be differentiated which improves
+      user experience during linear playout.
 
-1.2.  Operation with Interactive Audio/Video/Screen sharing
+2.2.  Operation with Interactive Audio/Video/Screen sharing
 
-   With interactive sessions CIDFI can help determine the bandwidth
-   available for the flow so the video (and screen sharing) quality and
-   size can be constrained to the available bandwidth.  This benefit can
-   be deployed locally with a CIDFI-aware client and CIDFI-aware
-   network.
+   Incremental deployment:  With interactive sessions CIDFI can help
+      determine the bandwidth available for the flow so the video (and
+      screen sharing) quality and size can be constrained to the
+      available bandwidth.  This benefit can be deployed locally with a
+      CIDFI-aware client and CIDFI-aware network.
 
-   When the remote peer also supports CIDFI, the remote peer can
-   differentiate packets containing audio, video, or screen sharing.  In
-   certain use-cases audio is the most important whereas in other use-
-   cases screen sharing is most important.  With CIDFI, the relative
-   importance of each packet can be differentiated as that relative
-   importance changes during a session.
+   Full system deployment:  When the remote peer also supports CIDFI,
+      the remote peer can differentiate packets containing audio, video,
+      or screen sharing.  In certain use-cases audio is the most
+      important whereas in other use-cases screen sharing is most
+      important.  With CIDFI, the relative importance of each packet can
+      be differentiated as that relative importance changes during a
+      session.
 
-2.  Conventions and Definitions
+3.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -366,7 +383,7 @@ Table of Contents
 
    The document makes use of the following terms:
 
-   CID:  Connection Identifier used by [QUIC] or [DTLS-CID].
+   CID:  Connection Identifier used by [QUIC].
 
    CNE:  CIDFI-aware Network Element, a network element that supports
       this CIDFI specification.  This is typically a router.
@@ -378,19 +395,18 @@ Table of Contents
       Examples of differentiated service are: prioritization, adaptive
       transmission, or traffic steering.
 
-2.1.  Notations
+3.1.  Notations
 
    For discussion purposes, JSON is used in the examples to give a
    flavor of the data that the client retrieves from a CNE.  The authors
    anticipate using a more efficient encoding such as [CBOR].
 
-3.  Design Goals
+4.  Design Goals
 
    This section highlights the design goals of this specification.
 
    Client Authorization:  The client authorizes each CIDFI-aware network
-      element (CNE) to participate in CIDFI for each QUIC (or DTLS)
-      flow.
+      element (CNE) to participate in CIDFI for each QUIC flow.
 
    Same Server Instance:  When the server also participates in CIDFI,
       the same QUIC connection is used for CIDFI communication with that
@@ -409,24 +425,23 @@ Table of Contents
 
    Integrity:  Metadata sharing, including the mapping of packet
       importance to Destination CIDs, are integrity protected by QUIC
-      (or DTLS) itself and cannot be modified by on-path network
-      elements.  The communication between client, server, and network
-      elements is protected by TLS.
+      itself and cannot be modified by on-path network elements.  The
+      communication between client, server, and network elements is
+      protected by TLS.
 
       Packet metadata is communicated over a TLS-encrypted channel from
       the CIDFI client to its CIDFI-aware network elements, and mapped
-      to integrity-protected QUIC (or DTLS) CIDs.
+      to integrity-protected QUIC CIDs.
 
-   Internet Survival:  The QUIC (or DTLS) communications between clients
-      and servers are not changed so CIDFI is expected to work wherever
-      QUIC (or DTLS) works.  The elements involved are only the QUIC (or
-      DTLS) client and server and with the participating CIDFI-aware
-      network elements.
+   Internet Survival:  The QUIC communications between clients and
+      servers are not changed so CIDFI is expected to work wherever QUIC
+      works.  The elements involved are only the QUIC client and server
+      and with the participating CIDFI-aware network elements.
 
       CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT),
       and IPv6/IPv4 translation (NAT64).
 
-4.  Network Configuration to Support CIDFI
+5.  Network Configuration to Support CIDFI
 
    The network is configured to advertise its support for CIDFI.
 
@@ -438,11 +453,11 @@ Table of Contents
       Standardizing all or some of these mechanisms is for further
       discussion.
 
-4.1.  DNS SVCB Records
+5.1.  DNS SVCB Records
 
    This document defines a new DNS Service Binding parameter "cidfi-
-   aware" in Section 14.4 and a new Special-Use Domain Name "cifi.arpa"
-   in Section 14.3.
+   aware" in Section 17.4 and a new Special-Use Domain Name "cidfi.arpa"
+   in Section 17.3.
 
    The local network is configured to respond to DNS SVCB [RFC9460]
    queries with ServiceMode (Section 2.4.3 of [RFC9460]) for "_cidfi-
@@ -456,11 +471,11 @@ Table of Contents
    other belonging to the local Wi-Fi network (example.com).
 
    _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 service-cidfi.example.net. (
-       alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
+       alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
        cidfimetadata=/cidfi-metadata
        )
    _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 wifi.example.com. (
-       alpn=h3 cidfipathauth=/path-auth-query {?cidfi}
+       alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
        cidfimetadata=/cidfi-metadata
        )
 
@@ -470,7 +485,7 @@ Table of Contents
    networks' "_cidfi-aware.cidfi.arpa" responses into the response sent
    to its locally-connected clients.
 
-4.2.  Provisioning Domains
+5.2.  Provisioning Domains
 
    The CIDFI networks are configured to set the H-flag so clients can
    request PvD Additional Information (Section 4.1 of [RFC8801]).
@@ -483,12 +498,14 @@ Table of Contents
               "cidfi":[
                  {
                     "cidfinode":"service-cidfi.example.net",
-                    "cidfipathauth":"/path-auth-query {?cidfi}",
+                    "min-ttl":3,
+                    "cidfipathauth":"/path-auth-query{?cidfi}",
                     "cidfimetadata":"/cidfi-metadata"
                  },
                  {
                     "cidfinode":"wi-fi.example.net",
-                    "cidfipathauth":"/path-auth-query {?cidfi}",
+                    "min-ttl":2,
+                    "cidfipathauth":"/path-auth-query{?cidfi}",
                     "cidfimetadata":"/cidfi-metadata"
                  }
               ]
@@ -505,18 +522,18 @@ Table of Contents
    that information so the Wi-Fi access point can provide both the 5G
    network's information and the Wi-Fi access point's information.
 
-4.3.  DHCP or 3GPP PCO
+5.3.  DHCP or 3GPP PCO
 
    The network is configured to respond to DHCPv6, DHCPv4 sub-option, or
    3GPP PCO (Protocol Configuration Option) Information Element.
 
-5.  Client Operation on Network Attach or Topology Change
+6.  Client Operation on Network Attach or Topology Change
 
-   On initial network attach topology change (see Section 9), the client
-   learns if the network supports CIDFI (Section 5.1) and authorizes
-   discovered network elements (Section 5.2).
+   On initial network attach topology change (see Section 10), the
+   client learns if the network supports CIDFI (Section 6.1) and
+   authorizes discovered network elements (Section 6.2).
 
-5.1.  Client Learns Local Network Supports CIDFI
+6.1.  Client Learns Local Network Supports CIDFI
 
    For this step, four mechanisms are identified: DNS SVCB records, IPv6
    PvD, DHCP, or 3GPP PCO.  These are described in the following sub-
@@ -526,24 +543,24 @@ Table of Contents
 
    *  if the discovery succeeds (i.e., the client concludes that the
       local and/or ISP network support CIDFI) client processing proceeds
-      to Section 5.2.
+      to Section 6.2.
 
    *  if the discovery failed (i.e., the client concludes that the local
       network and ISP do not support CIDFI) client processing stops.
 
-5.1.1.  Client Learns Using DNS SVCB
+6.1.1.  Client Learns Using DNS SVCB
 
    The client determines if the local network provides CIDFI service by
    issuing a query to the local DNS server for "_cidfi-
    aware.cidfi.arpa." with the SVCB resource record type (64) [RFC9460].
 
-5.1.2.  Client Learns Using Provisioning Domain
+6.1.2.  Client Learns Using Provisioning Domain
 
    The client determines if the local network supports CIDFI by querying
    https://<PvD-ID>/.well-known/pvd as described in Section 4.1 of
    [RFC8801].
 
-5.1.3.  Client Learns Using DHCP or 3GPP PCO
+6.1.3.  Client Learns Using DHCP or 3GPP PCO
 
    The client determines that a local network is CIDFI-capable if the
    client receives an explicit signal from the network, e.g., via a
@@ -552,9 +569,9 @@ Table of Contents
    option or DHCPv4 sub-option that that is returned as part of
    [RFC7839].
 
-5.2.  Client Authorizes CIDFI-aware Network Elements
+6.2.  Client Authorizes CIDFI-aware Network Elements
 
-   The response from the previous step in Section 5.1 will contain one
+   The response from the previous step in Section 6.1 will contain one
    or more CNEs.
 
    The client authorizes each of the CNEs using a local policy.  This
@@ -570,7 +587,7 @@ Table of Contents
    the CNE.
 
    The client then obtains the CIDFI nonce and CIDFI HMAC secret from
-   each CNE used later in Section 6.2 to prove the client owns its UDP
+   each CNE used later in Section 7.2 to prove the client owns its UDP
    4-tuple.
 
    {
@@ -584,26 +601,25 @@ Table of Contents
 
                  Figure 5: Example of CIDFI HMAC and Nonce
 
-6.  Client Operation on Each Connection to a Server
+7.  Client Operation on Each Connection to a Server
 
-   When a QUIC client (or DTLS-CID) client connects to a QUIC (or DTLS-
-   CID) server, the client:
+   When a QUIC client connects to a QUIC server, the client:
 
    1.  learns if the server supports CIDFI and obtains its mapping of
        transmitted Destination CIDs to metadata, described in
-       Section 6.1.
+       Section 7.1.
 
    2.  proves ownership of its UDP 4-tuple to the on-path CNEs,
-       described in Section 6.2.
+       described in Section 7.2.
 
    3.  performs initial metadata exchange with the CIDFI network element
        and server, and server and network element, described in
-       Section 6.3.
+       Section 7.3.
 
    4.  for the duration of the connection, receives network-to-host and
        performs host-to-network updates as network conditions or network
-       requirements change, described in Section 7.  Some policies are
-       provided to CNEs to control which network changes can triggers
+       requirements change, described in Section 8.  Some policies are
+       provided to CNEs to control which network changes can trigger
        updating clients.
 
       Note: the client is also a sender, and can also perform all these
@@ -616,10 +632,10 @@ Table of Contents
       application can benefit from receiving network performance
       metrics.
 
-6.1.  Client Learns Server Supports CIDFI
+7.1.  Client Learns Server Supports CIDFI
 
    On initial connection to a QUIC server, the client includes a new
-   QUIC transport parameter CIDFI (Section 14.1) which is remembered for
+   QUIC transport parameter CIDFI (Section 17.1) which is remembered for
    0-RTT.
 
    If the server does not indicate CIDFI support, the client can still
@@ -640,56 +656,78 @@ Table of Contents
       TODO: Specify how CIDFI stream number is communicated to client.
 
    The QUIC client and server exchange CIDFI information over this
-   CIDFI-dedicated stream as described in Section 6.3.
+   CIDFI-dedicated stream as described in Section 7.3.
 
    Processing continues with the next step.
 
-6.2.  Client Proves Ownership of its UDP 4-Tuple
+7.2.  Client Proves Ownership of its UDP 4-Tuple
 
    To ensure that the client messages to a CNE pertain only to the
    client's own UDP 4-tuple, the client sends the CIDFI nonce protected
-   by the HMAC secret it obtained from Section 5.2 over the QUIC UDP
-   4-tuple it is using with the QUIC server.  The ability to transmit
-   that packet on the same UDP 4-tuple as the QUIC connection indicates
-   ownership of that IP address and UDP port.  The nonce and HMAC are
-   sent in a [STUN] indication (STUN class of 0b01) containing one or
-   more CIDFI-NONCE attributes (Section 14.5).  If there are multiple
-   CNEs the single STUN indication contains a CIDFI-NONCE attribute from
-   each of them.  This message is discarded by the QUIC server.
+   by the HMAC secret it obtained from Section 6.2 over the QUIC UDP
+   4-tuple it is using with the QUIC server over the path that involves
+   that CNE.  The ability to transmit that packet on the same UDP
+   4-tuple as the QUIC connection indicates ownership of that IP address
+   and UDP port number.  The nonce and HMAC are sent in a [STUN]
+   indication (STUN class of 0b01) containing one or more CIDFI-NONCE
+   attributes (Section 17.5).  If there are multiple CNEs the single
+   STUN indication contains a CIDFI-NONCE attribute from each of them.
+   This message is discarded, if received, by the QUIC server.
+
+   In order to avoid overloading servers, the client may set the TTL/Hop
+   Limit to a value that allows to cross the CNE, but then dicarded
+   before reaching the server.  For example, the host sets the TTL to
+   "min-ttl" that is returned during CNE discovery.
 
    Figure 6 shows a summarized message flow obtaining the nonce and HMAC
-   secret from the CNE (steps 1-2) then later sending the nonce and HMAC
-   in the same UDP 4-tuple towards the QUIC server (step 4).  This
-   message flow shows an initial QUIC handshake for simplicity (steps 3
-   and 8) but a QUIC connection migration (Section 9 of [QUIC]) can also
-   occur and the CIDFI messages might appear before QUIC packets appear.
+   secret from the CNE (steps 1-2) which is performed on network attach.
+
+        QUIC                            CIDFI-aware            QUIC
+       client                           edge router           server
+         |                                    |                  |
+         |  1. HTTPS: Enroll CIDFI router to participate         |
+         +----------------------------------->|                  |
+         |  2. HTTPS: Ok.  nonce=12345        |                  |
+         |<-----------------------------------+                  |
+         |                                    |                  |
+
+                     Figure 6: Example of Flow Exhange
+
+   Later, when connecting to a new QUIC server, the client determines if
+   there are on-path CIDFI Network Elements by sending the nonce and
+   HMAC in the same UDP 4-tuple as the QUIC connect (step 2).  If a
+   CIDFI Network Element is present it processes the STUN Indication and
+   sends a response to the client over HTTP using the HTTP channel
+   established above.
 
        QUIC                            CIDFI-aware            QUIC
       client                           edge router           server
         |                                    |                  |
-        |  1. HTTPS: Enroll CIDFI router to participate         |
-        +----------------------------------->|                  |
-        |  2. HTTPS: Ok.  nonce=12345        |                  |
+        |  1. QUIC Initial, transport parameter=CIDFI           |
+        +------------------------------------------------------>|
+        |  2. STUN Indication, nonce=12345, hmac=e8FEc          |
+        +------------------------------------------------------>|
+        |                                    |                  |
+        |                                    |           3. discarded
+        |                                    |                  |
+        |                 4. "I saw my nonce, HMAC is valid"    |
+        |                                    |                  |
+        |  5. Valid STUN Indication processed|                  |
         |<-----------------------------------+                  |
         |                                    |                  |
-        :                                    :                  :
-        |                                    |                  |
-        |  3. QUIC Initial, transport parameter=CIDFI           |
-        +------------------------------------------------------>|
-        |  4. STUN Indication, nonce=12345, hmac=e8FEc          |
-        +------------------------------------------------------>|
-        |                                    |           5. discarded
-        |                                    |                  |
-        |                 6. "I saw my nonce, HMAC is valid"    |
-        |                                    |                  |
-        |  7. HTTPS: "Map DCID=xyz as high importance"          |
+        |  6. HTTPS: "Map DCID=xyz as high importance"          |
         +----------------------------------->|                  |
-        |  8. QUIC Initial, transport parameter=CIDFI           |
+        |  7. QUIC Initial, transport parameter=CIDFI           |
         |<------------------------------------------------------+
-        |  9. HTTPS: Ok                      |                  |
+        |  8. HTTPS: Ok                      |                  |
         |<-----------------------------------+                  |
 
-                     Figure 6: Example of Flow Exhange
+                  Figure 7: Example of Flow to New Server
+
+      Note the above message flow shows an initial QUIC handshake for
+      simplicity (steps 1 and 7) but because of QUIC connection
+      migration (Section 9 of [QUIC]) the QUIC messages might appear
+      later.
 
    The short header's Destination Connection ID (DCID) can be 0 bytes or
    as short as 8 bits, so multiple QUIC clients are likely to use the
@@ -697,26 +735,35 @@ Table of Contents
    Indication message allows the CIDFI network element to distinguish
    each QUIC client's UDP 4-tuple.
 
-   Because multiple QUIC clients will use the same incoming Destination
-   CID on their own UDP 4-tuple, the STUN Indication message also allows
-   a CNE to distinguish which UDP 4-tuple belongs to each CIDFI client.
+   Because multiple QUIC clients may use the same incoming Destination
+   CID on their own UDP 4-tuple, the STUN Indication message allows a
+   CNE to distinguish each QUIC client's UDP 4-tuple.
 
    To reduce CIDFI setup time the client STUN Indication MAY be sent at
-   the same time as the QUIC Initial packet (Section 17.2.2 of [QUIC]),
-   which is encouraged if the client remembers the server supports CIDFI
-   (0-RTT).
+   the same time as it establishes connection with the QUIC server.
 
    To prevent replay attacks, the Nonce is usable only for
    authenticating one UDP 4-tuple.  When the connection is migrated
    (Section 9 of [QUIC]) the CNE won't apply any CIDFI behavior to that
    newly-migrated connection.  The client will have to restart CIDFI
-   procedures at the beginning (Section 5).
+   procedures at the beginning (Section 6).
+
+   After the CIDFI Network Element receives the STUN Indication it
+   informs the client by sending an HTTP message to the client.  Details
+   TBD.
+
+   As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
+   Network Elements near the client, the client MAY reduce traffic to
+   the server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN
+   Indication messages.  The client SHOULD set TTL/Hop Limit to "min-
+   ttl".  The client MAY use other values (e.g., explicit configuration,
+   inferred from probe messages).
 
    Processing continues with the next step.
 
-6.2.1.  STUN CIDFI-NONCE Attribute
+7.2.1.  STUN CIDFI-NONCE Attribute
 
-   The format of the STUN CIDFI-NONCE attribute is shown in Figure 7.
+   The format of the STUN CIDFI-NONCE attribute is shown in Figure 8.
 
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -736,7 +783,7 @@ Table of Contents
      |                                                               |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-               Figure 7: Format of STUN CIDFI-NONCE Attribute
+               Figure 8: Format of STUN CIDFI-NONCE Attribute
 
    The nonce is 128 bits obtained from the CIDFI network element.  The
    HMAC-output field is computed per [RFC5869] using the CIDFI network
@@ -746,7 +793,11 @@ Table of Contents
 
      HMAC-output = HMAC-SHA256( hmac-secret, nonce | "cidfi" )
 
-6.3.  Initial Metadata Exchange
+   When there are multiple CIDFI Network Elements on the network,
+   multiple CIDFI-NONCE attributes are sent in a single STUN Indication
+   message.
+
+7.3.  Initial Metadata Exchange
 
    Using its HTTPS channel with each of the CNEs it previously
    authorized for CIDFI participation, the client signals the mapping of
@@ -786,12 +837,12 @@ Table of Contents
    UDP 4-tuple.  The client then sends a new STUN message with that new
    nonce value and send a new HTTPS mapping request(s).  This
    interaction is highlighted in the simplified message flow in
-   Figure 8.
+   Figure 9.
 
                                        CIDFI-aware            QUIC
       client                           edge router           server
         |                                    |                  |
-        |  HTTPS: Enroll CIDFI router to partipate              |
+        |  HTTPS: Enroll CIDFI router to participate            |
         +----------------------------------->|                  |
         |  HTTPS: Ok.  nonce=12345           |                  |
         |<-----------------------------------+                  |
@@ -818,16 +869,16 @@ Table of Contents
         |  Ok                                |                  |
         |<-----------------------------------+                  |
 
-          Figure 8: Example of a Client Re-transmitting Lost Nonce
+          Figure 9: Example of a Client Re-transmitting Lost Nonce
 
    After the initial metadata is exchanged, processing continues with
    ongoing host-to-network and network-to-host updates as described in
-   Section 7.
+   Section 8.
 
    There are two types of metadata exchanged, described in the following
    sub-sections.
 
-6.3.1.  Host to Network Signaling
+7.3.1.  Host to Network Signaling
 
    The server communicates to CNEs via the client which then
    communicates with the CNE(s).  While this adds communication delay,
@@ -836,7 +887,7 @@ Table of Contents
 
    The communication from the client to the server are using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
-   communication (Figure 9).
+   communication (Figure 10).
 
                       CIDFI-aware       CIDFI-aware
        client     Wi-Fi Access Point    edge router           server
@@ -855,17 +906,17 @@ Table of Contents
          |  QUIC CIDFI stream: Ok             |                  |
          +------------------------------------------------------>|
 
-                  Figure 9: Example of CIDIF Communication
+                 Figure 10: Example of CIDFI Communication
 
    To each of the network elements authorized by the client, the client
    sends the mappings of the server's transmitted Destination CIDs to
-   packet metadata (see Section 10).
+   packet metadata (see Section 11).
 
-6.3.2.  Network to Host Signaling
+7.3.2.  Network to Host Signaling
 
    The CNE sends network performance information to the server which is
    intended to influence the sender's traffic rate (such as improving or
-   reducing fidelity of the audio or video).  In Figure 10, the CNE
+   reducing fidelity of the audio or video).  In Figure 11, the CNE
    informs the client of reduced bandwidth and the client informs the
    server using CIDFI.
 
@@ -881,7 +932,7 @@ Table of Contents
             |  Ok              |                 |            |
             +----------------------------------->|            |
 
-      Figure 10: Example of CIDIFI Communication with Metadata Sharing
+      Figure 11: Example of CIDFI Communication with Metadata Sharing
 
    The communication from the client to the server is using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
@@ -891,9 +942,9 @@ Table of Contents
    connection changes significantly, but MUST NOT update more frequently
    than once every second.
 
-   The metadata exchanged over this channel is described in Section 10.
+   The metadata exchanged over this channel is described in Section 11.
 
-7.  Ongoing Signaling
+8.  Ongoing Signaling
 
    Throughout the life of the connection host-to-network and network-to-
    host signaling is updated whenever characteristics change.  Still,
@@ -904,7 +955,7 @@ Table of Contents
    Typically, due to environmental changes on wireless networks or other
    user's traffic patterns, a particular flow may be able to operate
    faster or might need to operate slower.  The relevant CNE SHOULD
-   signal such conditions to the client (Section 6.3.2), which can then
+   signal such conditions to the client (Section 7.3.2), which can then
    relay that information to the server using either CIDFI or via its
    application.
 
@@ -922,7 +973,7 @@ Table of Contents
    and likely new CIDs to differentiate the video packets from the audio
    packets.
 
-8.  Interaction with Load Balancers
+9.  Interaction with Load Balancers
 
    QUIC servers are likely to be behind CID-aware load balancers
    [I-D.ietf-quic-load-balancers].
@@ -936,7 +987,7 @@ Table of Contents
    Load balancers providing QUIC-to-TCP interworking are incompatible
    with CIDFI because TCP lacks QUIC's stream identification.
 
-9.  Topology Change
+10.  Topology Change
 
    When the topology changes the client will transmit from a new IP
    address -- such as switching to a backup WAN connection, or such as
@@ -948,19 +999,16 @@ Table of Contents
 
    When the CIDFI-aware client determines that it is connected to a new
    network or has received a QUIC PATH_CHALLENGE, the CIDFI-aware client
-   MUST re-discover its CNEs (Section 5.1) and continue with normal
+   MUST re-discover its CNEs (Section 6.1) and continue with normal
    CIDFI processing with any discovered CNEs.
 
-      todo: include discussion of [DTLS-CID] client and discussion of
-      its ICE interaction, if any?
-
-10.  Details of Metadata Exchanged
+11.  Details of Metadata Exchanged
 
    This section describes the metadata that can be exchanged from a CNE
    to a server (generally network performance information) and from the
    server to a CNE.
 
-10.1.  Server to CIDFI-aware Network Element
+11.1.  Server to CIDFI-aware Network Element
 
    Because there is no direct communication from the server to a CNE,
    the communication is relayed through the client.
@@ -971,7 +1019,7 @@ Table of Contents
    Two types of mapping metadata are described in the following sub-
    sections: metadata parameters and DSCP values.
 
-10.1.1.  Mapping Metadata Parameters to DCIDs
+11.1.1.  Mapping Metadata Parameters to DCIDs
 
    Several of metadata parameters can be mapped to Destination CIDs:
 
@@ -992,7 +1040,7 @@ Table of Contents
 
    Over the CIDFI-dedicated QUIC stream, the server sends mapping
    information to the client when then propagates that information to
-   each of the CNEs.  An example is shown in Figure 11.
+   each of the CNEs.  An example is shown in Figure 12.
 
    {
       "metadata-parameters":[
@@ -1031,9 +1079,12 @@ Table of Contents
       ]
    }
 
-                Figure 11: Example JSON for Flow Importance
+                Figure 12: Example JSON for Flow Importance
 
-10.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
+      Note: Figure 12 lists sample attributes and they will be discussed
+      in detail in a separate document.
+
+11.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
 
    A mapping from Destination CID to DiffServ code point [RFC2474]
    leverages existing DiffServ handling that may already exist in the
@@ -1050,7 +1101,7 @@ Table of Contents
    information to the client when then propagates that information to
    each of the CNEs.
 
-   An example is shown in Figure 12.
+   An example is shown in Figure 13.
 
    {
       "dscp":[
@@ -1077,9 +1128,9 @@ Table of Contents
       ]
    }
 
-                  Figure 12: Example JSON for DSCP Mapping
+                  Figure 13: Example JSON for DSCP Mapping
 
-10.2.  CIDFI-aware Network Element to Server
+11.2.  CIDFI-aware Network Element to Server
 
    The CIDFI-aware client informs the CNE of the client's received
    Destination CIDs.  As bandwidth availability to that client changes,
@@ -1093,26 +1144,45 @@ Table of Contents
    The client then sends that information to the server in the CIDFI-
    dedicated QUIC stream associated with that same Connection ID.
 
-11.  Discussion Points
+12.  Privacy Considerations
+
+12.1.  Privacy-Aware Metadata Sharing in Network Relationships
+
+   If the network operator and the server have a business relationship,
+   the server can sign or attest the metadata using, e.g., JSON Web
+   Token (JWT) [RFC7519] or CBOR Web Token (CWT) [RFC8392].  The
+   attested metadata will be sent from the server to the client.  The
+   client will decide whether to convey the attested metadata to the
+   CNE, considering privacy reasons, as it may reveal the identity of
+   the server to the network.  The client may use any local policy or
+   involve the end-user in the decision-making process regarding whether
+   to reveal the identity of the server to the network or not.  If the
+   attested metadata is sent to the CNE from the client, the attestation
+   will be utilized by the CNE, acting as a Relying Party (e.g.,
+   Section 7.1 of [RFC9334]), to determine the level of trust it wishes
+   to place in the attested metadata.  The relying party may choose to
+   trust or not trust the attestation.
+
+13.  Discussion Points
 
    This section discusses known issues that would benefit from wider
    discussion.
 
-11.1.  Client versus Server Signaling CID-to-importance Mapping
+13.1.  Client versus Server Signaling CID-to-importance Mapping
 
    Need to evaluate number of round trips (and other overhead) of client
    signaling CID-to-importance mapping or server signaling CID-to-
    importance mapping.
 
-11.2.  Overhead of QUIC DCID Packet Examination
+13.2.  Overhead of QUIC DCID Packet Examination
 
    If CID-to-importance metadata was signaled by the server as described
-   in Section 6.3.1, the CNE have to examine the UDP payload of each
+   in Section 7.3.1, the CNE have to examine the UDP payload of each
    packet for a matching Destination CID for the lifetime of the
    connection.  This is somewhat assuaged by the STUN nonce transmitted
    which may well be an easier signal to identify.
 
-11.3.  Interaction with Wi-Fi Packet Aggregation
+13.3.  Interaction with Wi-Fi Packet Aggregation
 
    Per-packet metadata influences transmission of that packet but may
    well conflict with some Wi-Fi optimizations (e.g.,
@@ -1120,7 +1190,7 @@ Table of Contents
 
    This impact needs further study.
 
-11.4.  Overhead of Mapping CIDs to Packet Metadata
+13.4.  Overhead of Mapping CIDs to Packet Metadata
 
    Network Elements have to maintain a mapping between each UDP 4-tuple
    and QUIC CID and its DSCP code point.  This also needs updating
@@ -1131,12 +1201,12 @@ Table of Contents
    meaning of those QUIC CIDs.  It also requires all networks to agree
    on the meaning of those QUIC CIDs.
 
-11.5.  Improve CIDFI Initialization Time
+13.5.  Improve CIDFI Initialization Time
 
    Find approaches to further reduce network communications to start
    CIDFI.
 
-11.6.  Primary QUIC Channel CID Change
+13.6.  Primary QUIC Channel CID Change
 
    Because the CIDFI network element, QUIC server, and QUIC client all
    cooperate to share the primary QUIC connection's Destination CID,
@@ -1148,7 +1218,7 @@ Table of Contents
    network attach and which DCIDs are for a migrated connection.
    Probably belongs in the QUIC transport parameter signaling?
 
-12.  State Maintenance
+14.  State Maintenance
 
    A CNE can safely remove state after UDP inactivity timeout
    Section 4.3 of [RFC4787].  The CIDFI client MUST re-signal its CNE(s)
@@ -1161,7 +1231,26 @@ Table of Contents
       TODO: Probably want keepalives on client->CNE communication.  To
       be assessed.
 
-13.  Security Considerations
+15.  API Integration for QUIC Stream and Packet-Level Prioritization
+
+   For each QUIC stream requiring differentiated service, the QUIC stack
+   can map that stream to a different Destination CID.  The application-
+   level code would require an API to instruct the QUIC stack that a
+   particular stream needs differentiated service.  Similarly, if the
+   application-level code seeks differentiated service for packets
+   within a stream (e.g., prioritizing P-frames over I-Frames in a video
+   stream), it would need an API to inform the QUIC stack that different
+   packets within the QUIC stream require differentiated services and to
+   map these packets to different Destination CIDs.
+
+   *Where packet-level differentiation is not desired, such API
+   enhancements are not needed*.  In that situation, the CIDFI-aware
+   client and CIDFI-aware network elements can utilize bandwidth
+   information to optimize their video streaming usage and their
+   interactive audio/video streams, without the benefit of packet-level
+   differentiation.
+
+16.  Security Considerations
 
    Because the sender's QUIC Destination Connection ID is mapped to
    packet importance, and the DCID remains the same for many packets, an
@@ -1180,44 +1269,49 @@ Table of Contents
    through the client because only the client knows the identity of the
    server and can validate its certificate.
 
-   For an attacker to succeed with the nonce challenge against a
-   victim's UDP 4-tuple the attacker has to send a STUN CIDFI-NONCE
-   packet using the victim's source IP address and a valid HMAC.  A
-   valid HMAC can only be obtained by the attacker making its own
-   connection to the CIDFI server and spoofing the source IP address and
-   UDP port of the victim.  Such spoofing of a victim's IP address is
-   prevented by the network using network ingress filtering ([RFC2827],
-   [RFC7513], [RFC6105], and/or [RFC6620]).  In the event network
-   ingress filtering is not configured or configured improperly, the
-   CIDFI network element can detect an attack if the client implements
-   CIDFI.  The CIDFI network element receive two HTTPS connections
-   describing the same DCID (one connection from the attacker, another
-   from the victim).  The CIDFI network element will issue unique Nonces
-   and HMACs to both the attacker and victim, and the attacker and
-   victim will both send the STUN indication on that same UDP 4-tuple.
-   This should never normally occur and should generate an alarm on the
-   CIDFI network element.  In this situation, it is recommended both
-   attack and victim be denied CIDFI access.
+   Spoofing Attacks:  For an attacker to succeed with the nonce
+      challenge against a victim's UDP 4-tuple, an attacker has to send
+      a STUN CIDFI-NONCE packet using the victim's source IP address and
+      a valid HMAC.  A valid HMAC can be obtained by the attacker making
+      its own connection to the CIDFI-aware server and spoofing the
+      source IP address and UDP port number of the victim.
 
-   If attacker can see the victim's Discovery Packet and attacker can
-   send that packet inside the attacker's 5-tuple and race it to the on-
-   path CIDFI network element (which needs to see the Discovery Packet)
-   the attacker can then 'steal' the victim's CIDFI control from the
-   victim's 5-tuple and the victim's CIDFI signaling thereafter for that
-   5-tuple will influence the attacker's 5-tuple.  The attacker can't
-   see that CIDFI signaling (because it still goes to the victim which
-   relays the CIDFI signaling to the CIDFI network element) but with
-   this attack the victim's CIDFI treatment is effectively disabled and
-   is available to the attacker.  The attacker can send
-   NEW_CONNECTION_ID frames to the server with the victim's (observed)
-   Destination CID, effectively stealing the victim's CIDFI signaling
-   for themselves.  To mitigate this replay attack shared networks need
-   per-endpoint encryption (e.g., Wi-Fi WPA3, DOCSIS BPI+) or traffic
-   separation (e.g., Ethernet switching rather than bridging).
+      If the client does not support CIDFI, the attacker can influence
+      the packet treatment of the victim's UDP 4-tuple.
 
-14.  IANA Considerations
+      If the client implements CIDFI, a CIDFI network element can
+      identify an IP address spoofing attack.  Concretely, the CNE will
+      receive two HTTPS connections describing the same DCID; one
+      connection from the attacker and another one from the victim.  The
+      CNE will then issue unique Nonces and HMACs to both the attacker
+      and victim, and both the attacker and victim should send the STUN
+      Indication on that same UDP 4-tuple.  Such an event should trigger
+      an alarm on the CNE.  In this scenario, it is recommended that
+      both the attacker and the victim be denied CIDFI access.
 
-14.1.  New QUIC Transport Parameter
+      The spoofing of a victim's IP address is prevented by the network
+      using network ingress filtering ([RFC2827], [RFC7513], [RFC6105],
+      and/or [RFC6620]).
+
+   On-Path Attacks:  An on-path attacker can observe the victim's
+      Discovery Packet, block it, and then forward the packet within the
+      attacker's 5-tuple.  Subsequently, the on-path attacker can
+      'steal' the victim's CIDFI control from the victim's UDP 4-tuple,
+      causing the victim's CIDFI signaling for that UDP 4-tuple to
+      influence the attacker's UDP 4-tuple.
+
+      Although the on-path attacker can't directly observe the encrypted
+      CIDFI signaling, this attack effectively disables the victim's
+      CIDFI treatment, making it accessible to the attacker.  The
+      attacker can send NEW_CONNECTION_ID frames to the server with the
+      victim's (observed) Destination CID, effectively claiming the
+      victim's CIDFI signaling for themselves.  An on-path attacker can
+      do a lot more damage by blocking or rate-limiting the victim's
+      traffic.
+
+17.  IANA Considerations
+
+17.1.  New QUIC Transport Parameter
 
    This document requests IANA to register the following new permanent
    QUIC transport parameter in the "QUIC Transport Parameters" registry
@@ -1231,31 +1325,44 @@ Table of Contents
 
                   Table 1: New QUIC Transport Parameter
 
-14.2.  New Well-known URI "cidfi-aware"
+17.2.  New Well-known URI "cidfi-aware"
 
    This document requests IANA to register the new well-known URI
    "cidfi" in the "Well-Known URIs" registry available at [IANA-WKU].
 
-14.3.  New Special-use Domain Name
+17.3.  New Special-use Domain Name
 
    Register new special-use domain name cidfi.arpa for DNS SVCB
    discovery.
 
-14.4.  New DNS Service Binding (SVCB)
+17.4.  New DNS Service Binding (SVCB)
 
    This document requests IANA to register the new DNS SVCB "_cidfi-
    aware" in the "DNS Service Bindings (SVCB)" registry available at
    [IANA-SVCB].
 
-14.5.  New STUN Attribute
+   The document also requests IANA to register the following service
+   parameter in the "Service Parameter Keys (SvcParamKeys)" registry
+   [IANA-SVCB]:
+
+   Number:  TBD
+
+   Name:  min-ttl
+
+   Meaning: :The minimum IPv4 TTL or IPv6 Hop Limit to use for a
+   connection.
+
+   Reference:  This-Document
+
+17.5.  New STUN Attribute
 
    This document requests IANA to register the new STUN attribute
    "CIDFI-NONCE" in the "STUN Attributes" registry available at
    [IANA-STUN].
 
-14.6.  New Provisioning Domain Additional Information Key
+17.6.  New Provisioning Domain Additional Information Key
 
-   This document requests IANA to register two new JSON keys in the
+   This document requests IANA to register a new JSON key in the
    Provisioning Domains Additional Information registry at [IANA-PVD]:
 
    JSON key: cidfi
@@ -1264,12 +1371,23 @@ Table of Contents
    Example: ["cidfinode": "service.example.net", "cidfipathauth":
              "/authpath", "cidfimetadata": "/meta"]
 
-   Additionally, in the following cidfi keys are to be registered:
+   Additionally, this document requests creating a new registry,
+   entitled "CIDFI JSON Keys" under the Provisioning Domains Additional
+   Information registry group [IANA-PVD].  The policy for assigning new
+   entries in this registry is Expert Review Section 4.5 of [RFC8126].
+   The structure of this registry is identical to the Provisioning
+   Domains Additional Information registry group.  The initial content
+   of this registry is provided below:
 
    JSON key: cidfinode
    Description: FQDN of CIDFI node
    Type: string
    Example: service.example.net
+
+   JSON key: min-ttl
+   Description: The minimum TTL or Hop Limit to reach a CNE
+   Type: Unsigned integer
+   Example: 5
 
    JSON key: cidfipathauth
    Description: authentication and authorization path for CIDFI
@@ -1281,19 +1399,14 @@ Table of Contents
    type: string
    example: "/metadata"
 
-15.  References
+18.  References
 
-15.1.  Normative References
+18.1.  Normative References
 
    [CBOR]     Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
               DOI 10.17487/RFC8949, December 2020,
               <https://www.rfc-editor.org/rfc/rfc8949>.
-
-   [DTLS-CID] Rescorla, E., Ed., Tschofenig, H., Ed., Fossati, T., and
-              A. Kraus, "Connection Identifier for DTLS 1.2", RFC 9146,
-              DOI 10.17487/RFC9146, March 2022,
-              <https://www.rfc-editor.org/rfc/rfc9146>.
 
    [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,
@@ -1315,10 +1428,31 @@ Table of Contents
               DOI 10.17487/RFC2474, December 1998,
               <https://www.rfc-editor.org/rfc/rfc2474>.
 
+   [RFC2827]  Ferguson, P. and D. Senie, "Network Ingress Filtering:
+              Defeating Denial of Service Attacks which employ IP Source
+              Address Spoofing", BCP 38, RFC 2827, DOI 10.17487/RFC2827,
+              May 2000, <https://www.rfc-editor.org/rfc/rfc2827>.
+
    [RFC4787]  Audet, F., Ed. and C. Jennings, "Network Address
               Translation (NAT) Behavioral Requirements for Unicast
               UDP", BCP 127, RFC 4787, DOI 10.17487/RFC4787, January
               2007, <https://www.rfc-editor.org/rfc/rfc4787>.
+
+   [RFC6620]  Nordmark, E., Bagnulo, M., and E. Levy-Abegnoli, "FCFS
+              SAVI: First-Come, First-Served Source Address Validation
+              Improvement for Locally Assigned IPv6 Addresses",
+              RFC 6620, DOI 10.17487/RFC6620, May 2012,
+              <https://www.rfc-editor.org/rfc/rfc6620>.
+
+   [RFC7513]  Bi, J., Wu, J., Yao, G., and F. Baker, "Source Address
+              Validation Improvement (SAVI) Solution for DHCP",
+              RFC 7513, DOI 10.17487/RFC7513, May 2015,
+              <https://www.rfc-editor.org/rfc/rfc7513>.
+
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8126>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1335,6 +1469,11 @@ Table of Contents
               RFC 8801, DOI 10.17487/RFC8801, July 2020,
               <https://www.rfc-editor.org/rfc/rfc8801>.
 
+   [RFC9221]  Pauly, T., Kinnear, E., and D. Schinazi, "An Unreliable
+              Datagram Extension to QUIC", RFC 9221,
+              DOI 10.17487/RFC9221, March 2022,
+              <https://www.rfc-editor.org/rfc/rfc9221>.
+
    [RFC9460]  Schwartz, B., Bishop, M., and E. Nygren, "Service Binding
               and Parameter Specification via the DNS (SVCB and HTTPS
               Resource Records)", RFC 9460, DOI 10.17487/RFC9460,
@@ -1345,7 +1484,7 @@ Table of Contents
               Utilities for NAT (STUN)", RFC 8489, DOI 10.17487/RFC8489,
               February 2020, <https://www.rfc-editor.org/rfc/rfc8489>.
 
-15.2.  Informative References
+18.2.  Informative References
 
    [cryptex]  Uberti, J., Jennings, C., and S. Murillo, "Completely
               Encrypting RTP Header Extensions and Contributing
@@ -1431,11 +1570,6 @@ Table of Contents
               <https://www.sciencedirect.com/science/article/pii/
               S0140366417312835>.
 
-   [RFC2827]  Ferguson, P. and D. Senie, "Network Ingress Filtering:
-              Defeating Denial of Service Attacks which employ IP Source
-              Address Spoofing", BCP 38, RFC 2827, DOI 10.17487/RFC2827,
-              May 2000, <https://www.rfc-editor.org/rfc/rfc2827>.
-
    [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
               Key Derivation Function (HKDF)", RFC 5869,
               DOI 10.17487/RFC5869, May 2010,
@@ -1446,21 +1580,18 @@ Table of Contents
               DOI 10.17487/RFC6105, February 2011,
               <https://www.rfc-editor.org/rfc/rfc6105>.
 
-   [RFC6620]  Nordmark, E., Bagnulo, M., and E. Levy-Abegnoli, "FCFS
-              SAVI: First-Come, First-Served Source Address Validation
-              Improvement for Locally Assigned IPv6 Addresses",
-              RFC 6620, DOI 10.17487/RFC6620, May 2012,
-              <https://www.rfc-editor.org/rfc/rfc6620>.
-
-   [RFC7513]  Bi, J., Wu, J., Yao, G., and F. Baker, "Source Address
-              Validation Improvement (SAVI) Solution for DHCP",
-              RFC 7513, DOI 10.17487/RFC7513, May 2015,
-              <https://www.rfc-editor.org/rfc/rfc7513>.
+   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
+              <https://www.rfc-editor.org/rfc/rfc7519>.
 
    [RFC7839]  Bhandari, S., Gundavelli, S., Grayson, M., Volz, B., and
               J. Korhonen, "Access-Network-Identifier Option in DHCP",
               RFC 7839, DOI 10.17487/RFC7839, June 2016,
               <https://www.rfc-editor.org/rfc/rfc7839>.
+
+   [RFC8392]  Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
+              "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392,
+              May 2018, <https://www.rfc-editor.org/rfc/rfc8392>.
 
    [RFC8517]  Dolson, D., Ed., Snellman, J., Boucadair, M., Ed., and C.
               Jacquenet, "An Inventory of Transport-Centric Functions
@@ -1468,10 +1599,15 @@ Table of Contents
               RFC 8517, DOI 10.17487/RFC8517, February 2019,
               <https://www.rfc-editor.org/rfc/rfc8517>.
 
-   [RFC9221]  Pauly, T., Kinnear, E., and D. Schinazi, "An Unreliable
-              Datagram Extension to QUIC", RFC 9221,
-              DOI 10.17487/RFC9221, March 2022,
-              <https://www.rfc-editor.org/rfc/rfc9221>.
+   [RFC9146]  Rescorla, E., Ed., Tschofenig, H., Ed., Fossati, T., and
+              A. Kraus, "Connection Identifier for DTLS 1.2", RFC 9146,
+              DOI 10.17487/RFC9146, March 2022,
+              <https://www.rfc-editor.org/rfc/rfc9146>.
+
+   [RFC9334]  Birkholz, H., Thaler, D., Richardson, M., Smith, N., and
+              W. Pan, "Remote ATtestation procedureS (RATS)
+              Architecture", RFC 9334, DOI 10.17487/RFC9334, January
+              2023, <https://www.rfc-editor.org/rfc/rfc9334>.
 
    [RTP]      Schulzrinne, H., Casner, S., Frederick, R., and V.
               Jacobson, "RTP: A Transport Protocol for Real-Time
@@ -1492,13 +1628,23 @@ Table of Contents
 
 Appendix A.  Extending CIDFI to Other Protocols
 
-   CIDFI can be extended to other protocols including TCP, SCTP, RTP and
-   SRTP, and bespoke UDP protocols.
+   CIDFI can be extended to other protocols including TCP, SCTP, RTP,
+   and SRTP, and bespoke UDP protocols.
 
    An extension to each protocol is described below which retains the
    ability of the client to prove its ownership of the 5-tuple to a CNE.
 
-A.1.  TCP
+A.1.  DTLS
+
+   DTLS is used by WebRTC and SIP for establishing interactive real-time
+   audio, video, and screen sharing, which benefit from knowing network
+   characteristics (n2h signaling) and benefit from prioritizing audio
+   over video (h2n signaling).  [RFC9146] defines an extension to add a
+   Connection ID (CID) to the DTLS record layer.  DTLS CID can be
+   leveraged by CIDFI to communicate per-connection information from
+   endpoint to CNE and vice-versa.
+
+A.2.  TCP
 
    To prove ownership of the TCP 4-tuple, TCP can utilize a new TCP
    option to carry the CNE's nonce and HMAC-output.  This TCP option can
@@ -1527,16 +1673,16 @@ A.1.  TCP
    To shorten this further we might truncate the HMAC output and/or
    truncate the Nonce after security evaluation.
 
-A.2.  SCTP
+A.3.  SCTP
 
    If SCTP is sent directly over IP, proof of ownership of the SCTP
    4-tuple can be achieved using an extension to its INIT packets,
    similar to what is described above for TCP SYN.
 
    If SCTP is run over UDP, the same proof of ownership of the UDP
-   4-tuple as described in Section 6.2 can be performed.
+   4-tuple as described in Section 7.2 can be performed.
 
-A.3.  RTP and SRTP
+A.4.  RTP and SRTP
 
    The RTP Synchronization Source (SSRC) is in the clear for [RTP],
    [SRTP], and [cryptex].  If the SSRC is signaled similarly to CID, RTP
@@ -1555,15 +1701,15 @@ A.3.  RTP and SRTP
    includes RTP over QUIC as one of its use cases Section 3.1 of
    [I-D.ietf-moq-requirements].
 
-A.4.  Bespoke UDP Application Protocols
+A.5.  Bespoke UDP Application Protocols
 
    To work with CIDFI, other UDP application protocols would have to
-   prove ownership of their UDP 4-tuple (Section 6.2) and extend their
+   prove ownership of their UDP 4-tuple (Section 7.2) and extend their
    protocol to include a connection identifier in the first several bits
    of each of their UDP packets.
 
    Alternatively, rather than modifying the application protocol it
-   could be run over [QUIC] or [DTLS-CID].
+   could be run over [QUIC].
 
 Acknowledgments
 
