@@ -230,7 +230,7 @@ are involved in CIDFI; some of them are optional:
 * CIDFI-aware clients sharing of metadata with CIDFI-aware server to adapt
   to local network conditions.
 
-CIDFI does not require that all these steps are enabled. Incremental
+**CIDFI does not require that all these steps are enabled**. Incremental
 deployments may be envisaged (e.g., network and client support, network, client,
 and server support). Differentiated service can
 be provided to a flow, packets within a flow, or a combination thereof as a function
@@ -315,7 +315,8 @@ Additionally, CIDFI can be extended to other protocols as discussed in
 
 ## Operation with Streaming Video
 
-Incremental deployment: Streaming video only needs to be transmitted slightly faster than the
+Incremental deployment:
+: Streaming video only needs to be transmitted slightly faster than the
 video playout rate.  Sending the video significantly faster can waste
 bandwidth, most notably if the user abandons the video early.  Worse, as discussed in {{Section 3.10 of ?RFC8517}}, a fast download of a video that won't be viewed completely by the subscriber may lead to quick exhaustion of the user data quota. CIDFI
 helps this use-case with its network-to-host signaling which informs
@@ -323,7 +324,8 @@ the client of available bandwidth allowing the client to choose
 a compatible video stream.  This functionality does not need a CIDFI-
 aware server.
 
-Full system deployment: With reliable transport such as TCP, the only purpose of
+Full system deployment:
+: With reliable transport such as TCP, the only purpose of
 video key frames is the user scrolling forward/backward.  When
 video streaming uses unreliable transport ({{?RFC9221}})
 it is beneficial to differentiate keyframes from predictive
@@ -334,13 +336,15 @@ during linear playout.
 
 ## Operation with Interactive Audio/Video/Screen sharing
 
-Incremental deployment: With interactive sessions CIDFI can help determine the bandwidth
+Incremental deployment:
+: With interactive sessions CIDFI can help determine the bandwidth
 available for the flow so the video (and screen sharing) quality and
 size can be constrained to the available bandwidth.  This benefit
 can be deployed locally with a CIDFI-aware client and CIDFI-aware
 network.
 
-Full system deployment: When the remote peer also supports CIDFI, the remote peer can
+Full system deployment:
+: When the remote peer also supports CIDFI, the remote peer can
 differentiate packets containing audio, video, or screen sharing.  In
 certain use-cases audio is the most important whereas in other
 use-cases screen sharing is most important.  With CIDFI, the relative
