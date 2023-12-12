@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-10T01:19:52.066327+00:00",
+  "timestamp": "2023-12-12T01:15:48.748765+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -297,15 +297,15 @@
       "id": "I_kwDOKCXv8853jFG9",
       "title": "Direction",
       "url": "https://github.com/danwing/cidfi/issues/45",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "boucadair",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://github.com/danwing/cidfi/blob/602c0125c6d257b180f7f9cd711a05d1be2a28ef/draft-wing-cidfi.md?plain=1#L833C30-L833C34\r\n\r\n\"Map DCID=xyz as high importance\": refers here to a CID chosen by the server not the DCID used by the server to communicate with the client (which is mirroring a CID picked by the client). \r\n\r\nMay be worth clarifying in the text.",
       "createdAt": "2023-11-22T06:47:46Z",
-      "updatedAt": "2023-11-22T06:47:46Z",
-      "closedAt": null,
+      "updatedAt": "2023-12-11T17:34:58Z",
+      "closedAt": "2023-12-11T17:34:58Z",
       "comments": []
     },
     {
@@ -3850,24 +3850,26 @@
       "id": "PR_kwDOKCXv885hhRCY",
       "title": "Move DTLS CID to Appendix",
       "url": "https://github.com/danwing/cidfi/pull/70",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tireddy2",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-12-08T12:34:40Z",
-      "updatedAt": "2023-12-09T05:26:32Z",
+      "updatedAt": "2023-12-11T06:32:20Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "4f6403228d3a5383a11e7872a0bd0dc1a55f8892",
       "headRepository": "danwing/cidfi",
       "headRefName": "tireddy2-patch-2",
       "headRefOid": "5e49afc35352fad5088e8e336640ce91761fdfe2",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-12-11T06:32:19Z",
+      "mergedAt": "2023-12-11T06:32:19Z",
+      "mergedBy": "tireddy2",
+      "mergeCommit": {
+        "oid": "7aa8c67750418a7d7f495681269ca5183d54535d"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3882,6 +3884,103 @@
           "createdAt": "2023-12-08T18:15:01Z",
           "updatedAt": "2023-12-08T18:15:01Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 71,
+      "id": "PR_kwDOKCXv885hpKaq",
+      "title": "minor formatting",
+      "url": "https://github.com/danwing/cidfi/pull/71",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-11T06:50:31Z",
+      "updatedAt": "2023-12-11T06:51:23Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "7aa8c67750418a7d7f495681269ca5183d54535d",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-1",
+      "headRefOid": "c0961ccf217438a7a6eae57c1a955867eab38241",
+      "closedAt": "2023-12-11T06:51:22Z",
+      "mergedAt": "2023-12-11T06:51:22Z",
+      "mergedBy": "boucadair",
+      "mergeCommit": {
+        "oid": "ae373888bf3dd9702f852bf78d5aafd2e902d1d5"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 72,
+      "id": "PR_kwDOKCXv885hpL4O",
+      "title": "clarify DCID in an example",
+      "url": "https://github.com/danwing/cidfi/pull/72",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-11T06:56:02Z",
+      "updatedAt": "2023-12-11T17:34:58Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "ae373888bf3dd9702f852bf78d5aafd2e902d1d5",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-1",
+      "headRefOid": "54d0ab55c25fad22761852f4ca9c6a9d13f09155",
+      "closedAt": "2023-12-11T17:34:57Z",
+      "mergedAt": "2023-12-11T17:34:57Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "4115bf513035aee66eac4685629458914e0a3306"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885p0qJg",
+          "commit": {
+            "abbreviatedOid": "54d0ab5"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-11T15:20:33Z",
+          "updatedAt": "2023-12-11T15:20:52Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "I don't get the new line. QUIC server designates the connection ID which the client uses to send packets to the server, for example see the packet capture in https://www.cloudshark.org/captures/3adfd15940d0 ",
+              "createdAt": "2023-12-11T15:20:33Z",
+              "updatedAt": "2023-12-11T15:20:52Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885p0tym",
+          "commit": {
+            "abbreviatedOid": "54d0ab5"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-11T15:25:58Z",
+          "updatedAt": "2023-12-11T15:25:58Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "This  is just about \"direction\" :-)\r\n\r\nWe do have both source and destination CIDs which depend on the direction of a packet. The SCID used by a client will be used as DCID for packets sent by a server and vice versa. So, if we want \"map DCID\" to be unambiguously interpreted, we need to clarify the direction. ",
+              "createdAt": "2023-12-11T15:25:58Z",
+              "updatedAt": "2023-12-11T15:26:47Z"
+            }
+          ]
         }
       ]
     }
