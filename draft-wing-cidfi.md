@@ -615,14 +615,14 @@ from receiving network performance metrics.
 ## Client Learns Server Supports CIDFI {#server-supports-cidfi}
 
 On initial connection to a QUIC server, the client includes a new QUIC
-transport parameter CIDFI ({{iana-tp}}) which is remembered for 0-RTT.
+transport parameter "enable_cidfi" (TBD1) ({{iana-tp}}) which is remembered for 0-RTT.
 
-If the server does not indicate CIDFI support, the client can still
+If the server does not indicate CIDFI support by means of enable_cidfi transport parameter, the client can still
 perform CIDFI -- but does not expect different CIDs to indicate
-differentiated behavior.  The client can still signal its CNE(s) about
+differentiated behavior.  The client can still signal to its CNE(s) about
 the flow, because the client knows some characteristics of the flow it
 is receiving.  For example, if the client requested streaming video of
-a certain bandwidth from the server or participated in a WebRTC
+a certain bandwidth from a server or participated in a WebRTC
 offer/answer exchange, the client knows some connectivity expectation about the
 incoming flow without the server supporting CIDFI.  Processing
 continues with the next step.
@@ -686,7 +686,7 @@ HTTP channel established above.
  QUIC                            CIDFI-aware            QUIC
 client                           edge router           server
   |                                    |                  |
-  |  1. QUIC Initial, transport parameter=CIDFI           |
+  |  1. QUIC Initial, transport parameter=enable_cidfi    |
   +------------------------------------------------------>|
   |  2. STUN Indication, nonce=12345, hmac=e8FEc          |
   +------------------------------------------------------>|
@@ -700,7 +700,7 @@ client                           edge router           server
   |                                    |                  |
   |  6. HTTPS: "Map DCID=xyz as high importance"          |
   +----------------------------------->|                  |
-  |  7. QUIC Initial, transport parameter=CIDFI           |
+  |  7. QUIC Initial, transport parameter=enable_cidfi    |
   |<------------------------------------------------------+
   |  8. HTTPS: Ok                      |                  |
   |<-----------------------------------+                  |
@@ -835,7 +835,7 @@ client                           edge router           server
   |                                    |                  |
   :                                    :                  :
   |                                    |                  |
-  |  QUIC Initial, transport parameter=CIDFI              |
+  |  QUIC Initial, transport parameter=enable_cidfi       |
   +------------------------------------------------------>|
   |  STUN Indication, nonce=12345, HMAC=8f93e             |
   +--------------------> X (lost)      |                  |
@@ -1210,7 +1210,7 @@ when a new CIDFI network element is involved (e.g., due to client
 attaching to a different network), a new Destination CID SHOULD
 be used for the reasons discussed in {{Section 9.5 of QUIC}}).
 
-We need clear way to signal which DCIDs can be used for 'this'
+> We need clear way to signal which DCIDs can be used for 'this'
 network attach and which DCIDs are for a migrated connection.  Probably
 belongs in the QUIC transport parameter signaling?
 
@@ -1280,7 +1280,7 @@ This document requests IANA to register the following new permanent QUIC transpo
 in the "QUIC Transport Parameters" registry under the "QUIC" registry group available at {{IANA-QUIC}}:
 
 |Value| Parameter Name| Reference|
-|TBD1| CIDFI| This-Document|
+|TBD1| enable_cidfi| This-Document|
 {: title="New QUIC Transport Parameter"}
 
 
