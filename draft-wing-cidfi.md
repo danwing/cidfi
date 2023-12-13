@@ -247,7 +247,7 @@ bandwidth-constrained link between a smartphone handset and its Radio
 Access Network (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
 domains such as Wi-Fi, an ISP edge router, and a 5G RAN. Readers may refer to Appendix C
-of {{?I-D.ietf-teas-5g-ns-ip-mpls}} for an overview of key building blocks.
+of {{?I-D.ietf-teas-5g-ns-ip-mpls}} for an overview of key 5G building blocks.
 
 For the sake of illustration, {{fig-arch}} simplifies the representation
 of the various involved network segments. It also assumes that multiple
@@ -723,8 +723,8 @@ flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
 but because of QUIC connection migration ({{Section 9 of QUIC}}) the
 QUIC messages might appear later.
 > Also, "Map DCID=xyz as high importance" refers to a CID chosen by
-> the server not the DCID used by the server to communicate with
-> the client.
+> the client not the DCID used by the client to communicate with
+> the server.
 
 
 The short header's Destination Connection ID (DCID) can be 0 bytes or
