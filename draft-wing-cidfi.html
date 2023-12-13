@@ -38,16 +38,16 @@ service. The proposed approach covers both directions of a flow.
 <!-- Generator version information:
   xml2rfc 3.18.2
     Python 3.11.6
-    ConfigArgParse 1.5.3
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
     platformdirs 4.1.0
     pycountry 22.3.5
-    PyYAML 6.0
+    PyYAML 6.0.1
     requests 2.31.0
-    setuptools 67.7.2
+    setuptools 68.2.2
     six 1.16.0
     wcwidth 0.2.12
 -->
@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 13 June 2024</td>
+<td class="center">Expires 15 June 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-wing-cidfi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-12-11" class="published">11 December 2023</time>
+<time datetime="2023-12-13" class="published">13 December 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-06-13">13 June 2024</time></dd>
+<dd class="expires"><time datetime="2024-06-15">15 June 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1136,7 +1136,7 @@ service. The proposed approach covers both directions of a flow.<a href="#sectio
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2254,13 +2254,13 @@ from receiving network performance metrics.<a href="#section-7-3.1.1" class="pil
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-client-learns-server-suppor" class="section-name selfRef">Client Learns Server Supports CIDFI</a>
         </h3>
 <p id="section-7.1-1">On initial connection to a QUIC server, the client includes a new QUIC
-transport parameter CIDFI (<a href="#iana-tp" class="auto internal xref">Section 17.1</a>) which is remembered for 0-RTT.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">If the server does not indicate CIDFI support, the client can still
+transport parameter "enable_cidfi" (TBD1) (<a href="#iana-tp" class="auto internal xref">Section 17.1</a>) which is remembered for 0-RTT.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">If the server does not indicate CIDFI support by means of enable_cidfi transport parameter, the client can still
 perform CIDFI -- but does not expect different CIDs to indicate
-differentiated behavior.  The client can still signal its CNE(s) about
+differentiated behavior.  The client can still signal to its CNE(s) about
 the flow, because the client knows some characteristics of the flow it
 is receiving.  For example, if the client requested streaming video of
-a certain bandwidth from the server or participated in a WebRTC
+a certain bandwidth from a server or participated in a WebRTC
 offer/answer exchange, the client knows some connectivity expectation about the
 incoming flow without the server supporting CIDFI.  Processing
 continues with the next step.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
@@ -2382,7 +2382,7 @@ HTTP channel established above.<a href="#section-7.2-5" class="pilcrow">¶</a></
                   <text x="84" y="84">QUIC</text>
                   <text x="140" y="84">Initial,</text>
                   <text x="216" y="84">transport</text>
-                  <text x="320" y="84">parameter=CIDFI</text>
+                  <text x="348" y="84">parameter=enable_cidfi</text>
                   <text x="52" y="116">2.</text>
                   <text x="84" y="116">STUN</text>
                   <text x="152" y="116">Indication,</text>
@@ -2415,7 +2415,7 @@ HTTP channel established above.<a href="#section-7.2-5" class="pilcrow">¶</a></
                   <text x="84" y="308">QUIC</text>
                   <text x="140" y="308">Initial,</text>
                   <text x="216" y="308">transport</text>
-                  <text x="320" y="308">parameter=CIDFI</text>
+                  <text x="348" y="308">parameter=enable_cidfi</text>
                   <text x="52" y="340">8.</text>
                   <text x="92" y="340">HTTPS:</text>
                   <text x="132" y="340">Ok</text>
@@ -2643,7 +2643,7 @@ highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="au
                   <text x="60" y="196">QUIC</text>
                   <text x="116" y="196">Initial,</text>
                   <text x="192" y="196">transport</text>
-                  <text x="296" y="196">parameter=CIDFI</text>
+                  <text x="324" y="196">parameter=enable_cidfi</text>
                   <text x="60" y="228">STUN</text>
                   <text x="128" y="228">Indication,</text>
                   <text x="228" y="228">nonce=12345,</text>
@@ -3190,9 +3190,13 @@ cooperate to share the primary QUIC connection's Destination CID,
 when a new CIDFI network element is involved (e.g., due to client
 attaching to a different network), a new Destination CID <span class="bcp14">SHOULD</span>
 be used for the reasons discussed in <span><a href="https://rfc-editor.org/rfc/rfc9000#section-9.5" class="relref">Section 9.5</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).<a href="#section-13.6-1" class="pilcrow">¶</a></p>
-<p id="section-13.6-2">We need clear way to signal which DCIDs can be used for 'this'
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-13.6-2.1">
+            <p id="section-13.6-2.1.1">We need clear way to signal which DCIDs can be used for 'this'
 network attach and which DCIDs are for a migrated connection.  Probably
-belongs in the QUIC transport parameter signaling?<a href="#section-13.6-2" class="pilcrow">¶</a></p>
+belongs in the QUIC transport parameter signaling?<a href="#section-13.6-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 </section>
@@ -3315,7 +3319,7 @@ in the "QUIC Transport Parameters" registry under the "QUIC" registry group avai
           <tbody>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">TBD1</td>
-              <td class="text-left" rowspan="1" colspan="1">CIDFI</td>
+              <td class="text-left" rowspan="1" colspan="1">enable_cidfi</td>
               <td class="text-left" rowspan="1" colspan="1">This-Document</td>
             </tr>
           </tbody>
