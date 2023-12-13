@@ -246,7 +246,8 @@ CIDFI-aware devices immediately upstream of those links, and another
 bandwidth-constrained link between a smartphone handset and its Radio
 Access Network (RAN).  This diagram shows the same protocol and same mechanism
 can operate with or without 5G, and can operate with different administrative
-domains such as Wi-Fi, an ISP edge router, and a 5G RAN.
+domains such as Wi-Fi, an ISP edge router, and a 5G RAN. Readers may refer to Appendix C
+of {{?I-D.ietf-teas-5g-ns-ip-mpls}} for an overview of key building blocks.
 
 For the sake of illustration, {{fig-arch}} simplifies the representation
 of the various involved network segments. It also assumes that multiple
