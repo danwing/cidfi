@@ -413,6 +413,16 @@ client and server and with the participating CIDFI-aware network elements.
 : CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT), and IPv6/IPv4
 translation (NAT64).
 
+Fast Path Forwarding Support:
+: For some differentiated services (e.g., capacity awareness), CIDFI does not require specific
+processing by on-path network devices. For others, once a state is programmed (CIDs, for example)
+no other forwarding constraint is required at CNEs.
+
+Single Encryption and No Nested Congestion Control:
+: CIDFI does not require any tunneling mechanism or any overhead
+of multi-layer encryption schemes that would impact CNEs processing. CIDFI uses the
+base connection to convey specific signals. Unlike tunneling mechanisms, CIDFI does not
+suffer from nested congestion control.
 
 # Network Configuration to Support CIDFI
 
