@@ -271,7 +271,8 @@ Table of Contents
    mechanism can operate with or without 5G, and can operate with
    different administrative domains such as Wi-Fi, an ISP edge router,
    and a 5G RAN.  Readers may refer to Appendix C of
-   [I-D.ietf-teas-5g-ns-ip-mpls] for an overview of key building blocks.
+   [I-D.ietf-teas-5g-ns-ip-mpls] for an overview of key 5G building
+   blocks.
 
    For the sake of illustration, Figure 2 simplifies the representation
    of the various involved network segments.  It also assumes that
@@ -441,6 +442,18 @@ Table of Contents
 
       CIDFI can operate over IPv4, IPv6, IPv4/IPv4 translation (NAT),
       and IPv6/IPv4 translation (NAT64).
+
+   Fast Path Forwarding Support:  For some differentiated services
+      (e.g., capacity awareness), CIDFI does not require specific
+      processing by on-path network devices.  For others, once a state
+      is programmed (CIDs, for example) no other forwarding constraint
+      is required at CNEs.
+
+   Single Encryption and No Nested Congestion Control:  CIDFI does not
+      require any tunneling mechanism or any overhead of multi-layer
+      encryption schemes that would impact CNEs processing.  CIDFI uses
+      the base connection to convey specific signals.  Unlike tunneling
+      mechanisms, CIDFI does not suffer from nested congestion control.
 
 5.  Network Configuration to Support CIDFI
 
@@ -636,18 +649,19 @@ Table of Contents
 7.1.  Client Learns Server Supports CIDFI
 
    On initial connection to a QUIC server, the client includes a new
-   QUIC transport parameter CIDFI (Section 17.1) which is remembered for
-   0-RTT.
+   QUIC transport parameter "enable_cidfi" (TBD1) (Section 17.1) which
+   is remembered for 0-RTT.
 
-   If the server does not indicate CIDFI support, the client can still
-   perform CIDFI -- but does not expect different CIDs to indicate
-   differentiated behavior.  The client can still signal its CNE(s)
-   about the flow, because the client knows some characteristics of the
-   flow it is receiving.  For example, if the client requested streaming
-   video of a certain bandwidth from the server or participated in a
-   WebRTC offer/answer exchange, the client knows some connectivity
-   expectation about the incoming flow without the server supporting
-   CIDFI.  Processing continues with the next step.
+   If the server does not indicate CIDFI support by means of
+   enable_cidfi transport parameter, the client can still perform CIDFI
+   -- but does not expect different CIDs to indicate differentiated
+   behavior.  The client can still signal to its CNE(s) about the flow,
+   because the client knows some characteristics of the flow it is
+   receiving.  For example, if the client requested streaming video of a
+   certain bandwidth from a server or participated in a WebRTC offer/
+   answer exchange, the client knows some connectivity expectation about
+   the incoming flow without the server supporting CIDFI.  Processing
+   continues with the next step.
 
    If the server indicates CIDFI support, then the server creates a new
    Server-Initiated, Bidirectional QUIC stream which is dedicated to
@@ -704,7 +718,7 @@ Table of Contents
        QUIC                            CIDFI-aware            QUIC
       client                           edge router           server
         |                                    |                  |
-        |  1. QUIC Initial, transport parameter=CIDFI           |
+        |  1. QUIC Initial, transport parameter=enable_cidfi    |
         +------------------------------------------------------>|
         |  2. STUN Indication, nonce=12345, hmac=e8FEc          |
         +------------------------------------------------------>|
@@ -718,7 +732,7 @@ Table of Contents
         |                                    |                  |
         |  6. HTTPS: "Map DCID=xyz as high importance"          |
         +----------------------------------->|                  |
-        |  7. QUIC Initial, transport parameter=CIDFI           |
+        |  7. QUIC Initial, transport parameter=enable_cidfi    |
         |<------------------------------------------------------+
         |  8. HTTPS: Ok                      |                  |
         |<-----------------------------------+                  |
@@ -729,8 +743,8 @@ Table of Contents
       simplicity (steps 1 and 7) but because of QUIC connection
       migration (Section 9 of [QUIC]) the QUIC messages might appear
       later.  Also, "Map DCID=xyz as high importance" refers to a CID
-      chosen by the server not the DCID used by the server to
-      communicate with the client.
+      chosen by the client not the DCID used by the client to
+      communicate with the server.
 
    The short header's Destination Connection ID (DCID) can be 0 bytes or
    as short as 8 bits, so multiple QUIC clients are likely to use the
@@ -852,7 +866,7 @@ Table of Contents
         |                                    |                  |
         :                                    :                  :
         |                                    |                  |
-        |  QUIC Initial, transport parameter=CIDFI              |
+        |  QUIC Initial, transport parameter=enable_cidfi       |
         +------------------------------------------------------>|
         |  STUN Indication, nonce=12345, HMAC=8f93e             |
         +--------------------> X (lost)      |                  |
@@ -1217,9 +1231,9 @@ Table of Contents
    attaching to a different network), a new Destination CID SHOULD be
    used for the reasons discussed in Section 9.5 of [QUIC]).
 
-   We need clear way to signal which DCIDs can be used for 'this'
-   network attach and which DCIDs are for a migrated connection.
-   Probably belongs in the QUIC transport parameter signaling?
+      We need clear way to signal which DCIDs can be used for 'this'
+      network attach and which DCIDs are for a migrated connection.
+      Probably belongs in the QUIC transport parameter signaling?
 
 14.  State Maintenance
 
@@ -1323,7 +1337,7 @@ Table of Contents
                 +=======+================+===============+
                 | Value | Parameter Name | Reference     |
                 +=======+================+===============+
-                | TBD1  | CIDFI          | This-Document |
+                | TBD1  | enable_cidfi   | This-Document |
                 +-------+----------------+---------------+
 
                   Table 1: New QUIC Transport Parameter
