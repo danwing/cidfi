@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 13 June 2024                                              Nokia
+Expires: 15 June 2024                                              Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                        11 December 2023
+                                                        13 December 2023
 
 
                 Framework for CID Flow Indicator (CIDFI)
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 June 2024.
+   This Internet-Draft will expire on 15 June 2024.
 
 Copyright Notice
 
@@ -270,7 +270,8 @@ Table of Contents
    Access Network (RAN).  This diagram shows the same protocol and same
    mechanism can operate with or without 5G, and can operate with
    different administrative domains such as Wi-Fi, an ISP edge router,
-   and a 5G RAN.
+   and a 5G RAN.  Readers may refer to Appendix C of
+   [I-D.ietf-teas-5g-ns-ip-mpls] for an overview of key building blocks.
 
    For the sake of illustration, Figure 2 simplifies the representation
    of the various involved network segments.  It also assumes that
@@ -1519,6 +1520,15 @@ Table of Contents
               Draft, draft-ietf-quic-load-balancers-17, 15 August 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
               load-balancers-17>.
+
+   [I-D.ietf-teas-5g-ns-ip-mpls]
+              Szarkowicz, K. G., Roberts, R., Lucek, J., Boucadair, M.,
+              and L. M. Contreras, "A Realization of RFC XXXX Network
+              Slices for 5G Networks Using Current IP/MPLS
+              Technologies", Work in Progress, Internet-Draft, draft-
+              ietf-teas-5g-ns-ip-mpls-02, 30 November 2023,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-teas-5g-
+              ns-ip-mpls-02>.
 
    [I-D.joras-sadcdn]
               Joras, M., "Securing Ancillary Data for Communicating with
