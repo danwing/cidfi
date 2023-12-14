@@ -1030,7 +1030,7 @@ path ownership.
 # Flushing Mapping State
 
 When the server supports CIDFI the metadata mapping creates additional
-state is created in the client, CIDFI Network Elements, and the
+state in the client, CIDFI Network Elements, and the
 server.
 
 Between the QUIC client and server when a mapping is no longer
