@@ -125,11 +125,11 @@ the user experience to adapt to network's constraints and share expected applica
 differentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both.
 
 This document describes how clients can communicate with their nearby
-network elements so their QUIC streams can be augmented with
-information about network conditions and packet importance to meet both
-intentional and reactive management policies.  With
-optional server support individual packets can receive differentiated
-service. The proposed approach covers both directions of a flow.
+network elements so they can learn network constraints.  Optionally,
+with QUIC server support their incoming QUIC packets can be mapped to
+metadata about their contents so packet importance can influence both
+intentional and reactive management policies.  The framework handles
+both directions of a flow.
 
 --- middle
 
@@ -211,6 +211,13 @@ Metadata exchanges can occur in one single direction or both directions of a flo
 
 The document is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol (see {{extending}}). To illustrate the framework's applicability this document focuses on QUIC transport.
 
+The design supports multiple CIDFI and QUIC implementations on one
+host (i.e., by several applications), cellular devices providing IP
+connectivity to other devices (see {{Section 3 of ?RFC7649}}), multiple
+CIDFI-aware network elements (e.g., Wi-Fi and an ISP network), hosts
+behind one or more IPv4 NATs or other IP translation technologies, and
+DOCSIS and 5G networks.
+
 # Overview
 
 This document defines CIDFI (pronounced "sid fye") which is a system
@@ -273,8 +280,13 @@ receive CIDFI metadata for that client.
 | aware   |         | |aware |  +------+  |   |      |
 | client  +-----B-----+RAN   +--+router+------+      |
 |(handset)|         | |router|  +------+  |          |
-+---------+         | +------+            |          |
-                    |                     |          |
++----+----+         | +------+            |          |
+     |              |                     |          |
++----+----+         |                     |          |
+| CIDFI-  |         |                     |          |
+| aware   |         |                     |          |
+|  app    |         |                     |          |
++---------+         |                     |          |
                     |                     | Transit  |  Server
    User Network     |    ISP Network      | Network  |  Network
 ~~~~~
@@ -646,11 +658,17 @@ CIDFI transport response during the QUIC handshake.
 > TODO: Specify how CIDFI stream number is communicated to client.
 
 The QUIC client and server exchange CIDFI information over
-this CIDFI-dedicated stream as described in {{initial-metadata-exchange}}.
+this CIDFI-dedicated stream using the new CIDFI_NEW_CONNECTION_ID_MAPPING
+frame as described in {{initial-metadata-exchange}}.
 
 Processing continues with the next step.
 
 ## Client Proves Ownership of its UDP 4-Tuple {#ownership}
+
+> Optimizations to this mechanism are being considered while
+  maintaining support for multiple CIDFI and QUIC implementations on
+  one host (i.e., by several applications) and support for cellular devices
+  providing IP connectivity to other devices (see {{Section 3 of ?RFC7849}}).
 
 To ensure that the client messages to a CNE
 pertain only to the client's own UDP 4-tuple, the client sends the
@@ -670,7 +688,9 @@ For example, the host sets the TTL to "min-ttl" that is returned during CNE disc
 
 {{flow-diag-attach}} shows a summarized message flow obtaining
 the nonce and HMAC secret from the CNE (steps 1-2) which is performed
-on network attach.
+on network attach.  The CNE also sends active_cidfi_connection_id_limit
+in step 2.
+
 
 ~~~~~ aasvg
  QUIC                            CIDFI-aware            QUIC
@@ -679,6 +699,7 @@ client                           edge router           server
   |  1. HTTPS: Enroll CIDFI router to participate         |
   +----------------------------------->|                  |
   |  2. HTTPS: Ok.  nonce=12345        |                  |
+  |     active_cidfi_connection_id_limit                  |
   |<-----------------------------------+                  |
   |                                    |                  |
 ~~~~~
@@ -688,9 +709,18 @@ client                           edge router           server
 Later, when connecting to a new QUIC server, the client
 determines if there are on-path CIDFI Network Elements by sending the
 nonce and HMAC in the same UDP 4-tuple as the QUIC connect
-(step 2).  If a CIDFI Network Element is present it processes the STUN
+(step 2).  This is necessary to deal with both IP address spoofing
+and with multiple QUIC+CIDFI implementations running on the same
+host; each QUIC+CIDFI implementation pair should only be able to
+modify treatment of its own flows, not of other flows to other
+UDP flows running on that same host.
+
+If a CIDFI Network Element is present on the path it processes the STUN
 Indication and sends a response to the client over HTTP using the
-HTTP channel established above.
+HTTP channel established above.  It decrements the IPv4 TTL or IPv6
+Hop Limit and forwards the STUN Indication along its normal path,
+to accomodate another CIDFI Network Element farther away from the
+client.
 
 
 ~~~~~ aasvg
@@ -722,20 +752,19 @@ client                           edge router           server
 flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
 but because of QUIC connection migration ({{Section 9 of QUIC}}) the
 QUIC messages might appear later.
+
 > Also, "Map DCID=xyz as high importance" refers to a CID chosen by
-> the client not the DCID used by the client to communicate with
-> the server.
+> the client (for traffic destined towards the client) and not
+> the DCID used by the client to communicate with the server.
 
 
 The short header's Destination Connection ID (DCID) can be 0 bytes or
-as short as 8 bits, so multiple QUIC clients are likely to use the
-same incoming Destination CID on their own UDP 4-tuple. The STUN
+as short as 8 bits, so multiple QUIC clients on the same host or
+on different hosts behind a NAT are likely to use the
+same incoming Destination CID on their own UDP 4-tuple (Birthday Paradox). The STUN
 Indication message allows the CIDFI network element to distinguish
-each QUIC client's UDP 4-tuple.
-
-Because multiple QUIC clients may use the same incoming Destination CID on
-their own UDP 4-tuple, the STUN Indication message allows a CNE
-to distinguish each QUIC client's UDP 4-tuple.
+each QUIC client's UDP 4-tuple -- both between hosts and between QUIC+CIDFI
+implementations on the same host (implemented within an application).
 
 To reduce CIDFI setup time the client STUN Indication MAY be sent at
 the same time as it establishes connection with the QUIC server.
@@ -796,29 +825,28 @@ message.
 
 ## Initial Metadata Exchange {#initial-metadata-exchange}
 
-Using its HTTPS channel with each of the CNEs it
-previously authorized for CIDFI participation, the client signals the
-mapping of the server's transmitted short Destination Connection ID
-and its length to the CNE.  As server support
+If the server indicated support for CIDFI during the QUIC handshake,
+the client uses its HTTPS channel with each of the CNEs it
+previously authorized for CIDFI participation to map client-chosen
+Destination CIDs to metadata for that CID.  As server support
 of the QUIC CIDFI transport parameter is remembered for 0-RTT, the
 client can immediately send the nonce.
 
-The primary purpose of a second Connection ID is connection migration
-({{Section 9 of QUIC}}).  With CIDFI, additional Connection IDs are
-necessary to:
+Over the QUIC connection with the server, the client sends QUIC
+CIDFI_NEW_CONNECTION_ID_MAPPING frames which map the destination CID
+to its metadata (e.g., high priority), not to exceed active_cidfi_connection_id_limit.
 
-  * maintain CIDFI operation when topology remains the same.
-  * use Destination Connection ID to indicate packet importance
+As with NEW_CONNECTION_ID, the client
+should allocate additional connection IDs retain client privacy during
+connection migration ({{Section 9.5 of QUIC}}) and those additional
+CIDs should also be communicated via CIDFI_NEW_CONNECTION_ID.  In
+anticipation of connection migration those additional connection IDs
+are not communicated to the existing network's CNEs, but only to the
+new network's CNEs.
 
-To maintain CIDFI operation when topology remains the same, the
-CIDFI client signals the CNEs of that 'next'
-Destination CID.  When QUIC detects a topology change, however, that
-Destination CID MUST NOT be used by the peer, otherwise it links
-the communication on the old topology to the new topology ({{Section 9.5 of QUIC}}).
-Thus, an additional Connection ID is purposefully not communicated
-from the CIDFI client to its CNEs, so that
-Connection ID can be immediately used by the peer during connection
-migration when the topology changes.
+Connection IDs which are communicated using NEW_CONNECTION_ID do
+not receive per-packet CIDFI treatment.  But their contribution
+to bandwidth consumption is considered by the CNE.
 
 Note that the source IP address and source UDP port number are not signaled
 by design.  This is because NATs ({{?NAPT=RFC3022}},
@@ -855,7 +883,7 @@ client                           edge router           server
   +----------------------------------->|                  |
   |  HTTPS: 403, new Nonce=5678        |                  |
   |<-----------------------------------|                  |
-  |  STUN Indicate, nonce=5678, HMAC=aaf3c                |
+  |  STUN Indication, nonce=5678, HMAC=8f93e              |
   +------------------------------------------------------>|
   |                                    |              discarded
   |                                    |                  |
@@ -986,7 +1014,7 @@ CIDFI because TCP lacks QUIC's stream identification.
 
 When the topology changes the client will transmit from a new IP
 address -- such as switching to a backup WAN connection, or such as
-switching from Wi-Fi to 5G.  If using QUIC, the server will consider
+switching from Wi-Fi to 5G.  The server will consider
 this as a connection migration ({{Section 9 of QUIC}}) and will issue a
 PATH_CHALLENGE.  If the client is aware of the topology change (such
 as attaching to a different network), the client would also change its
@@ -995,7 +1023,31 @@ QUIC Destination CID ({{Section 9 of QUIC}}).
 When the CIDFI-aware client determines that it is connected to a new
 network or has received a QUIC PATH_CHALLENGE, the CIDFI-aware client
 MUST re-discover its CNEs ({{discovery}}) and continue with normal CIDFI
-processing with any discovered CNEs.
+processing with any discovered CNEs.  This usually means repeating
+the initial metadata exchange ({{initial-metadata-exchange}}) to prove
+path ownership.
+
+# Flushing Mapping State
+
+When the server supports CIDFI the metadata mapping creates additional
+state is created in the client, CIDFI Network Elements, and the
+server.
+
+Between the QUIC client and server when a mapping is no longer
+needed it can be cleaned up with RETIRE_CONNECTION_ID.  If that
+connection ID was mapped in one or more CNEs, the client SHOULD
+also remove that mapping state from the CNEs.  This allows the
+mapping state to be used for other CIDFI implemenations on the
+same host or by other hosts (belonging to the same subscriber)
+or by other subscribers.
+
+As a client can disappear from a network without informing its CNE and
+are unlikely to voluntarily clean up CNE state even if they remain
+connected to the network, the CNE should retire its CIDFI state after
+3 minutes of bi-directional inactivity on that UDP 4-tuple or a more
+convenient time such as when it normally flushes its UDP NAT binding
+for bi-directional inactivity.
+
 
 # Details of Metadata Exchanged {#metadata-exchanged}
 
@@ -1293,6 +1345,10 @@ in the "QUIC Transport Parameters" registry under the "QUIC" registry group avai
 |Value| Parameter Name| Reference|
 |TBD1| enable_cidfi| This-Document|
 {: title="New QUIC Transport Parameter"}
+
+## New QUIC CIDFI_NEW_CONNECTION_ID_MAPPING Frame
+
+This document requests IANA to register a new CIDFI_NEW_CONNECTION_ID_MAPPING frame.  Details TBD.
 
 
 ## New Well-known URI "cidfi-aware" {#iana-uri}
