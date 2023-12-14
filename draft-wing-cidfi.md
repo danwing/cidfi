@@ -659,7 +659,7 @@ CIDFI transport response during the QUIC handshake.
 
 The QUIC client and server exchange CIDFI information over
 this CIDFI-dedicated stream using the new CIDFI_NEW_CONNECTION_ID_MAPPING
-frame as described in {{initial-metadata-exchange}}.
+frame type as described in {{initial-metadata-exchange}}.
 
 Processing continues with the next step.
 
