@@ -127,7 +127,7 @@ Table of Contents
    17. Security Considerations
    18. IANA Considerations
      18.1.  New QUIC Transport Parameter
-     18.2.  New QUIC CIDFI_NEW_CONNECTION_ID_MAPPING Frame
+     18.2.  New QUIC Frame Type
      18.3.  New Well-known URI "cidfi-aware"
      18.4.  New Special-use Domain Name
      18.5.  New DNS Service Binding (SVCB)
@@ -232,7 +232,8 @@ Table of Contents
    connectivity to other devices (see Section 3 of [RFC7649]), multiple
    CIDFI-aware network elements (e.g., Wi-Fi and an ISP network), hosts
    behind one or more IPv4 NATs or other IP translation technologies,
-   and DOCSIS and 5G networks.
+   and DOCSIS and 5G networks.  A comprehensive list of such translation
+   technologies is provided in Section 2.2 of [RFC8512].
 
 2.  Overview
 
@@ -686,7 +687,7 @@ Table of Contents
 
    The QUIC client and server exchange CIDFI information over this
    CIDFI-dedicated stream using the new CIDFI_NEW_CONNECTION_ID_MAPPING
-   frame as described in Section 7.3.
+   frame type as described in Section 7.3.
 
    Processing continues with the next step.
 
@@ -1056,8 +1057,8 @@ Table of Contents
 11.  Flushing Mapping State
 
    When the server supports CIDFI the metadata mapping creates
-   additional state is created in the client, CIDFI Network Elements,
-   and the server.
+   additional state in the client, CIDFI Network Elements, and the
+   server.
 
    Between the QUIC client and server when a mapping is no longer needed
    it can be cleaned up with RETIRE_CONNECTION_ID.  If that connection
@@ -1396,10 +1397,19 @@ Table of Contents
 
                   Table 1: New QUIC Transport Parameter
 
-18.2.  New QUIC CIDFI_NEW_CONNECTION_ID_MAPPING Frame
+18.2.  New QUIC Frame Type
 
-   This document requests IANA to register a new
-   CIDFI_NEW_CONNECTION_ID_MAPPING frame.  Details TBD.
+   This document requests IANA to register a new value in in the "QUIC
+   Frame Types" registry under the "QUIC" registry group available at
+   [IANA-QUIC]:
+
+   Value:  TBDF2
+
+   Frame Name:  CIDFI_NEW_CONNECTION_ID_MAPPING
+
+   Status:  permanent
+
+   Specification:  This-Document
 
 18.3.  New Well-known URI "cidfi-aware"
 
@@ -1687,6 +1697,12 @@ Table of Contents
    [RFC8392]  Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
               "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392,
               May 2018, <https://www.rfc-editor.org/rfc/rfc8392>.
+
+   [RFC8512]  Boucadair, M., Ed., Sivakumar, S., Jacquenet, C.,
+              Vinapamula, S., and Q. Wu, "A YANG Module for Network
+              Address Translation (NAT) and Network Prefix Translation
+              (NPT)", RFC 8512, DOI 10.17487/RFC8512, January 2019,
+              <https://www.rfc-editor.org/rfc/rfc8512>.
 
    [RFC8517]  Dolson, D., Ed., Snellman, J., Boucadair, M., Ed., and C.
               Jacquenet, "An Inventory of Transport-Centric Functions
