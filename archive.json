@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-12T01:15:48.748765+00:00",
+  "timestamp": "2023-12-14T01:14:31.164979+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -3927,7 +3927,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-12-11T06:56:02Z",
-      "updatedAt": "2023-12-11T17:34:58Z",
+      "updatedAt": "2023-12-14T00:36:42Z",
       "baseRepository": "danwing/cidfi",
       "baseRefName": "main",
       "baseRefOid": "ae373888bf3dd9702f852bf78d5aafd2e902d1d5",
@@ -3940,7 +3940,43 @@
       "mergeCommit": {
         "oid": "4115bf513035aee66eac4685629458914e0a3306"
       },
-      "comments": [],
+      "comments": [
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "QUIC's design requires the receiver choose the (Destination) CIDs for traffic sent to the receiver, and communicate those to its peer.  The Destination CIDs are all that the network sees; the source CIDs are not even in the short-header packets (neither encrypted nor un-encrypted).  And we only care about short header packets for CIDFI!  The packets containing source CID are only at the very beginning of a connection, and only last one round-trip.  \r\n\r\nWe *do* need to figure out how all this works.  It is not written down and we have not discussed.  It seems reasonable that the client talk to the CIDFI Network Elements and gets told their capabilities -- how many DCIDs will they map for each UDP 4-tuple (0?  1?  10?  1000?), and what sort of treatment can they give those packets.  With that, the client and server can figure out how to map, but we need to decide if it's best for the client to dictate to the server the mapping, or for the client to throw those 10 DCIDs at the server and the server chooses how to map the CNE capabilities to the 10 DCIDs.  \r\n\r\nIn any event, there is no 'source CID' that is interesting.   Perhaps we could say \"if this is a non-short QUIC packet\" it is interesting and something for CIDFI.  But sending the Source CID(s) to the CNE(s) prior to initiating a QUIC connection could be done, should we need Source CID to get handled specially.  I just don't see Long Header QUIC packets being interesting to the larger goals of CIDFI, which is to handle a stream after it has been set up with those Long Headers.\r\n\r\n\r\n\r\nI'm thinking something like:\r\n\r\n  client talks to CIDFI Network Elements, learns their capabilities (2 or 3 or 5 slots of priority?  can/cannot shorten bufferbloat depth?  5 DCIDs per UDP 4-tuple, whatever else is useful, etc.), and consolidates the capabilities of all its CNE's into some union set, and tells the CNE the mapping of their capabilities to soon-to-be-incoming DCIDs, sends the mapping to the server and sends QUIC NEW_CONNECTION_ID frames to the server, like: \"your high priority packets will use DCID=1234, low priority DCID=9999)\".\r\n\r\n\r\n",
+          "createdAt": "2023-12-12T06:39:22Z",
+          "updatedAt": "2023-12-12T06:39:22Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> The Destination CIDs are all that the network sees; the source CIDs are not even in the short-header packets\r\n\r\nThen we need to figure out how the differentiated behavior will be triggered for short packets from the server as DCID of packets sent by a server belong to the CID space of the client, not the server!!",
+          "createdAt": "2023-12-12T07:06:50Z",
+          "updatedAt": "2023-12-12T07:07:27Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "> Then we need to figure out how the differentiated behavior will be triggered for short packets from the server as DCID of packets sent by a server belong to the CID space of the client, not the server!!\r\n\r\nI do not see a problem.\r\n\r\nAfter the initial handshake, today, QUIC client and QUIC server use short headers, which only contain a DCID.\r\n\r\n\r\nBehavior for CIDFI is:\r\n\r\nClient picks three DCIDs to use with CIDFI, numbered 123, 345, 567.  Those will soon be used as Destination CIDs when the server sends packets towards the client.  The client signals the server with those values (123, 345, 567) in both of these two ways:\r\n-  NEW_CONNECTION_ID to the server, to keep its QUIC stack and the remote peer's QUIC stack happy, and\r\n- in a new CIDFI mapping message to the server, asking it to use 123 for low-priority traffic, 345 for middle priority, and 567 for high-priority.\r\n\r\nAfter that signaling occurs, the application on the server continues telling its QUIC stack, via a new API (or extending existing API) the importance of each payload it hands to QUIC.  The server's QUIC stack, now in possession of more DCIDs (the new 123, 345, 567) and knowing how the client's CIDFI Network Elements needs those CIDs mapped to their relative priority, transmits the payloads on the corresponding DCID.\r\n\r\nWe might optimize by removing the NEW_CONNECTION_ID from the above signaling, replacing it with a new QUIC message called CIDFI_NEW_CONNECTION_ID_AND_MAPPING.  Would that make things clearer?  Maybe it would.",
+          "createdAt": "2023-12-12T17:12:14Z",
+          "updatedAt": "2023-12-12T17:12:14Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> I do not see a problem.\r\n\r\nAgree as well, but we need to call out the bebavior: \r\n* indicate which CID space is covered by a differentiated policy\r\n* indicate support for bidir differentiated or not\r\n* clarify the required signaling between peers to share the same binding of CID/policy\r\n* we may define a cidfi_role=rcv-only, snd-only, snd-rcv. The default should be snd-only to cover binding a policy to packets issued by the server.\r\n\r\n> Client picks three DCIDs to use with CIDFI\r\n\r\nIt can pick up to a max that is communicated during handshake jointly with cidifi transport parameter. Let's call it: active_cidfi_connection_id_limit.\r\n\r\n> the application on the server continues telling its QUIC stack\r\n\r\nAgree. We can say also that it is up to the app to decide which streams to include in a packet and the control of the priority level tagging. For example, when a high-priority stream is enclosed, the the high prio CID should be used whatever other streams are flying in the same packet.\r\n\r\n\r\n> called CIDFI_NEW_CONNECTION_ID_AND_MAPPING. Would that make things clearer? Maybe it would.\r\n\r\nThis is better, but I still think we need a better separation of CIDFI functionality and make use of a new STREAM frame.",
+          "createdAt": "2023-12-13T08:17:05Z",
+          "updatedAt": "2023-12-13T08:17:05Z"
+        },
+        {
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "body": "> Agree as well, but we need to call out the bebavior:\r\n>\r\n> indicate which CID space is covered by a differentiated policy\r\n\r\nIn #77, I added a new QUIC CIDFI_NEW_CONNECTION_ID_MAPPING frame for the mapped CIDs.  Other CIDs which didn't get signaled with that frame don't get CIDFI treatment.\r\n\r\nThat edit feels pretty clean.\r\n\r\n> indicate support for bidir differentiated or not\r\n\r\nI want to punt that until later for bi-directional.  It gets complicated, as existing text all over talks of 'client' and 'server' and would need to change to 'peer' (or some-such).  \r\n\r\n> clarify the required signaling between peers to share the same binding of CID/policy\r\n\r\nI made minor forward progress towards that in #77 -- if I understood that comment correctly, that is.  The active_cidfi_connection_id_limit helps in that regard for network-to-host signaling, and similarly the CIDFI_NEW_CONNECTION_ID_MAPPING helps explain host-to-host signaling.\r\n\r\n> we may define a cidfi_role=rcv-only, snd-only, snd-rcv. The default should be snd-only to cover binding a policy to packets issued by the server.\r\n\r\nI would prefer deferring bi-directional until we can tackle it fully.  I think bi-directional will require a phone call for us to discuss it well.\r\n\r\n>> Client picks three DCIDs to use with CIDFI\r\n\r\n> It can pick up to a max that is communicated during handshake jointly with cidifi transport parameter. Let's call it: active_cidfi_connection_id_limit.\r\n\r\nAdded in #77.\r\n\r\n>> the application on the server continues telling its QUIC stack\r\n\r\n> Agree. We can say also that it is up to the app to decide which streams to include in a packet and the control of the priority level tagging. For example, when a high-priority stream is enclosed, the the high prio CID should be used whatever other streams are flying in the same packet.\r\n\r\nNyeah, maybe that's the right thing.  Maybe the right thing is send the high-priority stream by itself in its own packet (that is, do not coalesce).  Maybe heuristics like the size of the stream that wants to be sent has some bearing.  For example imagine one high-priority stream containing VoIP (10 bytes payload) and one low-priority stream containing 1000s of bytes (a PDF that is being printed for example).  On the wire, it's most efficient to send them together for sure.  But that means the PDF earns the same treatment as the VoIP high-priority stream; that doesn't seem fair to the screen-sharing also happening which might be medium priority.  My file transfer now clobbered my medium-priority stream.\r\n\r\nTo take a page from 3GPP, let's consider this decision For Future Study (3GPP seems to enjoy using that term).\r\n\r\n>> called CIDFI_NEW_CONNECTION_ID_AND_MAPPING. Would that make things clearer? Maybe it would.\r\n\r\n> This is better, but I still think we need a better separation of CIDFI functionality and make use of a new STREAM frame.\r\n\r\nAdded in #77.\r\n",
+          "createdAt": "2023-12-14T00:14:54Z",
+          "updatedAt": "2023-12-14T00:36:42Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKCXv885p0qJg",
@@ -3981,8 +4017,242 @@
               "updatedAt": "2023-12-11T15:26:47Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885p5Yko",
+          "commit": {
+            "abbreviatedOid": "54d0ab5"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-12T05:26:39Z",
+          "updatedAt": "2023-12-12T05:26:39Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "No, SCID will be used for the packets sent from the server and DCID will be used for the packets sent from the client and the CID is generated by the server. ",
+              "createdAt": "2023-12-12T05:26:39Z",
+              "updatedAt": "2023-12-12T05:26:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKCXv885p53Wc",
+          "commit": {
+            "abbreviatedOid": "54d0ab5"
+          },
+          "author": "boucadair",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-12T07:02:18Z",
+          "updatedAt": "2023-12-12T07:02:18Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "> No\r\n\r\nHow is this relevant to what I said? :-) \r\n\r\nWhat I'm saying is that \"DCID\" are per direction. Once that clarified, we can add another clarification whether the specified differentiated behavior will apply or not for both directions of a flow or only if explicitly requested by the client. If the policy is bidir, what you indicated will be followed by a CNE.\r\n\r\nTill now, we don't have all these details. I know this is digging a little bit into much details, but I'm afraid that we need to have things clear.",
+              "createdAt": "2023-12-12T07:02:18Z",
+              "updatedAt": "2023-12-12T07:02:18Z"
+            }
+          ]
         }
       ]
+    },
+    {
+      "number": 73,
+      "id": "PR_kwDOKCXv885h5jJ2",
+      "title": "fast-path-single encryption scheme",
+      "url": "https://github.com/danwing/cidfi/pull/73",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-13T13:46:24Z",
+      "updatedAt": "2023-12-13T17:22:44Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "4115bf513035aee66eac4685629458914e0a3306",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "other-goals",
+      "headRefOid": "7f4e745f67d2c687fdc29544cea19112077c1afd",
+      "closedAt": "2023-12-13T17:22:44Z",
+      "mergedAt": "2023-12-13T17:22:44Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "b4e780ee3f0e58f13d764ab501208ced381e9750"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885qGtNS",
+          "commit": {
+            "abbreviatedOid": "7f4e745"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-13T17:22:38Z",
+          "updatedAt": "2023-12-13T17:22:38Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 74,
+      "id": "PR_kwDOKCXv885h5vM4",
+      "title": "rename the transport parameter",
+      "url": "https://github.com/danwing/cidfi/pull/74",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-13T14:14:27Z",
+      "updatedAt": "2023-12-13T17:21:34Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "4115bf513035aee66eac4685629458914e0a3306",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "enable_cidfi",
+      "headRefOid": "e90db8d7629d8f601b60da0683cbc92493d8cc44",
+      "closedAt": "2023-12-13T17:21:33Z",
+      "mergedAt": "2023-12-13T17:21:33Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "118f89f305fe0becfafd9d4b59c9b2b9577fa44a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885qGsoc",
+          "commit": {
+            "abbreviatedOid": "e90db8d"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-13T17:21:25Z",
+          "updatedAt": "2023-12-13T17:21:25Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 75,
+      "id": "PR_kwDOKCXv885h6ufl",
+      "title": "A note for a brief of 5G",
+      "url": "https://github.com/danwing/cidfi/pull/75",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-13T16:40:16Z",
+      "updatedAt": "2023-12-13T17:21:49Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "4115bf513035aee66eac4685629458914e0a3306",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-1",
+      "headRefOid": "ca97bedf43d71fef5da85a997da7c5a8e3a1a2b7",
+      "closedAt": "2023-12-13T17:21:48Z",
+      "mergedAt": "2023-12-13T17:21:48Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "ce62ab21722ff464247ca319894cae3d93e74f66"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885qGsVq",
+          "commit": {
+            "abbreviatedOid": "ca97bed"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-13T17:20:44Z",
+          "updatedAt": "2023-12-13T17:20:44Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 76,
+      "id": "PR_kwDOKCXv885h7H5Z",
+      "title": "fix a note to reflect the CID discussion",
+      "url": "https://github.com/danwing/cidfi/pull/76",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-13T17:55:52Z",
+      "updatedAt": "2023-12-13T18:21:45Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "b4e780ee3f0e58f13d764ab501208ced381e9750",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "boucadair-patch-1",
+      "headRefOid": "702a633f3e8de9b2b0f5ef2c12f9ee96d8180720",
+      "closedAt": "2023-12-13T18:21:45Z",
+      "mergedAt": "2023-12-13T18:21:44Z",
+      "mergedBy": "danwing",
+      "mergeCommit": {
+        "oid": "e770f2681a3aedde8e9c998bb107cda0cd0c2485"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKCXv885qHE0f",
+          "commit": {
+            "abbreviatedOid": "702a633"
+          },
+          "author": "danwing",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-13T18:21:38Z",
+          "updatedAt": "2023-12-13T18:21:38Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 77,
+      "id": "PR_kwDOKCXv885h8pMK",
+      "title": "more QUIC-specific changes",
+      "url": "https://github.com/danwing/cidfi/pull/77",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-14T00:09:43Z",
+      "updatedAt": "2023-12-14T00:09:44Z",
+      "baseRepository": "danwing/cidfi",
+      "baseRefName": "main",
+      "baseRefOid": "e770f2681a3aedde8e9c998bb107cda0cd0c2485",
+      "headRepository": "danwing/cidfi",
+      "headRefName": "more_quic_specifics",
+      "headRefOid": "bc2f9b313809c4174bbae85e5be574292829205a",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
