@@ -13,11 +13,11 @@
 the user experience to adapt to network's constraints and share expected application needs, and thus to provide
 differentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both. 
        This document describes how clients can communicate with their nearby
-network elements so their QUIC streams can be augmented with
-information about network conditions and packet importance to meet both
-intentional and reactive management policies.  With
-optional server support individual packets can receive differentiated
-service. The proposed approach covers both directions of a flow. 
+network elements so they can learn network constraints.  Optionally,
+with QUIC server support their incoming QUIC packets can be mapped to
+metadata about their contents so packet importance can influence both
+intentional and reactive management policies.  The framework handles
+both directions of a flow. 
     " name="description">
 <meta content="xml2rfc 3.18.2" name="generator">
 <meta content="user experience" name="keyword">
@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 15 June 2024</td>
+<td class="center">Expires 16 June 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-wing-cidfi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-12-13" class="published">13 December 2023</time>
+<time datetime="2023-12-14" class="published">14 December 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-06-15">15 June 2024</time></dd>
+<dd class="expires"><time datetime="2024-06-16">16 June 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1095,11 +1095,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 the user experience to adapt to network's constraints and share expected application needs, and thus to provide
 differentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">This document describes how clients can communicate with their nearby
-network elements so their QUIC streams can be augmented with
-information about network conditions and packet importance to meet both
-intentional and reactive management policies.  With
-optional server support individual packets can receive differentiated
-service. The proposed approach covers both directions of a flow.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+network elements so they can learn network constraints.  Optionally,
+with QUIC server support their incoming QUIC packets can be mapped to
+metadata about their contents so packet importance can influence both
+intentional and reactive management policies.  The framework handles
+both directions of a flow.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1136,7 +1136,7 @@ service. The proposed approach covers both directions of a flow.<a href="#sectio
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 16 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1263,123 +1263,129 @@ service. The proposed approach covers both directions of a flow.<a href="#sectio
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-topology-change" class="internal xref">Topology Change</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-details-of-metadata-exchang" class="internal xref">Details of Metadata Exchanged</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-server-to-cidfi-aware-netwo" class="internal xref">Server to CIDFI-aware Network Element</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.1">
-                    <p id="section-toc.1-1.11.2.1.2.1.1"><a href="#section-11.1.1" class="auto internal xref">11.1.1</a>.  <a href="#name-mapping-metadata-parameters" class="internal xref">Mapping Metadata Parameters to DCIDs</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-flushing-mapping-state" class="internal xref">Flushing Mapping State</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.2">
-                    <p id="section-toc.1-1.11.2.1.2.2.1"><a href="#section-11.1.2" class="auto internal xref">11.1.2</a>.  <a href="#name-mapping-diffserv-code-point" class="internal xref">Mapping DiffServ Code Point (DSCP) to DCIDs</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-details-of-metadata-exchang" class="internal xref">Details of Metadata Exchanged</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-server-to-cidfi-aware-netwo" class="internal xref">Server to CIDFI-aware Network Element</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1.2.1">
+                    <p id="section-toc.1-1.12.2.1.2.1.1"><a href="#section-12.1.1" class="auto internal xref">12.1.1</a>.  <a href="#name-mapping-metadata-parameters" class="internal xref">Mapping Metadata Parameters to DCIDs</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1.2.2">
+                    <p id="section-toc.1-1.12.2.1.2.2.1"><a href="#section-12.1.2" class="auto internal xref">12.1.2</a>.  <a href="#name-mapping-diffserv-code-point" class="internal xref">Mapping DiffServ Code Point (DSCP) to DCIDs</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-cidfi-aware-network-element" class="internal xref">CIDFI-aware Network Element to Server</a></p>
-</li>
-            </ul>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
-                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-privacy-aware-metadata-shar" class="internal xref">Privacy-Aware Metadata Sharing in Network Relationships</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-cidfi-aware-network-element" class="internal xref">CIDFI-aware Network Element to Server</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-discussion-points" class="internal xref">Discussion Points</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
-                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-client-versus-server-signal" class="internal xref">Client versus Server Signaling CID-to-importance Mapping</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
-                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-overhead-of-quic-dcid-packe" class="internal xref">Overhead of QUIC DCID Packet Examination</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.3">
-                <p id="section-toc.1-1.13.2.3.1"><a href="#section-13.3" class="auto internal xref">13.3</a>.  <a href="#name-interaction-with-wi-fi-pack" class="internal xref">Interaction with Wi-Fi Packet Aggregation</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.4">
-                <p id="section-toc.1-1.13.2.4.1"><a href="#section-13.4" class="auto internal xref">13.4</a>.  <a href="#name-overhead-of-mapping-cids-to" class="internal xref">Overhead of Mapping CIDs to Packet Metadata</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.5">
-                <p id="section-toc.1-1.13.2.5.1"><a href="#section-13.5" class="auto internal xref">13.5</a>.  <a href="#name-improve-cidfi-initializatio" class="internal xref">Improve CIDFI Initialization Time</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.6">
-                <p id="section-toc.1-1.13.2.6.1"><a href="#section-13.6" class="auto internal xref">13.6</a>.  <a href="#name-primary-quic-channel-cid-ch" class="internal xref">Primary QUIC Channel CID Change</a></p>
+                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-privacy-aware-metadata-shar" class="internal xref">Privacy-Aware Metadata Sharing in Network Relationships</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-state-maintenance" class="internal xref">State Maintenance</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#section-15" class="auto internal xref">15</a>. <a href="#name-api-integration-for-quic-st" class="internal xref">API Integration for QUIC Stream and Packet-Level Prioritization</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
-            <p id="section-toc.1-1.16.1"><a href="#section-16" class="auto internal xref">16</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#section-17" class="auto internal xref">17</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-discussion-points" class="internal xref">Discussion Points</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.1">
-                <p id="section-toc.1-1.17.2.1.1"><a href="#section-17.1" class="auto internal xref">17.1</a>.  <a href="#name-new-quic-transport-paramete" class="internal xref">New QUIC Transport Parameter</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
+                <p id="section-toc.1-1.14.2.1.1"><a href="#section-14.1" class="auto internal xref">14.1</a>.  <a href="#name-client-versus-server-signal" class="internal xref">Client versus Server Signaling CID-to-importance Mapping</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.2">
-                <p id="section-toc.1-1.17.2.2.1"><a href="#section-17.2" class="auto internal xref">17.2</a>.  <a href="#name-new-well-known-uri-cidfi-aw" class="internal xref">New Well-known URI "cidfi-aware"</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
+                <p id="section-toc.1-1.14.2.2.1"><a href="#section-14.2" class="auto internal xref">14.2</a>.  <a href="#name-overhead-of-quic-dcid-packe" class="internal xref">Overhead of QUIC DCID Packet Examination</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.3">
-                <p id="section-toc.1-1.17.2.3.1"><a href="#section-17.3" class="auto internal xref">17.3</a>.  <a href="#name-new-special-use-domain-name" class="internal xref">New Special-use Domain Name</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
+                <p id="section-toc.1-1.14.2.3.1"><a href="#section-14.3" class="auto internal xref">14.3</a>.  <a href="#name-interaction-with-wi-fi-pack" class="internal xref">Interaction with Wi-Fi Packet Aggregation</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.4">
-                <p id="section-toc.1-1.17.2.4.1"><a href="#section-17.4" class="auto internal xref">17.4</a>.  <a href="#name-new-dns-service-binding-svc" class="internal xref">New DNS Service Binding (SVCB)</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.4">
+                <p id="section-toc.1-1.14.2.4.1"><a href="#section-14.4" class="auto internal xref">14.4</a>.  <a href="#name-overhead-of-mapping-cids-to" class="internal xref">Overhead of Mapping CIDs to Packet Metadata</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.5">
-                <p id="section-toc.1-1.17.2.5.1"><a href="#section-17.5" class="auto internal xref">17.5</a>.  <a href="#name-new-stun-attribute" class="internal xref">New STUN Attribute</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.5">
+                <p id="section-toc.1-1.14.2.5.1"><a href="#section-14.5" class="auto internal xref">14.5</a>.  <a href="#name-improve-cidfi-initializatio" class="internal xref">Improve CIDFI Initialization Time</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.6">
-                <p id="section-toc.1-1.17.2.6.1"><a href="#section-17.6" class="auto internal xref">17.6</a>.  <a href="#name-new-provisioning-domain-add" class="internal xref">New Provisioning Domain Additional Information Key</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.6">
+                <p id="section-toc.1-1.14.2.6.1"><a href="#section-14.6" class="auto internal xref">14.6</a>.  <a href="#name-primary-quic-channel-cid-ch" class="internal xref">Primary QUIC Channel CID Change</a></p>
 </li>
             </ul>
 </li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#section-15" class="auto internal xref">15</a>. <a href="#name-state-maintenance" class="internal xref">State Maintenance</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#section-16" class="auto internal xref">16</a>. <a href="#name-api-integration-for-quic-st" class="internal xref">API Integration for QUIC Stream and Packet-Level Prioritization</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
+            <p id="section-toc.1-1.17.1"><a href="#section-17" class="auto internal xref">17</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18">
-            <p id="section-toc.1-1.18.1"><a href="#section-18" class="auto internal xref">18</a>. <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.18.1"><a href="#section-18" class="auto internal xref">18</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.1">
-                <p id="section-toc.1-1.18.2.1.1"><a href="#section-18.1" class="auto internal xref">18.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+                <p id="section-toc.1-1.18.2.1.1"><a href="#section-18.1" class="auto internal xref">18.1</a>.  <a href="#name-new-quic-transport-paramete" class="internal xref">New QUIC Transport Parameter</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.2">
-                <p id="section-toc.1-1.18.2.2.1"><a href="#section-18.2" class="auto internal xref">18.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+                <p id="section-toc.1-1.18.2.2.1"><a href="#section-18.2" class="auto internal xref">18.2</a>.  <a href="#name-new-quic-frame-type" class="internal xref">New QUIC Frame Type</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.3">
+                <p id="section-toc.1-1.18.2.3.1"><a href="#section-18.3" class="auto internal xref">18.3</a>.  <a href="#name-new-well-known-uri-cidfi-aw" class="internal xref">New Well-known URI "cidfi-aware"</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.4">
+                <p id="section-toc.1-1.18.2.4.1"><a href="#section-18.4" class="auto internal xref">18.4</a>.  <a href="#name-new-special-use-domain-name" class="internal xref">New Special-use Domain Name</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.5">
+                <p id="section-toc.1-1.18.2.5.1"><a href="#section-18.5" class="auto internal xref">18.5</a>.  <a href="#name-new-dns-service-binding-svc" class="internal xref">New DNS Service Binding (SVCB)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.6">
+                <p id="section-toc.1-1.18.2.6.1"><a href="#section-18.6" class="auto internal xref">18.6</a>.  <a href="#name-new-stun-attribute" class="internal xref">New STUN Attribute</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.7">
+                <p id="section-toc.1-1.18.2.7.1"><a href="#section-18.7" class="auto internal xref">18.7</a>.  <a href="#name-new-provisioning-domain-add" class="internal xref">New Provisioning Domain Additional Information Key</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19">
-            <p id="section-toc.1-1.19.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-extending-cidfi-to-other-pr" class="internal xref">Extending CIDFI to Other Protocols</a></p>
+            <p id="section-toc.1-1.19.1"><a href="#section-19" class="auto internal xref">19</a>. <a href="#name-references" class="internal xref">References</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19.2.1">
-                <p id="section-toc.1-1.19.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-dtls" class="internal xref">DTLS</a></p>
+                <p id="section-toc.1-1.19.2.1.1"><a href="#section-19.1" class="auto internal xref">19.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19.2.2">
-                <p id="section-toc.1-1.19.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-tcp" class="internal xref">TCP</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19.2.3">
-                <p id="section-toc.1-1.19.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-sctp" class="internal xref">SCTP</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19.2.4">
-                <p id="section-toc.1-1.19.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-rtp-and-srtp" class="internal xref">RTP and SRTP</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19.2.5">
-                <p id="section-toc.1-1.19.2.5.1"><a href="#appendix-A.5" class="auto internal xref">A.5</a>.  <a href="#name-bespoke-udp-application-pro" class="internal xref">Bespoke UDP Application Protocols</a></p>
+                <p id="section-toc.1-1.19.2.2.1"><a href="#section-19.2" class="auto internal xref">19.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20">
-            <p id="section-toc.1-1.20.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.20.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-extending-cidfi-to-other-pr" class="internal xref">Extending CIDFI to Other Protocols</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20.2.1">
+                <p id="section-toc.1-1.20.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-dtls" class="internal xref">DTLS</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20.2.2">
+                <p id="section-toc.1-1.20.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-tcp" class="internal xref">TCP</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20.2.3">
+                <p id="section-toc.1-1.20.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-sctp" class="internal xref">SCTP</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20.2.4">
+                <p id="section-toc.1-1.20.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-rtp-and-srtp" class="internal xref">RTP and SRTP</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20.2.5">
+                <p id="section-toc.1-1.20.2.5.1"><a href="#appendix-A.5" class="auto internal xref">A.5</a>.  <a href="#name-bespoke-udp-application-pro" class="internal xref">Bespoke UDP Application Protocols</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.21">
-            <p id="section-toc.1-1.21.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.21.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.22">
+            <p id="section-toc.1-1.22.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1624,6 +1630,12 @@ Metadata exchanges can occur in one single direction or both directions of a flo
         </figcaption></figure>
 </div>
 <p id="section-1-6">The document is a generic framework that would function in any network deployment. This framework can be leveraged by any transport protocol (see <a href="#extending" class="auto internal xref">Appendix A</a>). To illustrate the framework's applicability this document focuses on QUIC transport.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">The design supports multiple CIDFI and QUIC implementations on one
+host (i.e., by several applications), cellular devices providing IP
+connectivity to other devices (see <span><a href="https://rfc-editor.org/rfc/rfc7649#section-3" class="relref">Section 3</a> of [<a href="#RFC7649" class="cite xref">RFC7649</a>]</span>), multiple
+CIDFI-aware network elements (e.g., Wi-Fi and an ISP network), hosts
+behind one or more IPv4 NATs or other IP translation technologies, and
+DOCSIS and 5G networks. A comprehensive list of such translation technologies is provided in <span><a href="https://rfc-editor.org/rfc/rfc8512#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC8512" class="cite xref">RFC8512</a>]</span>.<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="overview">
@@ -1667,7 +1679,7 @@ be provided to a flow, packets within a flow, or a combination thereof as a func
 of the CIDFI support by various involved entities. For example, a CIDFI-aware network
 might share signals with clients that would then trigger locally connection migration or relay
 the information to the server (if it is CIDFI-aware) to adjust its sending behavior
-by avoiding aggressive use of local resources or using alternate paths. <a href="#metadata-exchanged" class="auto internal xref">Section 11</a>
+by avoiding aggressive use of local resources or using alternate paths. <a href="#metadata-exchanged" class="auto internal xref">Section 12</a>
 further elaborates on the differentiated service that can be provided by enabling CIDFI.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4"><a href="#fig-arch" class="auto internal xref">Figure 2</a> provides a sample network diagram of a CIDFI system showing two
 bandwidth-constrained networks (or links) depicted by "B" and
@@ -1689,16 +1701,19 @@ receive CIDFI metadata for that client.<a href="#section-2-5" class="pilcrow">¶
 <figure id="figure-2">
         <div id="section-2-6.1">
           <div class="alignCenter art-svg artwork" id="section-2-6.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="320" width="560" viewBox="0 0 560 320" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="400" width="560" viewBox="0 0 560 400" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,48 L 8,112" fill="none" stroke="black"></path>
               <path d="M 8,176 L 8,256" fill="none" stroke="black"></path>
+              <path d="M 8,288 L 8,352" fill="none" stroke="black"></path>
+              <path d="M 48,256 L 48,288" fill="none" stroke="black"></path>
               <path d="M 64,48 L 64,112" fill="none" stroke="black"></path>
               <path d="M 88,176 L 88,256" fill="none" stroke="black"></path>
+              <path d="M 88,288 L 88,352" fill="none" stroke="black"></path>
               <path d="M 96,48 L 96,144" fill="none" stroke="black"></path>
               <path d="M 152,48 L 152,144" fill="none" stroke="black"></path>
               <path d="M 168,32 L 168,80" fill="none" stroke="black"></path>
               <path d="M 168,112 L 168,216" fill="none" stroke="black"></path>
-              <path d="M 168,232 L 168,304" fill="none" stroke="black"></path>
+              <path d="M 168,232 L 168,384" fill="none" stroke="black"></path>
               <path d="M 184,48 L 184,128" fill="none" stroke="black"></path>
               <path d="M 184,176 L 184,256" fill="none" stroke="black"></path>
               <path d="M 240,48 L 240,128" fill="none" stroke="black"></path>
@@ -1709,13 +1724,13 @@ receive CIDFI metadata for that client.<a href="#section-2-5" class="pilcrow">¶
               <path d="M 320,208 L 320,240" fill="none" stroke="black"></path>
               <path d="M 344,32 L 344,88" fill="none" stroke="black"></path>
               <path d="M 344,104 L 344,216" fill="none" stroke="black"></path>
-              <path d="M 344,232 L 344,304" fill="none" stroke="black"></path>
+              <path d="M 344,232 L 344,384" fill="none" stroke="black"></path>
               <path d="M 360,144 L 360,176" fill="none" stroke="black"></path>
               <path d="M 376,96 L 376,144" fill="none" stroke="black"></path>
               <path d="M 376,176 L 376,224" fill="none" stroke="black"></path>
               <path d="M 416,144 L 416,176" fill="none" stroke="black"></path>
               <path d="M 432,32 L 432,152" fill="none" stroke="black"></path>
-              <path d="M 432,168 L 432,304" fill="none" stroke="black"></path>
+              <path d="M 432,168 L 432,384" fill="none" stroke="black"></path>
               <path d="M 448,112 L 448,192" fill="none" stroke="black"></path>
               <path d="M 464,96 L 464,112" fill="none" stroke="black"></path>
               <path d="M 480,80 L 480,96" fill="none" stroke="black"></path>
@@ -1751,6 +1766,8 @@ receive CIDFI metadata for that client.<a href="#section-2-5" class="pilcrow">¶
               <path d="M 264,240 L 320,240" fill="none" stroke="black"></path>
               <path d="M 8,256 L 88,256" fill="none" stroke="black"></path>
               <path d="M 184,256 L 240,256" fill="none" stroke="black"></path>
+              <path d="M 8,288 L 88,288" fill="none" stroke="black"></path>
+              <path d="M 8,352 L 88,352" fill="none" stroke="black"></path>
               <g class="text">
                 <text x="36" y="68">CIDFI-</text>
                 <text x="124" y="68">CIDFI-</text>
@@ -1782,14 +1799,17 @@ receive CIDFI metadata for that client.<a href="#section-2-5" class="pilcrow">¶
                 <text x="292" y="228">router</text>
                 <text x="48" y="244">(handset)</text>
                 <text x="212" y="244">router</text>
-                <text x="384" y="292">Transit</text>
-                <text x="476" y="292">Server</text>
-                <text x="44" y="308">User</text>
-                <text x="96" y="308">Network</text>
-                <text x="216" y="308">ISP</text>
-                <text x="264" y="308">Network</text>
-                <text x="384" y="308">Network</text>
-                <text x="480" y="308">Network</text>
+                <text x="44" y="308">CIDFI-</text>
+                <text x="40" y="324">aware</text>
+                <text x="40" y="340">app</text>
+                <text x="384" y="372">Transit</text>
+                <text x="476" y="372">Server</text>
+                <text x="44" y="388">User</text>
+                <text x="96" y="388">Network</text>
+                <text x="216" y="388">ISP</text>
+                <text x="264" y="388">Network</text>
+                <text x="384" y="388">Network</text>
+                <text x="480" y="388">Network</text>
               </g>
             </svg><a href="#section-2-6.1.1" class="pilcrow">¶</a>
 </div>
@@ -1819,7 +1839,7 @@ delivery networks because of its advantages to both end users and
 servers.  CIDFI can bring value to a system comprised solely of a
 CIDFI-aware client and the CIDFI-aware network elements.  By adding a
 CIDFI-aware server that supports QUIC unreliable datagrams
-<span>[<a href="#RFC9221" class="cite xref">RFC9221</a>]</span> and API integration (see <a href="#api-integration" class="auto internal xref">Section 15</a>), each
+<span>[<a href="#RFC9221" class="cite xref">RFC9221</a>]</span> and API integration (see <a href="#api-integration" class="auto internal xref">Section 16</a>), each
 packet can receive differentiated service from the network.  This is
 especially useful during user transitions from a high quality wireless
 reception to lower quality reception (e.g., entering a building).
@@ -2029,8 +2049,8 @@ These are described in the following sub-sections.<a href="#section-5-2" class="
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-dns-svcb-records" class="section-name selfRef">DNS SVCB Records</a>
         </h3>
 <p id="section-5.1-1">This document defines a new DNS Service Binding parameter "cidfi-aware" in
-<a href="#iana-svcb" class="auto internal xref">Section 17.4</a> and a new Special-Use Domain Name "cidfi.arpa" in
-<a href="#iana-sudn" class="auto internal xref">Section 17.3</a>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<a href="#iana-svcb" class="auto internal xref">Section 18.5</a> and a new Special-Use Domain Name "cidfi.arpa" in
+<a href="#iana-sudn" class="auto internal xref">Section 18.4</a>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">The local network is configured to respond to DNS SVCB
 <span>[<a href="#RFC9460" class="cite xref">RFC9460</a>]</span> queries with ServiceMode (<span><a href="https://rfc-editor.org/rfc/rfc9460#section-2.4.3" class="relref">Section 2.4.3</a> of [<a href="#RFC9460" class="cite xref">RFC9460</a>]</span>) for "_cidfi-aware.cidfi.arpa" with
 the DNS names of that network's and upstream network's CIDFI-aware
@@ -2270,7 +2290,7 @@ from receiving network performance metrics.<a href="#section-7-3.1.1" class="pil
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-client-learns-server-suppor" class="section-name selfRef">Client Learns Server Supports CIDFI</a>
         </h3>
 <p id="section-7.1-1">On initial connection to a QUIC server, the client includes a new QUIC
-transport parameter "enable_cidfi" (TBD1) (<a href="#iana-tp" class="auto internal xref">Section 17.1</a>) which is remembered for 0-RTT.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+transport parameter "enable_cidfi" (TBD1) (<a href="#iana-tp" class="auto internal xref">Section 18.1</a>) which is remembered for 0-RTT.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <p id="section-7.1-2">If the server does not indicate CIDFI support by means of enable_cidfi transport parameter, the client can still
 perform CIDFI -- but does not expect different CIDs to indicate
 differentiated behavior.  The client can still signal to its CNE(s) about
@@ -2290,7 +2310,8 @@ CIDFI transport response during the QUIC handshake.<a href="#section-7.1-3" clas
 </li>
         </ul>
 <p id="section-7.1-5">The QUIC client and server exchange CIDFI information over
-this CIDFI-dedicated stream as described in <a href="#initial-metadata-exchange" class="auto internal xref">Section 7.3</a>.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
+this CIDFI-dedicated stream using the new CIDFI_NEW_CONNECTION_ID_MAPPING
+frame type as described in <a href="#initial-metadata-exchange" class="auto internal xref">Section 7.3</a>.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
 <p id="section-7.1-6">Processing continues with the next step.<a href="#section-7.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2299,7 +2320,15 @@ this CIDFI-dedicated stream as described in <a href="#initial-metadata-exchange"
         <h3 id="name-client-proves-ownership-of-">
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-client-proves-ownership-of-" class="section-name selfRef">Client Proves Ownership of its UDP 4-Tuple</a>
         </h3>
-<p id="section-7.2-1">To ensure that the client messages to a CNE
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-7.2-1.1">
+            <p id="section-7.2-1.1.1">Optimizations to this mechanism are being considered while
+  maintaining support for multiple CIDFI and QUIC implementations on
+  one host (i.e., by several applications) and support for cellular devices
+  providing IP connectivity to other devices (see <span><a href="https://rfc-editor.org/rfc/rfc7849#section-3" class="relref">Section 3</a> of [<a href="#RFC7849" class="cite xref">RFC7849</a>]</span>).<a href="#section-7.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-7.2-2">To ensure that the client messages to a CNE
 pertain only to the client's own UDP 4-tuple, the client sends the
 CIDFI nonce protected by the HMAC secret it obtained from
 <a href="#client-authorizes" class="auto internal xref">Section 6.2</a> over the QUIC UDP 4-tuple it is using with the
@@ -2307,27 +2336,29 @@ QUIC server over the path that involves that CNE. The ability to transmit that p
 4-tuple as the QUIC connection indicates ownership of that IP address
 and UDP port number.  The nonce and HMAC are sent in a <span>[<a href="#STUN" class="cite xref">STUN</a>]</span> indication (STUN
 class of 0b01) containing one or more CIDFI-NONCE attributes
-(<a href="#iana-stun" class="auto internal xref">Section 17.5</a>).  If there are multiple CNEs
+(<a href="#iana-stun" class="auto internal xref">Section 18.6</a>).  If there are multiple CNEs
 the single STUN indication contains a CIDFI-NONCE attribute from each of
-them.  This message is discarded, if received, by the QUIC server.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
-<p id="section-7.2-2">In order to avoid overloading servers, the client may set the TTL/Hop Limit
+them.  This message is discarded, if received, by the QUIC server.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.2-3">In order to avoid overloading servers, the client may set the TTL/Hop Limit
 to a value that allows to cross the CNE, but then dicarded before reaching the server.
-For example, the host sets the TTL to "min-ttl" that is returned during CNE discovery.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
-<p id="section-7.2-3"><a href="#flow-diag-attach" class="auto internal xref">Figure 6</a> shows a summarized message flow obtaining
+For example, the host sets the TTL to "min-ttl" that is returned during CNE discovery.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+<p id="section-7.2-4"><a href="#flow-diag-attach" class="auto internal xref">Figure 6</a> shows a summarized message flow obtaining
 the nonce and HMAC secret from the CNE (steps 1-2) which is performed
-on network attach.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+on network attach.  The CNE also sends active_cidfi_connection_id_limit
+in step 2.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
 <span id="name-example-of-flow-exhange"></span><div id="flow-diag-attach">
 <figure id="figure-6">
-          <div id="section-7.2-4.1">
-            <div class="alignCenter art-svg artwork" id="section-7.2-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="160" width="496" viewBox="0 0 496 160" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 24,64 L 24,144" fill="none" stroke="black"></path>
-                <path d="M 320,96 L 320,144" fill="none" stroke="black"></path>
-                <path d="M 472,64 L 472,144" fill="none" stroke="black"></path>
+          <div id="section-7.2-5.1">
+            <div class="alignCenter art-svg artwork" id="section-7.2-5.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="496" viewBox="0 0 496 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 24,64 L 24,160" fill="none" stroke="black"></path>
+                <path d="M 320,96 L 320,112" fill="none" stroke="black"></path>
+                <path d="M 320,144 L 320,160" fill="none" stroke="black"></path>
+                <path d="M 472,64 L 472,160" fill="none" stroke="black"></path>
                 <path d="M 24,96 L 312,96" fill="none" stroke="black"></path>
-                <path d="M 32,128 L 320,128" fill="none" stroke="black"></path>
+                <path d="M 32,144 L 320,144" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="320,96 308,90.4 308,101.6" fill="black" transform="rotate(0,312,96)"></polygon>
-                <polygon class="arrowhead" points="40,128 28,122.4 28,133.6" fill="black" transform="rotate(180,32,128)"></polygon>
+                <polygon class="arrowhead" points="40,144 28,138.4 28,149.6" fill="black" transform="rotate(180,32,144)"></polygon>
                 <g class="text">
                   <text x="28" y="36">QUIC</text>
                   <text x="312" y="36">CIDFI-aware</text>
@@ -2348,24 +2379,33 @@ on network attach.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
                   <text x="92" y="116">HTTPS:</text>
                   <text x="136" y="116">Ok.</text>
                   <text x="208" y="116">nonce=12345</text>
+                  <text x="196" y="132">active_cidfi_connection_id_limit</text>
                 </g>
-              </svg><a href="#section-7.2-4.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-7.2-5.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
 <a href="#name-example-of-flow-exhange" class="selfRef">Example of Flow Exhange</a>
           </figcaption></figure>
 </div>
-<p id="section-7.2-5">Later, when connecting to a new QUIC server, the client
+<p id="section-7.2-6">Later, when connecting to a new QUIC server, the client
 determines if there are on-path CIDFI Network Elements by sending the
 nonce and HMAC in the same UDP 4-tuple as the QUIC connect
-(step 2).  If a CIDFI Network Element is present it processes the STUN
+(step 2).  This is necessary to deal with both IP address spoofing
+and with multiple QUIC+CIDFI implementations running on the same
+host; each QUIC+CIDFI implementation pair should only be able to
+modify treatment of its own flows, not of other flows to other
+UDP flows running on that same host.<a href="#section-7.2-6" class="pilcrow">¶</a></p>
+<p id="section-7.2-7">If a CIDFI Network Element is present on the path it processes the STUN
 Indication and sends a response to the client over HTTP using the
-HTTP channel established above.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
+HTTP channel established above.  It decrements the IPv4 TTL or IPv6
+Hop Limit and forwards the STUN Indication along its normal path,
+to accomodate another CIDFI Network Element farther away from the
+client.<a href="#section-7.2-7" class="pilcrow">¶</a></p>
 <span id="name-example-of-flow-to-new-serv"></span><div id="flow-diag-connect">
 <figure id="figure-7">
-          <div id="section-7.2-6.1">
-            <div class="alignCenter art-svg artwork" id="section-7.2-6.1.1">
+          <div id="section-7.2-8.1">
+            <div class="alignCenter art-svg artwork" id="section-7.2-8.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="368" width="512" viewBox="0 0 512 368" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 24,64 L 24,352" fill="none" stroke="black"></path>
                 <path d="M 320,136 L 320,176" fill="none" stroke="black"></path>
@@ -2436,7 +2476,7 @@ HTTP channel established above.<a href="#section-7.2-5" class="pilcrow">¶</a></
                   <text x="92" y="340">HTTPS:</text>
                   <text x="132" y="340">Ok</text>
                 </g>
-              </svg><a href="#section-7.2-6.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-7.2-8.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
@@ -2444,36 +2484,39 @@ HTTP channel established above.<a href="#section-7.2-5" class="pilcrow">¶</a></
           </figcaption></figure>
 </div>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-7.2-7.1">
-            <p id="section-7.2-7.1.1">Note the above message
+<li class="normal ulEmpty" id="section-7.2-9.1">
+            <p id="section-7.2-9.1.1">Note the above message
 flow shows an initial QUIC handshake for simplicity (steps 1 and 7)
 but because of QUIC connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the
-QUIC messages might appear later.
-Also, "Map DCID=xyz as high importance" refers to a CID chosen by
-the client not the DCID used by the client to communicate with
-the server.<a href="#section-7.2-7.1.1" class="pilcrow">¶</a></p>
+QUIC messages might appear later.<a href="#section-7.2-9.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-7.2-8">The short header's Destination Connection ID (DCID) can be 0 bytes or
-as short as 8 bits, so multiple QUIC clients are likely to use the
-same incoming Destination CID on their own UDP 4-tuple. The STUN
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-7.2-10.1">
+            <p id="section-7.2-10.1.1">Also, "Map DCID=xyz as high importance" refers to a CID chosen by
+the client (for traffic destined towards the client) and not
+the DCID used by the client to communicate with the server.<a href="#section-7.2-10.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-7.2-11">The short header's Destination Connection ID (DCID) can be 0 bytes or
+as short as 8 bits, so multiple QUIC clients on the same host or
+on different hosts behind a NAT are likely to use the
+same incoming Destination CID on their own UDP 4-tuple (Birthday Paradox). The STUN
 Indication message allows the CIDFI network element to distinguish
-each QUIC client's UDP 4-tuple.<a href="#section-7.2-8" class="pilcrow">¶</a></p>
-<p id="section-7.2-9">Because multiple QUIC clients may use the same incoming Destination CID on
-their own UDP 4-tuple, the STUN Indication message allows a CNE
-to distinguish each QUIC client's UDP 4-tuple.<a href="#section-7.2-9" class="pilcrow">¶</a></p>
-<p id="section-7.2-10">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
-the same time as it establishes connection with the QUIC server.<a href="#section-7.2-10" class="pilcrow">¶</a></p>
-<p id="section-7.2-11">To prevent replay attacks, the Nonce is usable only for authenticating
+each QUIC client's UDP 4-tuple -- both between hosts and between QUIC+CIDFI
+implementations on the same host (implemented within an application).<a href="#section-7.2-11" class="pilcrow">¶</a></p>
+<p id="section-7.2-12">To reduce CIDFI setup time the client STUN Indication <span class="bcp14">MAY</span> be sent at
+the same time as it establishes connection with the QUIC server.<a href="#section-7.2-12" class="pilcrow">¶</a></p>
+<p id="section-7.2-13">To prevent replay attacks, the Nonce is usable only for authenticating
 one UDP 4-tuple.  When the connection is migrated (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) the CNE won't apply any CIDFI behavior to
 that newly-migrated connection.  The client will have to restart
-CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 6</a>).<a href="#section-7.2-11" class="pilcrow">¶</a></p>
-<p id="section-7.2-12">After the CIDFI Network Element receives the STUN Indication it
-informs the client by sending an HTTP message to the client.  Details TBD.<a href="#section-7.2-12" class="pilcrow">¶</a></p>
-<p id="section-7.2-13">As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
+CIDFI procedures at the beginning (<a href="#attach" class="auto internal xref">Section 6</a>).<a href="#section-7.2-13" class="pilcrow">¶</a></p>
+<p id="section-7.2-14">After the CIDFI Network Element receives the STUN Indication it
+informs the client by sending an HTTP message to the client.  Details TBD.<a href="#section-7.2-14" class="pilcrow">¶</a></p>
+<p id="section-7.2-15">As the proof of ownership of its UDP 4-tuple is only useful to CIDFI
 Network Elements near the client, the client <span class="bcp14">MAY</span> reduce traffic to the
-server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages. The client <span class="bcp14">SHOULD</span> set TTL/Hop Limit to "min-ttl". The client <span class="bcp14">MAY</span> use other values (e.g., explicit configuration, inferred from probe messages).<a href="#section-7.2-13" class="pilcrow">¶</a></p>
-<p id="section-7.2-14">Processing continues with the next step.<a href="#section-7.2-14" class="pilcrow">¶</a></p>
+server by modulating the IPv4 TTL or IPv6 Hop Limit of its STUN Indication messages. The client <span class="bcp14">SHOULD</span> set TTL/Hop Limit to "min-ttl". The client <span class="bcp14">MAY</span> use other values (e.g., explicit configuration, inferred from probe messages).<a href="#section-7.2-15" class="pilcrow">¶</a></p>
+<p id="section-7.2-16">Processing continues with the next step.<a href="#section-7.2-16" class="pilcrow">¶</a></p>
 <div id="stun-cidfi-nonce-attribute">
 <section id="section-7.2.1">
           <h4 id="name-stun-cidfi-nonce-attribute">
@@ -2563,32 +2606,25 @@ message.<a href="#section-7.2.1-5" class="pilcrow">¶</a></p>
         <h3 id="name-initial-metadata-exchange">
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-initial-metadata-exchange" class="section-name selfRef">Initial Metadata Exchange</a>
         </h3>
-<p id="section-7.3-1">Using its HTTPS channel with each of the CNEs it
-previously authorized for CIDFI participation, the client signals the
-mapping of the server's transmitted short Destination Connection ID
-and its length to the CNE.  As server support
+<p id="section-7.3-1">If the server indicated support for CIDFI during the QUIC handshake,
+the client uses its HTTPS channel with each of the CNEs it
+previously authorized for CIDFI participation to map client-chosen
+Destination CIDs to metadata for that CID.  As server support
 of the QUIC CIDFI transport parameter is remembered for 0-RTT, the
 client can immediately send the nonce.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<p id="section-7.3-2">The primary purpose of a second Connection ID is connection migration
-(<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).  With CIDFI, additional Connection IDs are
-necessary to:<a href="#section-7.3-2" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.3-3.1">
-            <p id="section-7.3-3.1.1">maintain CIDFI operation when topology remains the same.<a href="#section-7.3-3.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.3-3.2">
-            <p id="section-7.3-3.2.1">use Destination Connection ID to indicate packet importance<a href="#section-7.3-3.2.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-7.3-4">To maintain CIDFI operation when topology remains the same, the
-CIDFI client signals the CNEs of that 'next'
-Destination CID.  When QUIC detects a topology change, however, that
-Destination CID <span class="bcp14">MUST NOT</span> be used by the peer, otherwise it links
-the communication on the old topology to the new topology (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9.5" class="relref">Section 9.5</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).
-Thus, an additional Connection ID is purposefully not communicated
-from the CIDFI client to its CNEs, so that
-Connection ID can be immediately used by the peer during connection
-migration when the topology changes.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">Over the QUIC connection with the server, the client sends QUIC
+CIDFI_NEW_CONNECTION_ID_MAPPING frames which map the destination CID
+to its metadata (e.g., high priority), not to exceed active_cidfi_connection_id_limit.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">As with NEW_CONNECTION_ID, the client
+should allocate additional connection IDs retain client privacy during
+connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9.5" class="relref">Section 9.5</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) and those additional
+CIDs should also be communicated via CIDFI_NEW_CONNECTION_ID.  In
+anticipation of connection migration those additional connection IDs
+are not communicated to the existing network's CNEs, but only to the
+new network's CNEs.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.3-4">Connection IDs which are communicated using NEW_CONNECTION_ID do
+not receive per-packet CIDFI treatment.  But their contribution
+to bandwidth consumption is considered by the CNE.<a href="#section-7.3-4" class="pilcrow">¶</a></p>
 <p id="section-7.3-5">Note that the source IP address and source UDP port number are not signaled
 by design.  This is because NATs (<span>[<a href="#NAPT" class="cite xref">NAPT</a>]</span>,
 <span>[<a href="#NAT" class="cite xref">NAT</a>]</span>), multiple NATs on the path, IPv6/IPv4 translation,
@@ -2677,9 +2713,9 @@ highlighted in the simplified message flow in <a href="#ex-lost-nonce" class="au
                   <text x="152" y="308">new</text>
                   <text x="212" y="308">Nonce=5678</text>
                   <text x="60" y="340">STUN</text>
-                  <text x="120" y="340">Indicate,</text>
-                  <text x="208" y="340">nonce=5678,</text>
-                  <text x="300" y="340">HMAC=aaf3c</text>
+                  <text x="128" y="340">Indication,</text>
+                  <text x="224" y="340">nonce=5678,</text>
+                  <text x="316" y="340">HMAC=8f93e</text>
                   <text x="472" y="372">discarded</text>
                   <text x="196" y="404">"I</text>
                   <text x="224" y="404">saw</text>
@@ -2787,7 +2823,7 @@ QUIC stream over the same QUIC connection as their primary communication (<a hre
 </div>
 <p id="section-7.3.1-4">To each of the network elements authorized by the client, the client
 sends the mappings of the server's transmitted Destination CIDs to
-packet metadata (see <a href="#metadata-exchanged" class="auto internal xref">Section 11</a>).<a href="#section-7.3.1-4" class="pilcrow">¶</a></p>
+packet metadata (see <a href="#metadata-exchanged" class="auto internal xref">Section 12</a>).<a href="#section-7.3.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="network-to-host">
@@ -2857,7 +2893,7 @@ QUIC stream over the same QUIC connection as their primary communication.<a href
 <p id="section-7.3.2-4">The CNE can update the client with whenever
 the metadata about the connection changes significantly, but <span class="bcp14">MUST NOT</span>
 update more frequently than once every second.<a href="#section-7.3.2-4" class="pilcrow">¶</a></p>
-<p id="section-7.3.2-5">The metadata exchanged over this channel is described in <a href="#metadata-exchanged" class="auto internal xref">Section 11</a>.<a href="#section-7.3.2-5" class="pilcrow">¶</a></p>
+<p id="section-7.3.2-5">The metadata exchanged over this channel is described in <a href="#metadata-exchanged" class="auto internal xref">Section 12</a>.<a href="#section-7.3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2912,7 +2948,7 @@ CIDFI because TCP lacks QUIC's stream identification.<a href="#section-9-3" clas
       </h2>
 <p id="section-10-1">When the topology changes the client will transmit from a new IP
 address -- such as switching to a backup WAN connection, or such as
-switching from Wi-Fi to 5G.  If using QUIC, the server will consider
+switching from Wi-Fi to 5G.  The server will consider
 this as a connection migration (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-9" class="relref">Section 9</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) and will issue a
 PATH_CHALLENGE.  If the client is aware of the topology change (such
 as attaching to a different network), the client would also change its
@@ -2920,66 +2956,91 @@ QUIC Destination CID (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-
 <p id="section-10-2">When the CIDFI-aware client determines that it is connected to a new
 network or has received a QUIC PATH_CHALLENGE, the CIDFI-aware client
 <span class="bcp14">MUST</span> re-discover its CNEs (<a href="#discovery" class="auto internal xref">Section 6.1</a>) and continue with normal CIDFI
-processing with any discovered CNEs.<a href="#section-10-2" class="pilcrow">¶</a></p>
+processing with any discovered CNEs.  This usually means repeating
+the initial metadata exchange (<a href="#initial-metadata-exchange" class="auto internal xref">Section 7.3</a>) to prove
+path ownership.<a href="#section-10-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="flushing-mapping-state">
+<section id="section-11">
+      <h2 id="name-flushing-mapping-state">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-flushing-mapping-state" class="section-name selfRef">Flushing Mapping State</a>
+      </h2>
+<p id="section-11-1">When the server supports CIDFI the metadata mapping creates additional
+state in the client, CIDFI Network Elements, and the
+server.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-2">Between the QUIC client and server when a mapping is no longer
+needed it can be cleaned up with RETIRE_CONNECTION_ID.  If that
+connection ID was mapped in one or more CNEs, the client <span class="bcp14">SHOULD</span>
+also remove that mapping state from the CNEs.  This allows the
+mapping state to be used for other CIDFI implemenations on the
+same host or by other hosts (belonging to the same subscriber)
+or by other subscribers.<a href="#section-11-2" class="pilcrow">¶</a></p>
+<p id="section-11-3">As a client can disappear from a network without informing its CNE and
+are unlikely to voluntarily clean up CNE state even if they remain
+connected to the network, the CNE should retire its CIDFI state after
+3 minutes of bi-directional inactivity on that UDP 4-tuple or a more
+convenient time such as when it normally flushes its UDP NAT binding
+for bi-directional inactivity.<a href="#section-11-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="metadata-exchanged">
-<section id="section-11">
+<section id="section-12">
       <h2 id="name-details-of-metadata-exchang">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-details-of-metadata-exchang" class="section-name selfRef">Details of Metadata Exchanged</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-details-of-metadata-exchang" class="section-name selfRef">Details of Metadata Exchanged</a>
       </h2>
-<p id="section-11-1">This section describes the metadata that can be exchanged from a
+<p id="section-12-1">This section describes the metadata that can be exchanged from a
 CNE to a server (generally network
-performance information) and from the server to a CNE.<a href="#section-11-1" class="pilcrow">¶</a></p>
+performance information) and from the server to a CNE.<a href="#section-12-1" class="pilcrow">¶</a></p>
 <div id="server-to-cidfi-aware-network-element">
-<section id="section-11.1">
+<section id="section-12.1">
         <h3 id="name-server-to-cidfi-aware-netwo">
-<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-server-to-cidfi-aware-netwo" class="section-name selfRef">Server to CIDFI-aware Network Element</a>
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-server-to-cidfi-aware-netwo" class="section-name selfRef">Server to CIDFI-aware Network Element</a>
         </h3>
-<p id="section-11.1-1">Because there is no direct communication from the server to
-a CNE, the communication is relayed through the client.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
-<p id="section-11.1-2">The communications from servers to CNEs do not occur directly,
-but rather through the client.<a href="#section-11.1-2" class="pilcrow">¶</a></p>
-<p id="section-11.1-3">Two types of mapping metadata are described in the following sub-sections: metadata parameters
-and DSCP values.<a href="#section-11.1-3" class="pilcrow">¶</a></p>
+<p id="section-12.1-1">Because there is no direct communication from the server to
+a CNE, the communication is relayed through the client.<a href="#section-12.1-1" class="pilcrow">¶</a></p>
+<p id="section-12.1-2">The communications from servers to CNEs do not occur directly,
+but rather through the client.<a href="#section-12.1-2" class="pilcrow">¶</a></p>
+<p id="section-12.1-3">Two types of mapping metadata are described in the following sub-sections: metadata parameters
+and DSCP values.<a href="#section-12.1-3" class="pilcrow">¶</a></p>
 <div id="mapping-parameters">
-<section id="section-11.1.1">
+<section id="section-12.1.1">
           <h4 id="name-mapping-metadata-parameters">
-<a href="#section-11.1.1" class="section-number selfRef">11.1.1. </a><a href="#name-mapping-metadata-parameters" class="section-name selfRef">Mapping Metadata Parameters to DCIDs</a>
+<a href="#section-12.1.1" class="section-number selfRef">12.1.1. </a><a href="#name-mapping-metadata-parameters" class="section-name selfRef">Mapping Metadata Parameters to DCIDs</a>
           </h4>
-<p id="section-11.1.1-1">Several of metadata parameters can be mapped to Destination CIDs:<a href="#section-11.1.1-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-11.1.1-2">
-            <dt id="section-11.1.1-2.1">Importance:</dt>
-            <dd style="margin-left: 1.5em" id="section-11.1.1-2.2">
-              <p id="section-11.1.1-2.2.1">Low/Medium/High importance, relative to other CIDs within this
-same UDP 4-tuple.<a href="#section-11.1.1-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-12.1.1-1">Several of metadata parameters can be mapped to Destination CIDs:<a href="#section-12.1.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-12.1.1-2">
+            <dt id="section-12.1.1-2.1">Importance:</dt>
+            <dd style="margin-left: 1.5em" id="section-12.1.1-2.2">
+              <p id="section-12.1.1-2.2.1">Low/Medium/High importance, relative to other CIDs within this
+same UDP 4-tuple.<a href="#section-12.1.1-2.2.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-11.1.1-2.3">Delay budget:</dt>
-            <dd style="margin-left: 1.5em" id="section-11.1.1-2.4">
-              <p id="section-11.1.1-2.4.1">Time in milliseconds until this packet is worthless to the receiver.
+<dt id="section-12.1.1-2.3">Delay budget:</dt>
+            <dd style="margin-left: 1.5em" id="section-12.1.1-2.4">
+              <p id="section-12.1.1-2.4.1">Time in milliseconds until this packet is worthless to the receiver.
 This is counted from when the packet arrives at the CNE
 to when it is transmitted; other delays may occur
 before or after that event occurs.  The receiver knows its own jitter
 (playout) buffer length and the client and server can calculate the
 one-way delay using timestamps.  With that information, the client can
 adjust the server's signaled delay budget with the client's own
-knowledge.<a href="#section-11.1.1-2.4.1" class="pilcrow">¶</a></p>
+knowledge.<a href="#section-12.1.1-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-11.1.1-3.1">
-              <p id="section-11.1.1-3.1.1">TODO: provide enough details to create interoperable
-implementations.<a href="#section-11.1.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-12.1.1-3.1">
+              <p id="section-12.1.1-3.1.1">TODO: provide enough details to create interoperable
+implementations.<a href="#section-12.1.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-11.1.1-4">Over the CIDFI-dedicated QUIC stream, the server sends mapping
+<p id="section-12.1.1-4">Over the CIDFI-dedicated QUIC stream, the server sends mapping
 information to the client when then propagates that information
-to each of the CNEs. An example is shown in <a href="#fig-import" class="auto internal xref">Figure 12</a>.<a href="#section-11.1.1-4" class="pilcrow">¶</a></p>
+to each of the CNEs. An example is shown in <a href="#fig-import" class="auto internal xref">Figure 12</a>.<a href="#section-12.1.1-4" class="pilcrow">¶</a></p>
 <span id="name-example-json-for-flow-impor"></span><div id="fig-import">
 <figure id="figure-12">
-            <div class="alignLeft art-json art-text artwork" id="section-11.1.1-5.1">
+            <div class="alignLeft art-json art-text artwork" id="section-12.1.1-5.1">
 <pre>
 {
    "metadata-parameters":[
@@ -3024,33 +3085,33 @@ to each of the CNEs. An example is shown in <a href="#fig-import" class="auto in
             </figcaption></figure>
 </div>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-11.1.1-6.1">
-              <p id="section-11.1.1-6.1.1">Note: <a href="#fig-import" class="auto internal xref">Figure 12</a> lists sample attributes and they will be discussed in detail in a separate document.<a href="#section-11.1.1-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-12.1.1-6.1">
+              <p id="section-12.1.1-6.1.1">Note: <a href="#fig-import" class="auto internal xref">Figure 12</a> lists sample attributes and they will be discussed in detail in a separate document.<a href="#section-12.1.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="mapping-dscp">
-<section id="section-11.1.2">
+<section id="section-12.1.2">
           <h4 id="name-mapping-diffserv-code-point">
-<a href="#section-11.1.2" class="section-number selfRef">11.1.2. </a><a href="#name-mapping-diffserv-code-point" class="section-name selfRef">Mapping DiffServ Code Point (DSCP) to DCIDs</a>
+<a href="#section-12.1.2" class="section-number selfRef">12.1.2. </a><a href="#name-mapping-diffserv-code-point" class="section-name selfRef">Mapping DiffServ Code Point (DSCP) to DCIDs</a>
           </h4>
-<p id="section-11.1.2-1">A mapping from Destination CID to DiffServ code point
+<p id="section-12.1.2-1">A mapping from Destination CID to DiffServ code point
 <span>[<a href="#RFC2474" class="cite xref">RFC2474</a>]</span> leverages existing DiffServ handling that may already
 exist in the CIDFI network element.  If there are downstream network
 elements configured with the same DSCP the CIDFI
-network element could mark the packet with that code point as well.<a href="#section-11.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-11.1.2-2">Signaling the DSCP values for different QUIC Destination CIDs
+network element could mark the packet with that code point as well.<a href="#section-12.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-12.1.2-2">Signaling the DSCP values for different QUIC Destination CIDs
 increases the edge network's confidence that the sender's DiffServ intent
 is preserved into the edge network, even if the DSCP bits were
-modified en route to the edge network (e.g., <span>[<a href="#pathologies" class="cite xref">pathologies</a>]</span>).<a href="#section-11.1.2-2" class="pilcrow">¶</a></p>
-<p id="section-11.1.2-3">Over the CIDFI-dedicated QUIC stream, the server sends the mapping
+modified en route to the edge network (e.g., <span>[<a href="#pathologies" class="cite xref">pathologies</a>]</span>).<a href="#section-12.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-12.1.2-3">Over the CIDFI-dedicated QUIC stream, the server sends the mapping
 information to the client when then propagates that information
-to each of the CNEs.<a href="#section-11.1.2-3" class="pilcrow">¶</a></p>
-<p id="section-11.1.2-4">An example is shown in <a href="#fig-dscp-json" class="auto internal xref">Figure 13</a>.<a href="#section-11.1.2-4" class="pilcrow">¶</a></p>
+to each of the CNEs.<a href="#section-12.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-12.1.2-4">An example is shown in <a href="#fig-dscp-json" class="auto internal xref">Figure 13</a>.<a href="#section-12.1.2-4" class="pilcrow">¶</a></p>
 <span id="name-example-json-for-dscp-mappi"></span><div id="fig-dscp-json">
 <figure id="figure-13">
-            <div class="alignLeft art-json art-text artwork" id="section-11.1.2-5.1">
+            <div class="alignLeft art-json art-text artwork" id="section-12.1.2-5.1">
 <pre>
 {
    "dscp":[
@@ -3087,39 +3148,39 @@ to each of the CNEs.<a href="#section-11.1.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="cidfi-aware-network-element-to-server">
-<section id="section-11.2">
+<section id="section-12.2">
         <h3 id="name-cidfi-aware-network-element">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-cidfi-aware-network-element" class="section-name selfRef">CIDFI-aware Network Element to Server</a>
+<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-cidfi-aware-network-element" class="section-name selfRef">CIDFI-aware Network Element to Server</a>
         </h3>
-<p id="section-11.2-1">The CIDFI-aware client informs the CNE of the client's
+<p id="section-12.2-1">The CIDFI-aware client informs the CNE of the client's
 received Destination CIDs.  As bandwidth availability to that client
 changes, the CNE updates the client with new
-metadata.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.2-2">
+metadata.<a href="#section-12.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-12.2-2">
 <pre>
 {
    "dcid":123,
    "bandwidth":"1Mbps"
 }
-</pre><a href="#section-11.2-2" class="pilcrow">¶</a>
+</pre><a href="#section-12.2-2" class="pilcrow">¶</a>
 </div>
-<p id="section-11.2-3">The client then sends that information to the server in the CIDFI-dedicated
-QUIC stream associated with that same Connection ID.<a href="#section-11.2-3" class="pilcrow">¶</a></p>
+<p id="section-12.2-3">The client then sends that information to the server in the CIDFI-dedicated
+QUIC stream associated with that same Connection ID.<a href="#section-12.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="privacy-considerations">
-<section id="section-12">
+<section id="section-13">
       <h2 id="name-privacy-considerations">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
       </h2>
 <div id="privacy-aware-metadata-sharing-in-network-relationships">
-<section id="section-12.1">
+<section id="section-13.1">
         <h3 id="name-privacy-aware-metadata-shar">
-<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-privacy-aware-metadata-shar" class="section-name selfRef">Privacy-Aware Metadata Sharing in Network Relationships</a>
+<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-privacy-aware-metadata-shar" class="section-name selfRef">Privacy-Aware Metadata Sharing in Network Relationships</a>
         </h3>
-<p id="section-12.1-1">If the network operator and the server have a business relationship,
+<p id="section-13.1-1">If the network operator and the server have a business relationship,
 the server can sign or attest the metadata using, e.g., JSON Web Token (JWT) <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> or CBOR Web Token (CWT) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>. The
 attested metadata will be sent from the server to the client. The client
 will decide whether to convey the attested metadata to the CNE, considering
@@ -3129,88 +3190,88 @@ whether to reveal the identity of the server to the network or not.
 If the attested metadata is sent to the CNE from the client, the attestation
 will be utilized by the CNE, acting as a Relying Party (e.g., <span><a href="https://rfc-editor.org/rfc/rfc9334#section-7.1" class="relref">Section 7.1</a> of [<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>), to determine the
 level of trust it wishes to place in the attested metadata. The relying party
-may choose to trust or not trust the attestation.<a href="#section-12.1-1" class="pilcrow">¶</a></p>
+may choose to trust or not trust the attestation.<a href="#section-13.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="discussion-points">
-<section id="section-13">
+<section id="section-14">
       <h2 id="name-discussion-points">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-discussion-points" class="section-name selfRef">Discussion Points</a>
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-discussion-points" class="section-name selfRef">Discussion Points</a>
       </h2>
-<p id="section-13-1">This section discusses known issues that would benefit from wider discussion.<a href="#section-13-1" class="pilcrow">¶</a></p>
+<p id="section-14-1">This section discusses known issues that would benefit from wider discussion.<a href="#section-14-1" class="pilcrow">¶</a></p>
 <div id="client-versus-server-signaling-cid-to-importance-mapping">
-<section id="section-13.1">
+<section id="section-14.1">
         <h3 id="name-client-versus-server-signal">
-<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-client-versus-server-signal" class="section-name selfRef">Client versus Server Signaling CID-to-importance Mapping</a>
+<a href="#section-14.1" class="section-number selfRef">14.1. </a><a href="#name-client-versus-server-signal" class="section-name selfRef">Client versus Server Signaling CID-to-importance Mapping</a>
         </h3>
-<p id="section-13.1-1">Need to evaluate number of round trips (and other overhead) of client
+<p id="section-14.1-1">Need to evaluate number of round trips (and other overhead) of client
 signaling CID-to-importance mapping or server signaling CID-to-importance
-mapping.<a href="#section-13.1-1" class="pilcrow">¶</a></p>
+mapping.<a href="#section-14.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="overhead-of-quic-dcid-packet-examination">
-<section id="section-13.2">
+<section id="section-14.2">
         <h3 id="name-overhead-of-quic-dcid-packe">
-<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-overhead-of-quic-dcid-packe" class="section-name selfRef">Overhead of QUIC DCID Packet Examination</a>
+<a href="#section-14.2" class="section-number selfRef">14.2. </a><a href="#name-overhead-of-quic-dcid-packe" class="section-name selfRef">Overhead of QUIC DCID Packet Examination</a>
         </h3>
-<p id="section-13.2-1">If CID-to-importance metadata was signaled by the server as described
+<p id="section-14.2-1">If CID-to-importance metadata was signaled by the server as described
 in <a href="#host-to-network" class="auto internal xref">Section 7.3.1</a>, the CNE have to
 examine the UDP payload of each packet for a matching Destination CID
 for the lifetime of the connection.  This is somewhat assuaged by
 the STUN nonce transmitted which may well be an easier signal to
-identify.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
+identify.<a href="#section-14.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="interaction-with-wi-fi-packet-aggregation">
-<section id="section-13.3">
+<section id="section-14.3">
         <h3 id="name-interaction-with-wi-fi-pack">
-<a href="#section-13.3" class="section-number selfRef">13.3. </a><a href="#name-interaction-with-wi-fi-pack" class="section-name selfRef">Interaction with Wi-Fi Packet Aggregation</a>
+<a href="#section-14.3" class="section-number selfRef">14.3. </a><a href="#name-interaction-with-wi-fi-pack" class="section-name selfRef">Interaction with Wi-Fi Packet Aggregation</a>
         </h3>
-<p id="section-13.3-1">Per-packet metadata influences transmission of that packet but may
+<p id="section-14.3-1">Per-packet metadata influences transmission of that packet but may
 well conflict with some Wi-Fi optimizations (e.g., <span>[<a href="#wifi-aggregation" class="cite xref">wifi-aggregation</a>]</span>)
-and similar 5G optimizations.<a href="#section-13.3-1" class="pilcrow">¶</a></p>
-<p id="section-13.3-2">This impact needs further study.<a href="#section-13.3-2" class="pilcrow">¶</a></p>
+and similar 5G optimizations.<a href="#section-14.3-1" class="pilcrow">¶</a></p>
+<p id="section-14.3-2">This impact needs further study.<a href="#section-14.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="overhead-of-mapping-cids-to-packet-metadata">
-<section id="section-13.4">
+<section id="section-14.4">
         <h3 id="name-overhead-of-mapping-cids-to">
-<a href="#section-13.4" class="section-number selfRef">13.4. </a><a href="#name-overhead-of-mapping-cids-to" class="section-name selfRef">Overhead of Mapping CIDs to Packet Metadata</a>
+<a href="#section-14.4" class="section-number selfRef">14.4. </a><a href="#name-overhead-of-mapping-cids-to" class="section-name selfRef">Overhead of Mapping CIDs to Packet Metadata</a>
         </h3>
-<p id="section-13.4-1">Network Elements have to maintain a mapping between each UDP 4-tuple
+<p id="section-14.4-1">Network Elements have to maintain a mapping between each UDP 4-tuple
 and QUIC CID and its DSCP code point.  This also needs updating
-whenever sender changes its CID.  This is awkward.<a href="#section-13.4-1" class="pilcrow">¶</a></p>
-<p id="section-13.4-2">An alternative is a fixed mapping of QUIC CIDs to their meanings,
+whenever sender changes its CID.  This is awkward.<a href="#section-14.4-1" class="pilcrow">¶</a></p>
+<p id="section-14.4-2">An alternative is a fixed mapping of QUIC CIDs to their meanings,
 as proposed in <span>[<a href="#I-D.zmlk-quic-te" class="cite xref">I-D.zmlk-quic-te</a>]</span>.  However, this will ossify
 the meaning of those QUIC CIDs.  It also requires all networks to
-agree on the meaning of those QUIC CIDs.<a href="#section-13.4-2" class="pilcrow">¶</a></p>
+agree on the meaning of those QUIC CIDs.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="improve-cidfi-initialization-time">
-<section id="section-13.5">
+<section id="section-14.5">
         <h3 id="name-improve-cidfi-initializatio">
-<a href="#section-13.5" class="section-number selfRef">13.5. </a><a href="#name-improve-cidfi-initializatio" class="section-name selfRef">Improve CIDFI Initialization Time</a>
+<a href="#section-14.5" class="section-number selfRef">14.5. </a><a href="#name-improve-cidfi-initializatio" class="section-name selfRef">Improve CIDFI Initialization Time</a>
         </h3>
-<p id="section-13.5-1">Find approaches to further reduce network communications to start CIDFI.<a href="#section-13.5-1" class="pilcrow">¶</a></p>
+<p id="section-14.5-1">Find approaches to further reduce network communications to start CIDFI.<a href="#section-14.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="primary-cid-change">
-<section id="section-13.6">
+<section id="section-14.6">
         <h3 id="name-primary-quic-channel-cid-ch">
-<a href="#section-13.6" class="section-number selfRef">13.6. </a><a href="#name-primary-quic-channel-cid-ch" class="section-name selfRef">Primary QUIC Channel CID Change</a>
+<a href="#section-14.6" class="section-number selfRef">14.6. </a><a href="#name-primary-quic-channel-cid-ch" class="section-name selfRef">Primary QUIC Channel CID Change</a>
         </h3>
-<p id="section-13.6-1">Because the CIDFI network element, QUIC server, and QUIC client all
+<p id="section-14.6-1">Because the CIDFI network element, QUIC server, and QUIC client all
 cooperate to share the primary QUIC connection's Destination CID,
 when a new CIDFI network element is involved (e.g., due to client
 attaching to a different network), a new Destination CID <span class="bcp14">SHOULD</span>
-be used for the reasons discussed in <span><a href="https://rfc-editor.org/rfc/rfc9000#section-9.5" class="relref">Section 9.5</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).<a href="#section-13.6-1" class="pilcrow">¶</a></p>
+be used for the reasons discussed in <span><a href="https://rfc-editor.org/rfc/rfc9000#section-9.5" class="relref">Section 9.5</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).<a href="#section-14.6-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-13.6-2.1">
-            <p id="section-13.6-2.1.1">We need clear way to signal which DCIDs can be used for 'this'
+<li class="normal ulEmpty" id="section-14.6-2.1">
+            <p id="section-14.6-2.1.1">We need clear way to signal which DCIDs can be used for 'this'
 network attach and which DCIDs are for a migrated connection.  Probably
-belongs in the QUIC transport parameter signaling?<a href="#section-13.6-2.1.1" class="pilcrow">¶</a></p>
+belongs in the QUIC transport parameter signaling?<a href="#section-14.6-2.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -3218,49 +3279,49 @@ belongs in the QUIC transport parameter signaling?<a href="#section-13.6-2.1.1" 
 </section>
 </div>
 <div id="state-maintenance">
-<section id="section-14">
+<section id="section-15">
       <h2 id="name-state-maintenance">
-<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-state-maintenance" class="section-name selfRef">State Maintenance</a>
+<a href="#section-15" class="section-number selfRef">15. </a><a href="#name-state-maintenance" class="section-name selfRef">State Maintenance</a>
       </h2>
-<p id="section-14-1">A CNE can safely remove state after UDP inactivity timeout <span><a href="https://rfc-editor.org/rfc/rfc4787#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC4787" class="cite xref">RFC4787</a>]</span>.  The CIDFI client <span class="bcp14">MUST</span> re-signal its CNE(s) when it
+<p id="section-15-1">A CNE can safely remove state after UDP inactivity timeout <span><a href="https://rfc-editor.org/rfc/rfc4787#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC4787" class="cite xref">RFC4787</a>]</span>.  The CIDFI client <span class="bcp14">MUST</span> re-signal its CNE(s) when it
 receives a QUIC path validation message, as that indicates a NAT
 rebinding occurred.  A CNE's state can also be cleared by signaling from
 the CIDFI client, such as when closing the application; however, this
 signal cannot be relied upon due to network disconnect, battery
-depletion, and suchlike.<a href="#section-14-1" class="pilcrow">¶</a></p>
+depletion, and suchlike.<a href="#section-15-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-14-2.1">
-          <p id="section-14-2.1.1">TODO: Probably want keepalives on client-&gt;CNE communication. To be assessed.<a href="#section-14-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-15-2.1">
+          <p id="section-15-2.1.1">TODO: Probably want keepalives on client-&gt;CNE communication. To be assessed.<a href="#section-15-2.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
 </div>
 <div id="api-integration">
-<section id="section-15">
+<section id="section-16">
       <h2 id="name-api-integration-for-quic-st">
-<a href="#section-15" class="section-number selfRef">15. </a><a href="#name-api-integration-for-quic-st" class="section-name selfRef">API Integration for QUIC Stream and Packet-Level Prioritization</a>
+<a href="#section-16" class="section-number selfRef">16. </a><a href="#name-api-integration-for-quic-st" class="section-name selfRef">API Integration for QUIC Stream and Packet-Level Prioritization</a>
       </h2>
-<p id="section-15-1">For each QUIC stream requiring differentiated service, the QUIC stack can
+<p id="section-16-1">For each QUIC stream requiring differentiated service, the QUIC stack can
 map that stream to a different Destination CID. The application-level code
 would require an API to instruct the QUIC stack that a particular stream
 needs differentiated service. Similarly, if the application-level code seeks
 differentiated service for packets within a stream (e.g., prioritizing P-frames
 over I-Frames in a video stream), it would need an API to inform the QUIC stack
 that different packets within the QUIC stream require differentiated services
-and to map these packets to different Destination CIDs.<a href="#section-15-1" class="pilcrow">¶</a></p>
-<p id="section-15-2"><strong>Where packet-level differentiation is not desired, such API enhancements
+and to map these packets to different Destination CIDs.<a href="#section-16-1" class="pilcrow">¶</a></p>
+<p id="section-16-2"><strong>Where packet-level differentiation is not desired, such API enhancements
 are not needed</strong>.  In that situation, the CIDFI-aware client and CIDFI-aware
 network elements can utilize bandwidth information to optimize their video
 streaming usage and their interactive audio/video streams, without the
-benefit of packet-level differentiation.<a href="#section-15-2" class="pilcrow">¶</a></p>
+benefit of packet-level differentiation.<a href="#section-16-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-16">
+<section id="section-17">
       <h2 id="name-security-considerations">
-<a href="#section-16" class="section-number selfRef">16. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-17" class="section-number selfRef">17. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-16-1">Because the sender's QUIC Destination Connection ID is mapped to
+<p id="section-17-1">Because the sender's QUIC Destination Connection ID is mapped to
 packet importance, and the DCID remains the same for many packets, an
 attacker could determine which DCIDs are important by causing
 interference on the bandwidth-constrained link (by creating other
@@ -3269,57 +3330,57 @@ DCIDs are transmitted versus which DCIDs are dropped.  This is a side-
 effect of using fixed identifier (DCIDs) rather than encrypting
 the packet importance.  This was a design trade-off to reduce the
 CPU effort on the CNEs.  A mitigation is using
-several DCIDs for every packet importance.<a href="#section-16-1" class="pilcrow">¶</a></p>
-<p id="section-16-2">Other than what can be inferred from a destination IP address, the server's identity is not disclosed to the CIDFI Network Elements,
+several DCIDs for every packet importance.<a href="#section-17-1" class="pilcrow">¶</a></p>
+<p id="section-17-2">Other than what can be inferred from a destination IP address, the server's identity is not disclosed to the CIDFI Network Elements,
 thus maintaining the end user's privacy.  Communications are relayed through the client because only the
 client knows the identity of the server and can validate
-its certificate.<a href="#section-16-2" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-16-3">
-        <dt id="section-16-3.1">Spoofing Attacks:</dt>
-        <dd style="margin-left: 1.5em" id="section-16-3.2">
-          <p id="section-16-3.2.1">For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.<a href="#section-16-3.2.1" class="pilcrow">¶</a></p>
+its certificate.<a href="#section-17-2" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-17-3">
+        <dt id="section-17-3.1">Spoofing Attacks:</dt>
+        <dd style="margin-left: 1.5em" id="section-17-3.2">
+          <p id="section-17-3.2.1">For an attacker to succeed with the nonce challenge against a victim's UDP 4-tuple, an attacker has to send a STUN CIDFI-NONCE packet using the victim's source IP address and a valid HMAC. A valid HMAC can be obtained by the attacker making its own connection to the CIDFI-aware server and spoofing the source IP address and UDP port number of the victim.<a href="#section-17-3.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-16-3.3"></dt>
-        <dd style="margin-left: 1.5em" id="section-16-3.4">
-          <p id="section-16-3.4.1">If the client does not support CIDFI, the attacker can influence the packet treatment of the victim's UDP 4-tuple.<a href="#section-16-3.4.1" class="pilcrow">¶</a></p>
+<dt id="section-17-3.3"></dt>
+        <dd style="margin-left: 1.5em" id="section-17-3.4">
+          <p id="section-17-3.4.1">If the client does not support CIDFI, the attacker can influence the packet treatment of the victim's UDP 4-tuple.<a href="#section-17-3.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-16-3.5"></dt>
-        <dd style="margin-left: 1.5em" id="section-16-3.6">
-          <p id="section-16-3.6.1">If the client implements CIDFI, a CIDFI network element can identify an IP address spoofing attack. Concretely, the CNE will receive two HTTPS connections describing the same DCID; one connection from the attacker and another one from the victim. The CNE will then issue unique Nonces and HMACs to both the attacker and victim, and both the attacker and victim should send the STUN Indication on that same UDP 4-tuple. Such an event should trigger an alarm on the CNE. In this scenario, it is recommended that both the attacker and the victim be denied CIDFI access.<a href="#section-16-3.6.1" class="pilcrow">¶</a></p>
+<dt id="section-17-3.5"></dt>
+        <dd style="margin-left: 1.5em" id="section-17-3.6">
+          <p id="section-17-3.6.1">If the client implements CIDFI, a CIDFI network element can identify an IP address spoofing attack. Concretely, the CNE will receive two HTTPS connections describing the same DCID; one connection from the attacker and another one from the victim. The CNE will then issue unique Nonces and HMACs to both the attacker and victim, and both the attacker and victim should send the STUN Indication on that same UDP 4-tuple. Such an event should trigger an alarm on the CNE. In this scenario, it is recommended that both the attacker and the victim be denied CIDFI access.<a href="#section-17-3.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-16-3.7"></dt>
-        <dd style="margin-left: 1.5em" id="section-16-3.8">
-          <p id="section-16-3.8.1">The spoofing of a victim's IP address is prevented by the network using network ingress filtering (<span>[<a href="#RFC2827" class="cite xref">RFC2827</a>]</span>, <span>[<a href="#RFC7513" class="cite xref">RFC7513</a>]</span>, <span>[<a href="#RFC6105" class="cite xref">RFC6105</a>]</span>, and/or <span>[<a href="#RFC6620" class="cite xref">RFC6620</a>]</span>).<a href="#section-16-3.8.1" class="pilcrow">¶</a></p>
+<dt id="section-17-3.7"></dt>
+        <dd style="margin-left: 1.5em" id="section-17-3.8">
+          <p id="section-17-3.8.1">The spoofing of a victim's IP address is prevented by the network using network ingress filtering (<span>[<a href="#RFC2827" class="cite xref">RFC2827</a>]</span>, <span>[<a href="#RFC7513" class="cite xref">RFC7513</a>]</span>, <span>[<a href="#RFC6105" class="cite xref">RFC6105</a>]</span>, and/or <span>[<a href="#RFC6620" class="cite xref">RFC6620</a>]</span>).<a href="#section-17-3.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-16-3.9">On-Path Attacks:</dt>
-        <dd style="margin-left: 1.5em" id="section-16-3.10">
-          <p id="section-16-3.10.1">An on-path attacker can observe the victim's Discovery Packet, block it, and then forward the packet within the attacker's 5-tuple. Subsequently, the on-path attacker can 'steal' the victim's CIDFI control from the victim's UDP 4-tuple, causing the victim's CIDFI signaling for that UDP 4-tuple to influence the attacker's UDP 4-tuple.<a href="#section-16-3.10.1" class="pilcrow">¶</a></p>
+<dt id="section-17-3.9">On-Path Attacks:</dt>
+        <dd style="margin-left: 1.5em" id="section-17-3.10">
+          <p id="section-17-3.10.1">An on-path attacker can observe the victim's Discovery Packet, block it, and then forward the packet within the attacker's 5-tuple. Subsequently, the on-path attacker can 'steal' the victim's CIDFI control from the victim's UDP 4-tuple, causing the victim's CIDFI signaling for that UDP 4-tuple to influence the attacker's UDP 4-tuple.<a href="#section-17-3.10.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-16-3.11"></dt>
-        <dd style="margin-left: 1.5em" id="section-16-3.12">
-          <p id="section-16-3.12.1">Although the on-path attacker can't directly observe the encrypted CIDFI signaling, this attack effectively disables the victim's CIDFI treatment, making it accessible to the attacker. The attacker can send NEW_CONNECTION_ID frames to the server with the victim's (observed) Destination CID, effectively claiming the victim's CIDFI signaling for themselves. An on-path attacker can do a lot more damage by blocking or rate-limiting the victim's traffic.<a href="#section-16-3.12.1" class="pilcrow">¶</a></p>
+<dt id="section-17-3.11"></dt>
+        <dd style="margin-left: 1.5em" id="section-17-3.12">
+          <p id="section-17-3.12.1">Although the on-path attacker can't directly observe the encrypted CIDFI signaling, this attack effectively disables the victim's CIDFI treatment, making it accessible to the attacker. The attacker can send NEW_CONNECTION_ID frames to the server with the victim's (observed) Destination CID, effectively claiming the victim's CIDFI signaling for themselves. An on-path attacker can do a lot more damage by blocking or rate-limiting the victim's traffic.<a href="#section-17-3.12.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-17">
+<section id="section-18">
       <h2 id="name-iana-considerations">
-<a href="#section-17" class="section-number selfRef">17. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-18" class="section-number selfRef">18. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="iana-tp">
-<section id="section-17.1">
+<section id="section-18.1">
         <h3 id="name-new-quic-transport-paramete">
-<a href="#section-17.1" class="section-number selfRef">17.1. </a><a href="#name-new-quic-transport-paramete" class="section-name selfRef">New QUIC Transport Parameter</a>
+<a href="#section-18.1" class="section-number selfRef">18.1. </a><a href="#name-new-quic-transport-paramete" class="section-name selfRef">New QUIC Transport Parameter</a>
         </h3>
-<p id="section-17.1-1">This document requests IANA to register the following new permanent QUIC transport parameter
-in the "QUIC Transport Parameters" registry under the "QUIC" registry group available at <span>[<a href="#IANA-QUIC" class="cite xref">IANA-QUIC</a>]</span>:<a href="#section-17.1-1" class="pilcrow">¶</a></p>
+<p id="section-18.1-1">This document requests IANA to register the following new permanent QUIC transport parameter
+in the "QUIC Transport Parameters" registry under the "QUIC" registry group available at <span>[<a href="#IANA-QUIC" class="cite xref">IANA-QUIC</a>]</span>:<a href="#section-18.1-1" class="pilcrow">¶</a></p>
 <span id="name-new-quic-transport-parameter"></span><table class="center" id="table-1">
           <caption>
 <a href="#table-1" class="selfRef">Table 1</a>:
@@ -3342,86 +3403,116 @@ in the "QUIC Transport Parameters" registry under the "QUIC" registry group avai
         </table>
 </section>
 </div>
-<div id="iana-uri">
-<section id="section-17.2">
-        <h3 id="name-new-well-known-uri-cidfi-aw">
-<a href="#section-17.2" class="section-number selfRef">17.2. </a><a href="#name-new-well-known-uri-cidfi-aw" class="section-name selfRef">New Well-known URI "cidfi-aware"</a>
+<div id="sec-iana-new-frame">
+<section id="section-18.2">
+        <h3 id="name-new-quic-frame-type">
+<a href="#section-18.2" class="section-number selfRef">18.2. </a><a href="#name-new-quic-frame-type" class="section-name selfRef">New QUIC Frame Type</a>
         </h3>
-<p id="section-17.2-1">This document requests IANA to register the new well-known URI "cidfi" in the
-"Well-Known URIs" registry available at <span>[<a href="#IANA-WKU" class="cite xref">IANA-WKU</a>]</span>.<a href="#section-17.2-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="iana-sudn">
-<section id="section-17.3">
-        <h3 id="name-new-special-use-domain-name">
-<a href="#section-17.3" class="section-number selfRef">17.3. </a><a href="#name-new-special-use-domain-name" class="section-name selfRef">New Special-use Domain Name</a>
-        </h3>
-<p id="section-17.3-1">Register new special-use domain name cidfi.arpa for DNS SVCB discovery.<a href="#section-17.3-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="iana-svcb">
-<section id="section-17.4">
-        <h3 id="name-new-dns-service-binding-svc">
-<a href="#section-17.4" class="section-number selfRef">17.4. </a><a href="#name-new-dns-service-binding-svc" class="section-name selfRef">New DNS Service Binding (SVCB)</a>
-        </h3>
-<p id="section-17.4-1">This document requests IANA to register the new DNS SVCB "_cidfi-aware" in
-the "DNS Service Bindings (SVCB)" registry available at <span>[<a href="#IANA-SVCB" class="cite xref">IANA-SVCB</a>]</span>.<a href="#section-17.4-1" class="pilcrow">¶</a></p>
-<p id="section-17.4-2">The document also requests IANA to register the following service parameter
-in the "Service Parameter Keys (SvcParamKeys)" registry <span>[<a href="#IANA-SVCB" class="cite xref">IANA-SVCB</a>]</span>:<a href="#section-17.4-2" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-17.4-3">
-          <dt id="section-17.4-3.1">Number:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.4-3.2">
-            <p id="section-17.4-3.2.1">TBD<a href="#section-17.4-3.2.1" class="pilcrow">¶</a></p>
+<p id="section-18.2-1">This document requests IANA to register a new value in in the "QUIC Frame Types" registry under the "QUIC" registry group available at <span>[<a href="#IANA-QUIC" class="cite xref">IANA-QUIC</a>]</span>:<a href="#section-18.2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-18.2-2">
+          <dt id="section-18.2-2.1">Value:</dt>
+          <dd style="margin-left: 1.5em" id="section-18.2-2.2">
+            <p id="section-18.2-2.2.1">TBDF2<a href="#section-18.2-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.4-3.3">Name:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.4-3.4">
-            <p id="section-17.4-3.4.1">min-ttl<a href="#section-17.4-3.4.1" class="pilcrow">¶</a></p>
+<dt id="section-18.2-2.3">Frame Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-18.2-2.4">
+            <p id="section-18.2-2.4.1">CIDFI_NEW_CONNECTION_ID_MAPPING<a href="#section-18.2-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-18.2-2.5">Status:</dt>
+          <dd style="margin-left: 1.5em" id="section-18.2-2.6">
+            <p id="section-18.2-2.6.1">permanent<a href="#section-18.2-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-18.2-2.7">Specification:</dt>
+          <dd style="margin-left: 1.5em" id="section-18.2-2.8">
+            <p id="section-18.2-2.8.1">This-Document<a href="#section-18.2-2.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-17.4-4">Meaning:
-:The minimum IPv4 TTL or IPv6 Hop Limit to use for a connection.<a href="#section-17.4-4" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-17.4-5">
-          <dt id="section-17.4-5.1">Reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.4-5.2">
-            <p id="section-17.4-5.2.1">This-Document<a href="#section-17.4-5.2.1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-uri">
+<section id="section-18.3">
+        <h3 id="name-new-well-known-uri-cidfi-aw">
+<a href="#section-18.3" class="section-number selfRef">18.3. </a><a href="#name-new-well-known-uri-cidfi-aw" class="section-name selfRef">New Well-known URI "cidfi-aware"</a>
+        </h3>
+<p id="section-18.3-1">This document requests IANA to register the new well-known URI "cidfi" in the
+"Well-Known URIs" registry available at <span>[<a href="#IANA-WKU" class="cite xref">IANA-WKU</a>]</span>.<a href="#section-18.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-sudn">
+<section id="section-18.4">
+        <h3 id="name-new-special-use-domain-name">
+<a href="#section-18.4" class="section-number selfRef">18.4. </a><a href="#name-new-special-use-domain-name" class="section-name selfRef">New Special-use Domain Name</a>
+        </h3>
+<p id="section-18.4-1">Register new special-use domain name cidfi.arpa for DNS SVCB discovery.<a href="#section-18.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-svcb">
+<section id="section-18.5">
+        <h3 id="name-new-dns-service-binding-svc">
+<a href="#section-18.5" class="section-number selfRef">18.5. </a><a href="#name-new-dns-service-binding-svc" class="section-name selfRef">New DNS Service Binding (SVCB)</a>
+        </h3>
+<p id="section-18.5-1">This document requests IANA to register the new DNS SVCB "_cidfi-aware" in
+the "DNS Service Bindings (SVCB)" registry available at <span>[<a href="#IANA-SVCB" class="cite xref">IANA-SVCB</a>]</span>.<a href="#section-18.5-1" class="pilcrow">¶</a></p>
+<p id="section-18.5-2">The document also requests IANA to register the following service parameter
+in the "Service Parameter Keys (SvcParamKeys)" registry <span>[<a href="#IANA-SVCB" class="cite xref">IANA-SVCB</a>]</span>:<a href="#section-18.5-2" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-18.5-3">
+          <dt id="section-18.5-3.1">Number:</dt>
+          <dd style="margin-left: 1.5em" id="section-18.5-3.2">
+            <p id="section-18.5-3.2.1">TBD<a href="#section-18.5-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-18.5-3.3">Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-18.5-3.4">
+            <p id="section-18.5-3.4.1">min-ttl<a href="#section-18.5-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-18.5-4">Meaning:
+:The minimum IPv4 TTL or IPv6 Hop Limit to use for a connection.<a href="#section-18.5-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-18.5-5">
+          <dt id="section-18.5-5.1">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-18.5-5.2">
+            <p id="section-18.5-5.2.1">This-Document<a href="#section-18.5-5.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
 </section>
 </div>
 <div id="iana-stun">
-<section id="section-17.5">
+<section id="section-18.6">
         <h3 id="name-new-stun-attribute">
-<a href="#section-17.5" class="section-number selfRef">17.5. </a><a href="#name-new-stun-attribute" class="section-name selfRef">New STUN Attribute</a>
+<a href="#section-18.6" class="section-number selfRef">18.6. </a><a href="#name-new-stun-attribute" class="section-name selfRef">New STUN Attribute</a>
         </h3>
-<p id="section-17.5-1">This document requests IANA to register the new STUN attribute "CIDFI-NONCE"
-in the "STUN Attributes" registry available at <span>[<a href="#IANA-STUN" class="cite xref">IANA-STUN</a>]</span>.<a href="#section-17.5-1" class="pilcrow">¶</a></p>
+<p id="section-18.6-1">This document requests IANA to register the new STUN attribute "CIDFI-NONCE"
+in the "STUN Attributes" registry available at <span>[<a href="#IANA-STUN" class="cite xref">IANA-STUN</a>]</span>.<a href="#section-18.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-pvd">
-<section id="section-17.6">
+<section id="section-18.7">
         <h3 id="name-new-provisioning-domain-add">
-<a href="#section-17.6" class="section-number selfRef">17.6. </a><a href="#name-new-provisioning-domain-add" class="section-name selfRef">New Provisioning Domain Additional Information Key</a>
+<a href="#section-18.7" class="section-number selfRef">18.7. </a><a href="#name-new-provisioning-domain-add" class="section-name selfRef">New Provisioning Domain Additional Information Key</a>
         </h3>
-<p id="section-17.6-1">This document requests IANA to register a new JSON key in the
-Provisioning Domains Additional Information registry at <span>[<a href="#IANA-PVD" class="cite xref">IANA-PVD</a>]</span>:<a href="#section-17.6-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-17.6-2">
+<p id="section-18.7-1">This document requests IANA to register a new JSON key in the
+Provisioning Domains Additional Information registry at <span>[<a href="#IANA-PVD" class="cite xref">IANA-PVD</a>]</span>:<a href="#section-18.7-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-18.7-2">
 <pre>
 JSON key: cidfi
 Description: CID Flow Indicator
 Type: array of cidfi details
 Example: ["cidfinode": "service.example.net", "cidfipathauth":
           "/authpath", "cidfimetadata": "/meta"]
-</pre><a href="#section-17.6-2" class="pilcrow">¶</a>
+</pre><a href="#section-18.7-2" class="pilcrow">¶</a>
 </div>
-<p id="section-17.6-3">Additionally, this document requests creating a new registry, entitled "CIDFI JSON Keys" under
+<p id="section-18.7-3">Additionally, this document requests creating a new registry, entitled "CIDFI JSON Keys" under
 the Provisioning Domains Additional Information registry group <span>[<a href="#IANA-PVD" class="cite xref">IANA-PVD</a>]</span>.
 The policy for assigning new entries in this registry is Expert Review <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
 The structure of this registry is identical to the Provisioning Domains Additional Information registry group.
-The initial content of this registry is provided below:<a href="#section-17.6-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-17.6-4">
+The initial content of this registry is provided below:<a href="#section-18.7-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-18.7-4">
 <pre>
 JSON key: cidfinode
 Description: FQDN of CIDFI node
@@ -3442,20 +3533,20 @@ JSON key: cidfimetadata
 Description: metadata path for CIDFI
 type: string
 example: "/metadata"
-</pre><a href="#section-17.6-4" class="pilcrow">¶</a>
+</pre><a href="#section-18.7-4" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
-<section id="section-18">
+<section id="section-19">
       <h2 id="name-references">
-<a href="#section-18" class="section-number selfRef">18. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-19" class="section-number selfRef">19. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-18.1">
+<section id="section-19.1">
         <h3 id="name-normative-references">
-<a href="#section-18.1" class="section-number selfRef">18.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-19.1" class="section-number selfRef">19.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="CBOR">[CBOR]</dt>
@@ -3526,9 +3617,9 @@ example: "/metadata"
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-18.2">
+<section id="section-19.2">
         <h3 id="name-informative-references">
-<a href="#section-18.2" class="section-number selfRef">18.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-19.2" class="section-number selfRef">19.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="cryptex">[cryptex]</dt>
@@ -3607,13 +3698,25 @@ example: "/metadata"
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7519">https://www.rfc-editor.org/rfc/rfc7519</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC7649">[RFC7649]</dt>
+        <dd>
+<span class="refAuthor">Saint-Andre, P.</span> and <span class="refAuthor">D. York</span>, <span class="refTitle">"The Jabber Scribe Role at IETF Meetings"</span>, <span class="seriesInfo">RFC 7649</span>, <span class="seriesInfo">DOI 10.17487/RFC7649</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7649">https://www.rfc-editor.org/rfc/rfc7649</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC7839">[RFC7839]</dt>
         <dd>
 <span class="refAuthor">Bhandari, S.</span>, <span class="refAuthor">Gundavelli, S.</span>, <span class="refAuthor">Grayson, M.</span>, <span class="refAuthor">Volz, B.</span>, and <span class="refAuthor">J. Korhonen</span>, <span class="refTitle">"Access-Network-Identifier Option in DHCP"</span>, <span class="seriesInfo">RFC 7839</span>, <span class="seriesInfo">DOI 10.17487/RFC7839</span>, <time datetime="2016-06" class="refDate">June 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7839">https://www.rfc-editor.org/rfc/rfc7839</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC7849">[RFC7849]</dt>
+        <dd>
+<span class="refAuthor">Binet, D.</span>, <span class="refAuthor">Boucadair, M.</span>, <span class="refAuthor">Vizdal, A.</span>, <span class="refAuthor">Chen, G.</span>, <span class="refAuthor">Heatley, N.</span>, <span class="refAuthor">Chandler, R.</span>, <span class="refAuthor">Michaud, D.</span>, <span class="refAuthor">Lopez, D.</span>, and <span class="refAuthor">W. Haeffner</span>, <span class="refTitle">"An IPv6 Profile for 3GPP Mobile Devices"</span>, <span class="seriesInfo">RFC 7849</span>, <span class="seriesInfo">DOI 10.17487/RFC7849</span>, <time datetime="2016-05" class="refDate">May 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7849">https://www.rfc-editor.org/rfc/rfc7849</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8392">[RFC8392]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"CBOR Web Token (CWT)"</span>, <span class="seriesInfo">RFC 8392</span>, <span class="seriesInfo">DOI 10.17487/RFC8392</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8392">https://www.rfc-editor.org/rfc/rfc8392</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8512">[RFC8512]</dt>
+        <dd>
+<span class="refAuthor">Boucadair, M., Ed.</span>, <span class="refAuthor">Sivakumar, S.</span>, <span class="refAuthor">Jacquenet, C.</span>, <span class="refAuthor">Vinapamula, S.</span>, and <span class="refAuthor">Q. Wu</span>, <span class="refTitle">"A YANG Module for Network Address Translation (NAT) and Network Prefix Translation (NPT)"</span>, <span class="seriesInfo">RFC 8512</span>, <span class="seriesInfo">DOI 10.17487/RFC8512</span>, <time datetime="2019-01" class="refDate">January 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8512">https://www.rfc-editor.org/rfc/rfc8512</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8517">[RFC8517]</dt>
         <dd>
