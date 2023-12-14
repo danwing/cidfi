@@ -216,7 +216,7 @@ host (i.e., by several applications), cellular devices providing IP
 connectivity to other devices (see {{Section 3 of ?RFC7649}}), multiple
 CIDFI-aware network elements (e.g., Wi-Fi and an ISP network), hosts
 behind one or more IPv4 NATs or other IP translation technologies, and
-DOCSIS and 5G networks.
+DOCSIS and 5G networks. A comprehensive list of such translation technologies is provided in {{Section 2.2 of RFC8512}}.
 
 # Overview
 
