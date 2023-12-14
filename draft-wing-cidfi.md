@@ -1350,6 +1350,18 @@ in the "QUIC Transport Parameters" registry under the "QUIC" registry group avai
 
 This document requests IANA to register a new CIDFI_NEW_CONNECTION_ID_MAPPING frame.  Details TBD.
 
+Value:
+: TBDF2
+
+Frame Name:
+: CIDFI_NEW_CONNECTION_ID_MAPPING
+
+Status:
+: permanent
+
+Specification:
+: This-Document
+
 
 ## New Well-known URI "cidfi-aware" {#iana-uri}
 
