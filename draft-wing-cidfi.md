@@ -1346,7 +1346,7 @@ in the "QUIC Transport Parameters" registry under the "QUIC" registry group avai
 |TBD1| enable_cidfi| This-Document|
 {: title="New QUIC Transport Parameter"}
 
-## New QUIC CIDFI_NEW_CONNECTION_ID_MAPPING Frame
+## New QUIC Frame Type {#sec-iana-new-frame}
 
 This document requests IANA to register a new value in in the "QUIC Frame Types" registry under the "QUIC" registry group available at {{IANA-QUIC}}:
 
