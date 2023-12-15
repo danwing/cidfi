@@ -42,6 +42,7 @@ author:
     organization: Cloud Software Group Holdings, Inc.
     abbrev: Cloud Software Group
     country: United States of America
+    uri: https://www.cloud.com
     email: ["danwing@gmail.com"]
  -
     fullname: Tirumaleswar Reddy
@@ -214,9 +215,9 @@ The document is a generic framework that would function in any network deploymen
 The design supports multiple CIDFI and QUIC implementations on one
 host (i.e., by several applications), cellular devices providing IP
 connectivity to other devices (see {{Section 3 of ?RFC7649}}), multiple
-CIDFI-aware network elements (e.g., Wi-Fi and an ISP network), hosts
-behind one or more IPv4 NATs or other IP translation technologies, and
-DOCSIS and 5G networks. A comprehensive list of such translation technologies is provided in {{Section 2.2 of ?RFC8512}}.
+CIDFI-aware network elements (e.g., Wi-Fi and an ISP network), DOCSIS and
+5G networks, and hosts
+behind one or more IPv4 NATs or other IP translation technologies.  A comprehensive list of such translation technologies is provided in {{Section 2.2 of ?RFC8512}}.
 
 # Overview
 
@@ -650,16 +651,9 @@ offer/answer exchange, the client knows some connectivity expectation about the
 incoming flow without the server supporting CIDFI.  Processing
 continues with the next step.
 
-If the server indicates CIDFI support, then the server creates a
-new Server-Initiated, Bidirectional QUIC stream which is dedicated to
-CIDFI communication.  This stream number is communicated in the
-CIDFI transport response during the QUIC handshake.
-
-> TODO: Specify how CIDFI stream number is communicated to client.
-
-The QUIC client and server exchange CIDFI information over
-this CIDFI-dedicated stream using the new CIDFI_NEW_CONNECTION_ID_MAPPING
-frame type as described in {{initial-metadata-exchange}}.
+The QUIC client and server exchange CIDFI information using the new
+CIDFI_NEW_CONNECTION_ID_MAPPING frame type as described in
+{{initial-metadata-exchange}}.
 
 Processing continues with the next step.
 
@@ -683,7 +677,7 @@ the single STUN indication contains a CIDFI-NONCE attribute from each of
 them.  This message is discarded, if received, by the QUIC server.
 
 In order to avoid overloading servers, the client may set the TTL/Hop Limit
-to a value that allows to cross the CNE, but then dicarded before reaching the server.
+to a value that allows to cross the CNE, but then discarded before reaching the server.
 For example, the host sets the TTL to "min-ttl" that is returned during CNE discovery.
 
 {{flow-diag-attach}} shows a summarized message flow obtaining
@@ -703,7 +697,7 @@ client                           edge router           server
   |<-----------------------------------+                  |
   |                                    |                  |
 ~~~~~
-{: #flow-diag-attach title="Example of Flow Exhange" artwork-align="center"}
+{: #flow-diag-attach title="Example of Flow Exchange" artwork-align="center"}
 
 
 Later, when connecting to a new QUIC server, the client
@@ -719,7 +713,7 @@ If a CIDFI Network Element is present on the path it processes the STUN
 Indication and sends a response to the client over HTTP using the
 HTTP channel established above.  It decrements the IPv4 TTL or IPv6
 Hop Limit and forwards the STUN Indication along its normal path,
-to accomodate another CIDFI Network Element farther away from the
+to accommodate another CIDFI Network Element farther away from the
 client.
 
 
@@ -1037,7 +1031,7 @@ Between the QUIC client and server when a mapping is no longer
 needed it can be cleaned up with RETIRE_CONNECTION_ID.  If that
 connection ID was mapped in one or more CNEs, the client SHOULD
 also remove that mapping state from the CNEs.  This allows the
-mapping state to be used for other CIDFI implemenations on the
+mapping state to be used for other CIDFI implementations on the
 same host or by other hosts (belonging to the same subscriber)
 or by other subscribers.
 
