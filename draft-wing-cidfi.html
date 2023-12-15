@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 16 June 2024</td>
+<td class="center">Expires 17 June 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-wing-cidfi-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-12-14" class="published">14 December 2023</time>
+<time datetime="2023-12-15" class="published">15 December 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-06-16">16 June 2024</time></dd>
+<dd class="expires"><time datetime="2024-06-17">17 June 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1136,7 +1136,7 @@ both directions of a flow.<a href="#section-abstract-2" class="pilcrow">¶</a></
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 17 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1633,9 +1633,9 @@ Metadata exchanges can occur in one single direction or both directions of a flo
 <p id="section-1-7">The design supports multiple CIDFI and QUIC implementations on one
 host (i.e., by several applications), cellular devices providing IP
 connectivity to other devices (see <span><a href="https://rfc-editor.org/rfc/rfc7649#section-3" class="relref">Section 3</a> of [<a href="#RFC7649" class="cite xref">RFC7649</a>]</span>), multiple
-CIDFI-aware network elements (e.g., Wi-Fi and an ISP network), hosts
-behind one or more IPv4 NATs or other IP translation technologies, and
-DOCSIS and 5G networks. A comprehensive list of such translation technologies is provided in <span><a href="https://rfc-editor.org/rfc/rfc8512#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC8512" class="cite xref">RFC8512</a>]</span>.<a href="#section-1-7" class="pilcrow">¶</a></p>
+CIDFI-aware network elements (e.g., Wi-Fi and an ISP network), DOCSIS and
+5G networks, and hosts
+behind one or more IPv4 NATs or other IP translation technologies.  A comprehensive list of such translation technologies is provided in <span><a href="https://rfc-editor.org/rfc/rfc8512#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC8512" class="cite xref">RFC8512</a>]</span>.<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="overview">
@@ -2300,19 +2300,10 @@ a certain bandwidth from a server or participated in a WebRTC
 offer/answer exchange, the client knows some connectivity expectation about the
 incoming flow without the server supporting CIDFI.  Processing
 continues with the next step.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1-3">If the server indicates CIDFI support, then the server creates a
-new Server-Initiated, Bidirectional QUIC stream which is dedicated to
-CIDFI communication.  This stream number is communicated in the
-CIDFI transport response during the QUIC handshake.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-7.1-4.1">
-            <p id="section-7.1-4.1.1">TODO: Specify how CIDFI stream number is communicated to client.<a href="#section-7.1-4.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-7.1-5">The QUIC client and server exchange CIDFI information over
-this CIDFI-dedicated stream using the new CIDFI_NEW_CONNECTION_ID_MAPPING
-frame type as described in <a href="#initial-metadata-exchange" class="auto internal xref">Section 7.3</a>.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
-<p id="section-7.1-6">Processing continues with the next step.<a href="#section-7.1-6" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">The QUIC client and server exchange CIDFI information using the new
+CIDFI_NEW_CONNECTION_ID_MAPPING frame type as described in
+<a href="#initial-metadata-exchange" class="auto internal xref">Section 7.3</a>.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1-4">Processing continues with the next step.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ownership">
@@ -2340,13 +2331,13 @@ class of 0b01) containing one or more CIDFI-NONCE attributes
 the single STUN indication contains a CIDFI-NONCE attribute from each of
 them.  This message is discarded, if received, by the QUIC server.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 <p id="section-7.2-3">In order to avoid overloading servers, the client may set the TTL/Hop Limit
-to a value that allows to cross the CNE, but then dicarded before reaching the server.
+to a value that allows to cross the CNE, but then discarded before reaching the server.
 For example, the host sets the TTL to "min-ttl" that is returned during CNE discovery.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
 <p id="section-7.2-4"><a href="#flow-diag-attach" class="auto internal xref">Figure 6</a> shows a summarized message flow obtaining
 the nonce and HMAC secret from the CNE (steps 1-2) which is performed
 on network attach.  The CNE also sends active_cidfi_connection_id_limit
 in step 2.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
-<span id="name-example-of-flow-exhange"></span><div id="flow-diag-attach">
+<span id="name-example-of-flow-exchange"></span><div id="flow-diag-attach">
 <figure id="figure-6">
           <div id="section-7.2-5.1">
             <div class="alignCenter art-svg artwork" id="section-7.2-5.1.1">
@@ -2385,7 +2376,7 @@ in step 2.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
 </div>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-example-of-flow-exhange" class="selfRef">Example of Flow Exhange</a>
+<a href="#name-example-of-flow-exchange" class="selfRef">Example of Flow Exchange</a>
           </figcaption></figure>
 </div>
 <p id="section-7.2-6">Later, when connecting to a new QUIC server, the client
@@ -2400,7 +2391,7 @@ UDP flows running on that same host.<a href="#section-7.2-6" class="pilcrow">¶<
 Indication and sends a response to the client over HTTP using the
 HTTP channel established above.  It decrements the IPv4 TTL or IPv6
 Hop Limit and forwards the STUN Indication along its normal path,
-to accomodate another CIDFI Network Element farther away from the
+to accommodate another CIDFI Network Element farther away from the
 client.<a href="#section-7.2-7" class="pilcrow">¶</a></p>
 <span id="name-example-of-flow-to-new-serv"></span><div id="flow-diag-connect">
 <figure id="figure-7">
@@ -2973,7 +2964,7 @@ server.<a href="#section-11-1" class="pilcrow">¶</a></p>
 needed it can be cleaned up with RETIRE_CONNECTION_ID.  If that
 connection ID was mapped in one or more CNEs, the client <span class="bcp14">SHOULD</span>
 also remove that mapping state from the CNEs.  This allows the
-mapping state to be used for other CIDFI implemenations on the
+mapping state to be used for other CIDFI implementations on the
 same host or by other hosts (belonging to the same subscriber)
 or by other subscribers.<a href="#section-11-2" class="pilcrow">¶</a></p>
 <p id="section-11-3">As a client can disappear from a network without informing its CNE and
@@ -3870,6 +3861,10 @@ Ben Schwartz for suggesting PvD as an alternative discovery mechanism.<a href="#
 <div class="email">
 <span>Email:</span>
 <a href="mailto:danwing@gmail.com" class="email">danwing@gmail.com</a>
+</div>
+<div class="url">
+<span>URI:</span>
+<a href="https://www.cloud.com" class="url">https://www.cloud.com</a>
 </div>
 </address>
 <address class="vcard">
