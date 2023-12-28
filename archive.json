@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-26T01:11:56.410480+00:00",
+  "timestamp": "2023-12-28T01:11:58.059182+00:00",
   "repo": "danwing/cidfi",
   "labels": [
     {
@@ -440,6 +440,22 @@
       "body": "see #56 ",
       "createdAt": "2023-12-06T06:57:14Z",
       "updatedAt": "2023-12-06T06:57:14Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 79,
+      "id": "I_kwDOKCXv8856qF2u",
+      "title": "Discuss relationship with L4S and NQB",
+      "url": "https://github.com/danwing/cidfi/issues/79",
+      "state": "OPEN",
+      "author": "danwing",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Discuss CIDFI's relationship with [L4S](https://datatracker.ietf.org/doc/rfc9330/) and [NQB](https://datatracker.ietf.org/doc/draft-ietf-tsvwg-nqb/).  One aspect is low bandwidth of L4S and NQB, which is not required for CIDFI-signaled flows (e.g., video streaming can build a queue and that's okay, so it is not suitable for NQB); interactive audio/video will likely exceed the 500 kbps recommended by NQB.",
+      "createdAt": "2023-12-28T00:00:02Z",
+      "updatedAt": "2023-12-28T00:00:02Z",
       "closedAt": null,
       "comments": []
     }
