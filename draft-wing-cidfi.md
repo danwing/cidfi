@@ -440,92 +440,10 @@ suffer from nested congestion control.
 
 # Network Configuration to Support CIDFI
 
-The network is configured to advertise its support for CIDFI.
+The network is configured to advertise its support for CIDFI using a variety of means.
 
-For this step, four mechanisms are described in this document: DNS
+Four mechanisms are described in [I-D.wing-cidfi-discovery]: DNS
 SVCB records {{!RFC9460}}, IPv6 Provisioning Domains (PvD) {{!RFC8801}}, DHCP {{!RFC2131}}{{!RFC8415}}, and 3GPP PCO.
-These are described in the following sub-sections.
-
-> Standardizing all or some of these mechanisms is for further discussion.
-
-
-## DNS SVCB Records
-
-This document defines a new DNS Service Binding parameter "cidfi-aware" in
-{{iana-svcb}} and a new Special-Use Domain Name "cidfi.arpa" in
-{{iana-sudn}}.
-
-The local network is configured to respond to DNS SVCB
-{{!RFC9460}} queries with ServiceMode ({{Section
-2.4.3 of !RFC9460}}) for "_cidfi-aware.cidfi.arpa" with
-the DNS names of that network's and upstream network's CIDFI-aware
-network elements (CNEs).  If upstream networks also support CIDFI (e.g., the
-ISP network) those SVCB records are aggregated into the local DNS
-server's response by the local network's recursive DNS resolvers.  For
-example, a query for "_cidfi-aware.cidfi.arpa" might return two answers
-for the two CNEs on the local network, one belonging
-to the local ISP (example.net) and the other belonging to the local
-Wi-Fi network (example.com).
-
-~~~~~
-_cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 service-cidfi.example.net. (
-    alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
-    cidfimetadata=/cidfi-metadata
-    )
-_cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 wifi.example.com. (
-    alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
-    cidfimetadata=/cidfi-metadata
-    )
-~~~~~
-{: #svcb-ex artwork-align="center" title="Example of SVCB Records"}
-
-When multihoming, the multihome-capable CPE aggregates all upstream
-networks' "_cidfi-aware.cidfi.arpa" responses into the response sent to
-its locally-connected clients.
-
-
-## Provisioning Domains
-
-The CIDFI networks are configured to set the H-flag so clients can
-request PvD Additional Information ({{Section 4.1 of !RFC8801}}).
-
-The "application/pvd+json" returned looks like what is depicted in {{pvd-ex}} when there are two
-CIDFI-aware network elements, service-cidfi and wi-fi.
-
-~~~~~
-{
-   "cidfi":[
-      {
-         "cidfinode":"service-cidfi.example.net",
-         "min-ttl":3,
-         "cidfipathauth":"/path-auth-query{?cidfi}",
-         "cidfimetadata":"/cidfi-metadata"
-      },
-      {
-         "cidfinode":"wi-fi.example.net",
-         "min-ttl":2,
-         "cidfipathauth":"/path-auth-query{?cidfi}",
-         "cidfimetadata":"/cidfi-metadata"
-      }
-   ]
-}
-~~~~~
-{: #pvd-ex artwork-align="center" title="Example of PvD Information"}
-
-Multiple CIDFI-aware network elements on a network path will require
-propagating the Provisioning Domain Additional Information.  For
-example, a CIDFI-aware Wi-Fi access point connected to a CIDFI-aware
-5G network will require the information for both CIDFI networks be available
-to the client, in a single Provisioning Domain Additional Information
-request.  This means the Wi-Fi access point has to obtain that information
-so the Wi-Fi access point can provide both the 5G network's information
-and the Wi-Fi access point's information.
-
-
-## DHCP or 3GPP PCO
-
-The network is configured to respond to DHCPv6, DHCPv4 sub-option,
-or 3GPP PCO (Protocol Configuration Option) Information Element.
 
 # Client Operation on Network Attach or Topology Change {#attach}
 
@@ -535,44 +453,15 @@ authorizes discovered network elements ({{client-authorizes}}).
 
 ## Client Learns Local Network Supports CIDFI {#discovery}
 
-For this step, four mechanisms are identified: DNS SVCB records, IPv6
-PvD, DHCP, or 3GPP PCO.  These are described
-in the following sub-sections.
+The client uses one on of the four mechanisms defined in [I-D.wing-cidfi-discovery]
+to discover CNEs of the networks it is attached to.
 
-In all cases below,
-
-- if the discovery succeeds (i.e., the client concludes that the local
-  and/or ISP network support CIDFI) client processing proceeds to
+If the discovery succeeds (i.e., the client concludes that the local
+  and/or ISP network support CIDFI), client processing proceeds to
   {{client-authorizes}}.
 
-- if the discovery failed (i.e., the client concludes that the local
-  network and ISP do not support CIDFI) client processing stops.
-
-
-
-### Client Learns Using DNS SVCB
-
-The client determines if the local network provides CIDFI service by
-issuing a query to the local DNS server for
-"_cidfi-aware.cidfi.arpa." with the SVCB resource record type (64)
-{{!RFC9460}}.
-
-### Client Learns Using Provisioning Domain
-
-The client determines if the local network supports CIDFI by
-querying https://\<PvD-ID\>/.well-known/pvd as described in {{Section
-4.1 of !RFC8801}}.
-
-
-### Client Learns Using DHCP or 3GPP PCO
-
-The client determines that a local network is CIDFI-capable if the
-client receives an explicit signal from the network, e.g., via a
-dedicated DHCP option or a 3GPP PCO (Protocol Configuration Option)
-Information Element. An example of explicit signal would be a DHCPv6
-option or DHCPv4 sub-option that that is returned as part of
-{{?RFC7839}}.
-
+If the discovery failed (i.e., the client concludes that the local
+  network and ISP do not support CIDFI), client processing stops.
 
 ## Client Authorizes CIDFI-aware Network Elements {#client-authorizes}
 
@@ -612,15 +501,15 @@ the client owns its UDP 4-tuple.
 
 When a QUIC client connects to a QUIC server, the client:
 
-  1. learns if the server supports CIDFI
+  1. Learns if the server supports CIDFI
      and obtains its mapping of transmitted Destination CIDs to metadata, described
      in {{server-supports-cidfi}}.
-  2. proves ownership of its UDP 4-tuple to
+  2. Proves ownership of its UDP 4-tuple to
      the on-path CNEs, described in {{ownership}}.
-  3. performs initial metadata exchange
+  3. Performs initial metadata exchange
      with the CIDFI network element and server, and server and network element,
      described in {{initial-metadata-exchange}}.
-  4. for the duration of the connection, receives network-to-host and performs
+  4. For the duration of the connection, receives network-to-host and performs
      host-to-network updates as network conditions or network requirements change,
      described in {{ongoing}}. Some policies are provided to CNEs to control which network changes can trigger updating clients.
 
@@ -1356,84 +1245,15 @@ Status:
 Specification:
 : This-Document
 
-
 ## New Well-known URI "cidfi-aware" {#iana-uri}
 
 This document requests IANA to register the new well-known URI "cidfi" in the
 "Well-Known URIs" registry available at {{IANA-WKU}}.
 
-## New Special-use Domain Name {#iana-sudn}
-
-Register new special-use domain name cidfi.arpa for DNS SVCB discovery.
-
-
-## New DNS Service Binding (SVCB) {#iana-svcb}
-
-This document requests IANA to register the new DNS SVCB "_cidfi-aware" in
-the "DNS Service Bindings (SVCB)" registry available at {{IANA-SVCB}}.
-
-The document also requests IANA to register the following service parameter
-in the "Service Parameter Keys (SvcParamKeys)" registry {{IANA-SVCB}}:
-
-Number:
-: TBD
-
-Name:
-: min-ttl
-
-Meaning:
-:The minimum IPv4 TTL or IPv6 Hop Limit to use for a connection.
-
-Reference:
-: This-Document
-
-
 ## New STUN Attribute {#iana-stun}
 
 This document requests IANA to register the new STUN attribute "CIDFI-NONCE"
 in the "STUN Attributes" registry available at {{IANA-STUN}}.
-
-## New Provisioning Domain Additional Information Key {#iana-pvd}
-
-This document requests IANA to register a new JSON key in the
-Provisioning Domains Additional Information registry at {{IANA-PVD}}:
-
-~~~~~
-JSON key: cidfi
-Description: CID Flow Indicator
-Type: array of cidfi details
-Example: ["cidfinode": "service.example.net", "cidfipathauth":
-          "/authpath", "cidfimetadata": "/meta"]
-~~~~~
-
-Additionally, this document requests creating a new registry, entitled "CIDFI JSON Keys" under
-the Provisioning Domains Additional Information registry group {{IANA-PVD}}.
-The policy for assigning new entries in this registry is Expert Review {{Section 4.5 of !RFC8126}}.
-The structure of this registry is identical to the Provisioning Domains Additional Information registry group.
-The initial content of this registry is provided below:
-
-~~~~~
-JSON key: cidfinode
-Description: FQDN of CIDFI node
-Type: string
-Example: service.example.net
-
-JSON key: min-ttl
-Description: The minimum TTL or Hop Limit to reach a CNE
-Type: Unsigned integer
-Example: 5
-
-JSON key: cidfipathauth
-Description: authentication and authorization path for CIDFI
-type: string
-Example: "/authpath"
-
-JSON key: cidfimetadata
-Description: metadata path for CIDFI
-type: string
-example: "/metadata"
-~~~~~
-
 
 --- back
 
