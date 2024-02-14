@@ -88,14 +88,8 @@ Table of Contents
      3.1.  Notations
    4.  Design Goals
    5.  Network Configuration to Support CIDFI
-     5.1.  DNS SVCB Records
-     5.2.  Provisioning Domains
-     5.3.  DHCP or 3GPP PCO
    6.  Client Operation on Network Attach or Topology Change
      6.1.  Client Learns Local Network Supports CIDFI
-       6.1.1.  Client Learns Using DNS SVCB
-       6.1.2.  Client Learns Using Provisioning Domain
-       6.1.3.  Client Learns Using DHCP or 3GPP PCO
      6.2.  Client Authorizes CIDFI-aware Network Elements
    7.  Client Operation on Each Connection to a Server
      7.1.  Client Learns Server Supports CIDFI
@@ -129,10 +123,7 @@ Table of Contents
      18.1.  New QUIC Transport Parameter
      18.2.  New QUIC Frame Type
      18.3.  New Well-known URI "cidfi-aware"
-     18.4.  New Special-use Domain Name
-     18.5.  New DNS Service Binding (SVCB)
-     18.6.  New STUN Attribute
-     18.7.  New Provisioning Domain Additional Information Key
+     18.4.  New STUN Attribute
    19. References
      19.1.  Normative References
      19.2.  Informative References
@@ -472,89 +463,12 @@ Table of Contents
 
 5.  Network Configuration to Support CIDFI
 
-   The network is configured to advertise its support for CIDFI.
+   The network is configured to advertise its support for CIDFI using a
+   variety of means.
 
-   For this step, four mechanisms are described in this document: DNS
-   SVCB records [RFC9460], IPv6 Provisioning Domains (PvD) [RFC8801],
-   DHCP [RFC2131][RFC8415], and 3GPP PCO.  These are described in the
-   following sub-sections.
-
-      Standardizing all or some of these mechanisms is for further
-      discussion.
-
-5.1.  DNS SVCB Records
-
-   This document defines a new DNS Service Binding parameter "cidfi-
-   aware" in Section 18.5 and a new Special-Use Domain Name "cidfi.arpa"
-   in Section 18.4.
-
-   The local network is configured to respond to DNS SVCB [RFC9460]
-   queries with ServiceMode (Section 2.4.3 of [RFC9460]) for "_cidfi-
-   aware.cidfi.arpa" with the DNS names of that network's and upstream
-   network's CIDFI-aware network elements (CNEs).  If upstream networks
-   also support CIDFI (e.g., the ISP network) those SVCB records are
-   aggregated into the local DNS server's response by the local
-   network's recursive DNS resolvers.  For example, a query for "_cidfi-
-   aware.cidfi.arpa" might return two answers for the two CNEs on the
-   local network, one belonging to the local ISP (example.net) and the
-   other belonging to the local Wi-Fi network (example.com).
-
-   _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 service-cidfi.example.net. (
-       alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
-       cidfimetadata=/cidfi-metadata
-       )
-   _cidfi-aware.cidfi.arpa. 7200 IN SVCB 0 wifi.example.com. (
-       alpn=h3 cidfipathauth=/path-auth-query{?cidfi}
-       cidfimetadata=/cidfi-metadata
-       )
-
-                     Figure 3: Example of SVCB Records
-
-   When multihoming, the multihome-capable CPE aggregates all upstream
-   networks' "_cidfi-aware.cidfi.arpa" responses into the response sent
-   to its locally-connected clients.
-
-5.2.  Provisioning Domains
-
-   The CIDFI networks are configured to set the H-flag so clients can
-   request PvD Additional Information (Section 4.1 of [RFC8801]).
-
-   The "application/pvd+json" returned looks like what is depicted in
-   Figure 4 when there are two CIDFI-aware network elements, service-
-   cidfi and wi-fi.
-
-           {
-              "cidfi":[
-                 {
-                    "cidfinode":"service-cidfi.example.net",
-                    "min-ttl":3,
-                    "cidfipathauth":"/path-auth-query{?cidfi}",
-                    "cidfimetadata":"/cidfi-metadata"
-                 },
-                 {
-                    "cidfinode":"wi-fi.example.net",
-                    "min-ttl":2,
-                    "cidfipathauth":"/path-auth-query{?cidfi}",
-                    "cidfimetadata":"/cidfi-metadata"
-                 }
-              ]
-           }
-
-                    Figure 4: Example of PvD Information
-
-   Multiple CIDFI-aware network elements on a network path will require
-   propagating the Provisioning Domain Additional Information.  For
-   example, a CIDFI-aware Wi-Fi access point connected to a CIDFI-aware
-   5G network will require the information for both CIDFI networks be
-   available to the client, in a single Provisioning Domain Additional
-   Information request.  This means the Wi-Fi access point has to obtain
-   that information so the Wi-Fi access point can provide both the 5G
-   network's information and the Wi-Fi access point's information.
-
-5.3.  DHCP or 3GPP PCO
-
-   The network is configured to respond to DHCPv6, DHCPv4 sub-option, or
-   3GPP PCO (Protocol Configuration Option) Information Element.
+   Four mechanisms are described in [I-D.wing-cidfi-discovery]: DNS SVCB
+   records [RFC9460], IPv6 Provisioning Domains (PvD) [RFC8801], DHCP
+   [RFC2131][RFC8415], and 3GPP PCO.
 
 6.  Client Operation on Network Attach or Topology Change
 
@@ -564,39 +478,15 @@ Table of Contents
 
 6.1.  Client Learns Local Network Supports CIDFI
 
-   For this step, four mechanisms are identified: DNS SVCB records, IPv6
-   PvD, DHCP, or 3GPP PCO.  These are described in the following sub-
-   sections.
+   The client uses one on of the four mechanisms defined in [I-D.wing-
+   cidfi-discovery] to discover CNEs of the networks it is attached to.
 
-   In all cases below,
+   If the discovery succeeds (i.e., the client concludes that the local
+   and/or ISP network support CIDFI), client processing proceeds to
+   Section 6.2.
 
-   *  if the discovery succeeds (i.e., the client concludes that the
-      local and/or ISP network support CIDFI) client processing proceeds
-      to Section 6.2.
-
-   *  if the discovery failed (i.e., the client concludes that the local
-      network and ISP do not support CIDFI) client processing stops.
-
-6.1.1.  Client Learns Using DNS SVCB
-
-   The client determines if the local network provides CIDFI service by
-   issuing a query to the local DNS server for "_cidfi-
-   aware.cidfi.arpa." with the SVCB resource record type (64) [RFC9460].
-
-6.1.2.  Client Learns Using Provisioning Domain
-
-   The client determines if the local network supports CIDFI by querying
-   https://<PvD-ID>/.well-known/pvd as described in Section 4.1 of
-   [RFC8801].
-
-6.1.3.  Client Learns Using DHCP or 3GPP PCO
-
-   The client determines that a local network is CIDFI-capable if the
-   client receives an explicit signal from the network, e.g., via a
-   dedicated DHCP option or a 3GPP PCO (Protocol Configuration Option)
-   Information Element.  An example of explicit signal would be a DHCPv6
-   option or DHCPv4 sub-option that that is returned as part of
-   [RFC7839].
+   If the discovery failed (i.e., the client concludes that the local
+   network and ISP do not support CIDFI), client processing stops.
 
 6.2.  Client Authorizes CIDFI-aware Network Elements
 
@@ -628,24 +518,24 @@ Table of Contents
       ]
    }
 
-                 Figure 5: Example of CIDFI HMAC and Nonce
+                 Figure 3: Example of CIDFI HMAC and Nonce
 
 7.  Client Operation on Each Connection to a Server
 
    When a QUIC client connects to a QUIC server, the client:
 
-   1.  learns if the server supports CIDFI and obtains its mapping of
+   1.  Learns if the server supports CIDFI and obtains its mapping of
        transmitted Destination CIDs to metadata, described in
        Section 7.1.
 
-   2.  proves ownership of its UDP 4-tuple to the on-path CNEs,
+   2.  Proves ownership of its UDP 4-tuple to the on-path CNEs,
        described in Section 7.2.
 
-   3.  performs initial metadata exchange with the CIDFI network element
+   3.  Performs initial metadata exchange with the CIDFI network element
        and server, and server and network element, described in
        Section 7.3.
 
-   4.  for the duration of the connection, receives network-to-host and
+   4.  For the duration of the connection, receives network-to-host and
        performs host-to-network updates as network conditions or network
        requirements change, described in Section 8.  Some policies are
        provided to CNEs to control which network changes can trigger
@@ -700,7 +590,7 @@ Table of Contents
    4-tuple as the QUIC connection indicates ownership of that IP address
    and UDP port number.  The nonce and HMAC are sent in a [STUN]
    indication (STUN class of 0b01) containing one or more CIDFI-NONCE
-   attributes (Section 18.6).  If there are multiple CNEs the single
+   attributes (Section 18.4).  If there are multiple CNEs the single
    STUN indication contains a CIDFI-NONCE attribute from each of them.
    This message is discarded, if received, by the QUIC server.
 
@@ -709,7 +599,7 @@ Table of Contents
    before reaching the server.  For example, the host sets the TTL to
    "min-ttl" that is returned during CNE discovery.
 
-   Figure 6 shows a summarized message flow obtaining the nonce and HMAC
+   Figure 4 shows a summarized message flow obtaining the nonce and HMAC
    secret from the CNE (steps 1-2) which is performed on network attach.
    The CNE also sends active_cidfi_connection_id_limit in step 2.
 
@@ -723,7 +613,7 @@ Table of Contents
          |<-----------------------------------+                  |
          |                                    |                  |
 
-                     Figure 6: Example of Flow Exchange
+                     Figure 4: Example of Flow Exchange
 
    Later, when connecting to a new QUIC server, the client determines if
    there are on-path CIDFI Network Elements by sending the nonce and
@@ -763,7 +653,7 @@ Table of Contents
         |  8. HTTPS: Ok                      |                  |
         |<-----------------------------------+                  |
 
-                  Figure 7: Example of Flow to New Server
+                  Figure 5: Example of Flow to New Server
 
       Note the above message flow shows an initial QUIC handshake for
       simplicity (steps 1 and 7) but because of QUIC connection
@@ -807,7 +697,7 @@ Table of Contents
 
 7.2.1.  STUN CIDFI-NONCE Attribute
 
-   The format of the STUN CIDFI-NONCE attribute is shown in Figure 8.
+   The format of the STUN CIDFI-NONCE attribute is shown in Figure 6.
 
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -827,7 +717,7 @@ Table of Contents
      |                                                               |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-               Figure 8: Format of STUN CIDFI-NONCE Attribute
+               Figure 6: Format of STUN CIDFI-NONCE Attribute
 
    The nonce is 128 bits obtained from the CIDFI network element.  The
    HMAC-output field is computed per [RFC5869] using the CIDFI network
@@ -880,7 +770,7 @@ Table of Contents
    UDP 4-tuple.  The client then sends a new STUN message with that new
    nonce value and send a new HTTPS mapping request(s).  This
    interaction is highlighted in the simplified message flow in
-   Figure 9.
+   Figure 7.
 
                                        CIDFI-aware            QUIC
       client                           edge router           server
@@ -912,7 +802,7 @@ Table of Contents
         |  Ok                                |                  |
         |<-----------------------------------+                  |
 
-          Figure 9: Example of a Client Re-transmitting Lost Nonce
+          Figure 7: Example of a Client Re-transmitting Lost Nonce
 
    After the initial metadata is exchanged, processing continues with
    ongoing host-to-network and network-to-host updates as described in
@@ -930,7 +820,7 @@ Table of Contents
 
    The communication from the client to the server are using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
-   communication (Figure 10).
+   communication (Figure 8).
 
                       CIDFI-aware       CIDFI-aware
        client     Wi-Fi Access Point    edge router           server
@@ -949,7 +839,7 @@ Table of Contents
          |  QUIC CIDFI stream: Ok             |                  |
          +------------------------------------------------------>|
 
-                 Figure 10: Example of CIDFI Communication
+                  Figure 8: Example of CIDFI Communication
 
    To each of the network elements authorized by the client, the client
    sends the mappings of the server's transmitted Destination CIDs to
@@ -959,7 +849,7 @@ Table of Contents
 
    The CNE sends network performance information to the server which is
    intended to influence the sender's traffic rate (such as improving or
-   reducing fidelity of the audio or video).  In Figure 11, the CNE
+   reducing fidelity of the audio or video).  In Figure 9, the CNE
    informs the client of reduced bandwidth and the client informs the
    server using CIDFI.
 
@@ -975,7 +865,7 @@ Table of Contents
             |  Ok              |                 |            |
             +----------------------------------->|            |
 
-      Figure 11: Example of CIDFI Communication with Metadata Sharing
+       Figure 9: Example of CIDFI Communication with Metadata Sharing
 
    The communication from the client to the server is using a CIDFI-
    dedicated QUIC stream over the same QUIC connection as their primary
@@ -1105,7 +995,7 @@ Table of Contents
 
    Over the CIDFI-dedicated QUIC stream, the server sends mapping
    information to the client when then propagates that information to
-   each of the CNEs.  An example is shown in Figure 12.
+   each of the CNEs.  An example is shown in Figure 10.
 
    {
       "metadata-parameters":[
@@ -1144,9 +1034,9 @@ Table of Contents
       ]
    }
 
-                Figure 12: Example JSON for Flow Importance
+                Figure 10: Example JSON for Flow Importance
 
-      Note: Figure 12 lists sample attributes and they will be discussed
+      Note: Figure 10 lists sample attributes and they will be discussed
       in detail in a separate document.
 
 12.1.2.  Mapping DiffServ Code Point (DSCP) to DCIDs
@@ -1166,7 +1056,7 @@ Table of Contents
    information to the client when then propagates that information to
    each of the CNEs.
 
-   An example is shown in Figure 13.
+   An example is shown in Figure 11.
 
    {
       "dscp":[
@@ -1193,7 +1083,7 @@ Table of Contents
       ]
    }
 
-                  Figure 13: Example JSON for DSCP Mapping
+                  Figure 11: Example JSON for DSCP Mapping
 
 12.2.  CIDFI-aware Network Element to Server
 
@@ -1409,74 +1299,11 @@ Table of Contents
    This document requests IANA to register the new well-known URI
    "cidfi" in the "Well-Known URIs" registry available at [IANA-WKU].
 
-18.4.  New Special-use Domain Name
-
-   Register new special-use domain name cidfi.arpa for DNS SVCB
-   discovery.
-
-18.5.  New DNS Service Binding (SVCB)
-
-   This document requests IANA to register the new DNS SVCB "_cidfi-
-   aware" in the "DNS Service Bindings (SVCB)" registry available at
-   [IANA-SVCB].
-
-   The document also requests IANA to register the following service
-   parameter in the "Service Parameter Keys (SvcParamKeys)" registry
-   [IANA-SVCB]:
-
-   Number:  TBD
-
-   Name:  min-ttl
-
-   Meaning: :The minimum IPv4 TTL or IPv6 Hop Limit to use for a
-   connection.
-
-   Reference:  This-Document
-
-18.6.  New STUN Attribute
+18.4.  New STUN Attribute
 
    This document requests IANA to register the new STUN attribute
    "CIDFI-NONCE" in the "STUN Attributes" registry available at
    [IANA-STUN].
-
-18.7.  New Provisioning Domain Additional Information Key
-
-   This document requests IANA to register a new JSON key in the
-   Provisioning Domains Additional Information registry at [IANA-PVD]:
-
-   JSON key: cidfi
-   Description: CID Flow Indicator
-   Type: array of cidfi details
-   Example: ["cidfinode": "service.example.net", "cidfipathauth":
-             "/authpath", "cidfimetadata": "/meta"]
-
-   Additionally, this document requests creating a new registry,
-   entitled "CIDFI JSON Keys" under the Provisioning Domains Additional
-   Information registry group [IANA-PVD].  The policy for assigning new
-   entries in this registry is Expert Review Section 4.5 of [RFC8126].
-   The structure of this registry is identical to the Provisioning
-   Domains Additional Information registry group.  The initial content
-   of this registry is provided below:
-
-   JSON key: cidfinode
-   Description: FQDN of CIDFI node
-   Type: string
-   Example: service.example.net
-
-   JSON key: min-ttl
-   Description: The minimum TTL or Hop Limit to reach a CNE
-   Type: Unsigned integer
-   Example: 5
-
-   JSON key: cidfipathauth
-   Description: authentication and authorization path for CIDFI
-   type: string
-   Example: "/authpath"
-
-   JSON key: cidfimetadata
-   Description: metadata path for CIDFI
-   type: string
-   example: "/metadata"
 
 19.  References
 
@@ -1527,11 +1354,6 @@ Table of Contents
               Validation Improvement (SAVI) Solution for DHCP",
               RFC 7513, DOI 10.17487/RFC7513, May 2015,
               <https://www.rfc-editor.org/rfc/rfc7513>.
-
-   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
-              Writing an IANA Considerations Section in RFCs", BCP 26,
-              RFC 8126, DOI 10.17487/RFC8126, June 2017,
-              <https://www.rfc-editor.org/rfc/rfc8126>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1675,11 +1497,6 @@ Table of Contents
    [RFC7649]  Saint-Andre, P. and D. York, "The Jabber Scribe Role at
               IETF Meetings", RFC 7649, DOI 10.17487/RFC7649, September
               2015, <https://www.rfc-editor.org/rfc/rfc7649>.
-
-   [RFC7839]  Bhandari, S., Gundavelli, S., Grayson, M., Volz, B., and
-              J. Korhonen, "Access-Network-Identifier Option in DHCP",
-              RFC 7839, DOI 10.17487/RFC7839, June 2016,
-              <https://www.rfc-editor.org/rfc/rfc7839>.
 
    [RFC7849]  Binet, D., Boucadair, M., Vizdal, A., Chen, G., Heatley,
               N., Chandler, R., Michaud, D., Lopez, D., and W. Haeffner,
