@@ -478,8 +478,9 @@ Table of Contents
 
 6.1.  Client Learns Local Network Supports CIDFI
 
-   The client uses one on of the four mechanisms defined in [I-D.wing-
-   cidfi-discovery] to discover CNEs of the networks it is attached to.
+   The client uses one on of the four mechanisms defined in
+   [I-D.wing-cidfi-discovery] to discover CNEs of the networks it is
+   attached to.
 
    If the discovery succeeds (i.e., the client concludes that the local
    and/or ISP network support CIDFI), client processing proceeds to
@@ -1434,6 +1435,13 @@ Table of Contents
               draft-joras-sadcdn-01, 10 July 2023,
               <https://datatracker.ietf.org/doc/html/draft-joras-sadcdn-
               01>.
+
+   [I-D.wing-cidfi-discovery]
+              Wing, D., Reddy.K, T., and M. Boucadair, "Discovery of
+              CIDFI-aware Network Elements", Work in Progress, Internet-
+              Draft, draft-wing-cidfi-discovery-00, 14 February 2024,
+              <https://datatracker.ietf.org/doc/html/draft-wing-cidfi-
+              discovery-00>.
 
    [I-D.zmlk-quic-te]
               Zheng, Z., Ma, Y., Liu, Y., and M. Kühlewind, "QUIC-
