@@ -116,7 +116,7 @@ the user experience to adapt to network's constraints and share expected applica
 differentiated service to a flow and to packets within a flow. The differentiated service may be provided at the network (e.g., packet prioritization), the server (e.g., adaptive transmission), or both.
 Such an approach is called CIDFI, for Collaborative and Interoperable Dissemination of Flow Indicators.
 
-A key componenet in a CIDFI system is to discover whether a network is CIDFI-capable, and if so discover
+A key component in a CIDFI system is to discover whether a network is CIDFI-capable, and if so discover
 a set of CIDFI-aware Network Elements (CNEs) that will be involved in the Host-to-network signaling and network-to-host signaling.
 This document discusses a set of discovery methods.
 
@@ -145,12 +145,11 @@ resources cannot be used at maximum and, thus, a network would seek to
 reduce or offload some of the traffic during these events -- often
 called 'reactive traffic policy'. Network-to-host signals are
 useful to put in place adequate traffic distribution policies (e.g.,
-prefer the use of alternate paths, offload a network).
+prefer the use of alternate paths or offload a network).
 
-{{?I-D.wing-cidfi}} defines CIDFI (pronounced "sid fye") which is a system
-of several protocols that allow communicating about a connection from the network to the server and the server to the network.
-The information exchanged allows the server to know about network conditions
-and allows the server to signal packet importance. The following main steps
+{{?I-D.wing-cidfi}} defines a generic framework, called CIDFI (pronounced "sid fye"), which is a system
+of several protocols that allows communicating about a connection from the network to a host and the host to the network.
+For example, this mechanism can be used by a host to signal packet importance to a network element. Overall, the following main steps
 are involved in CIDFI; some of them are optional:
 
 * CIDFI-awareness discovery between a host and a network.
