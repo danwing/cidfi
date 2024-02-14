@@ -442,7 +442,7 @@ suffer from nested congestion control.
 
 The network is configured to advertise its support for CIDFI using a variety of means.
 
-Four mechanisms are described in [I-D.wing-cidfi-discovery]: DNS
+Four mechanisms are described in {{?I-D.wing-cidfi-discovery}}: DNS
 SVCB records {{!RFC9460}}, IPv6 Provisioning Domains (PvD) {{!RFC8801}}, DHCP {{!RFC2131}}{{!RFC8415}}, and 3GPP PCO.
 
 # Client Operation on Network Attach or Topology Change {#attach}
@@ -453,7 +453,7 @@ authorizes discovered network elements ({{client-authorizes}}).
 
 ## Client Learns Local Network Supports CIDFI {#discovery}
 
-The client uses one on of the four mechanisms defined in [I-D.wing-cidfi-discovery]
+The client uses one on of the four mechanisms defined in {{?I-D.wing-cidfi-discovery}}
 to discover CNEs of the networks it is attached to.
 
 If the discovery succeeds (i.e., the client concludes that the local
