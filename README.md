@@ -7,6 +7,14 @@ This is the working area for the individual Internet-Draft, "Framework for CID F
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-wing-cidfi)
 * [Compare Editor's Copy to Individual Draft](https://danwing.github.io/cidfi/#go.draft-wing-cidfi.diff)
 
+# CIDFI Network Elements Discovery
+
+This is the working area for the individual Internet-Draft, "Discovery of CIDFI-aware Network Elements".
+
+* [Editor's Copy](https://danwing.github.io/cidfi/#go.draft-wing-cidfi-discovery.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-wing-cidfi-discovery)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-wing-cidfi-discovery)
+* [Compare Editor's Copy to Individual Draft](https://danwing.github.io/cidfi/#go.draft-wing-cidfi-discovery.diff)
 
 ## Contributing
 
