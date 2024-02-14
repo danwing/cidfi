@@ -163,7 +163,9 @@ are involved in CIDFI; some of them are optional:
 * CIDFI-aware clients sharing of metadata with CIDFI-aware server to adapt
   to local network conditions.
 
-This document focuses on the discovery step.
+This document focuses on the discovery step. On initial network attach topology change,
+the client learns if the network supports CIDFI ({{discovery}}) and
+authorizes discovered network elements ({{client-authorizes}}) as a function of a local policy.
 
 # Conventions and Definitions
 
@@ -268,13 +270,7 @@ and the Wi-Fi access point's information.
 The network is configured to respond to DHCPv6, DHCPv4 sub-option,
 or 3GPP PCO (Protocol Configuration Option) Information Element.
 
-# Client Operation on Network Attach or Topology Change {#attach}
-
-On initial network attach topology change,
-the client learns if the network supports CIDFI ({{discovery}}) and
-authorizes discovered network elements ({{client-authorizes}}) as a function of a local policy.
-
-## Client Learns Local Network Supports CIDFI {#discovery}
+# Client Learns Local Network Supports CIDFI {#discovery}
 
 For this step, four mechanisms are identified: DNS SVCB records, IPv6
 PvD, DHCP, or 3GPP PCO.  These are described
@@ -289,20 +285,20 @@ In all cases below,
 - if the discovery failed (i.e., the client concludes that the local
   network and ISP do not support CIDFI) client processing stops.
 
-### Client Learns Using DNS SVCB
+## Client Learns Using DNS SVCB
 
 The client determines if the local network provides CIDFI service by
 issuing a query to the local DNS server for
 "_cidfi-aware.cidfi.arpa." with the SVCB resource record type (64)
 {{!RFC9460}}.
 
-### Client Learns Using Provisioning Domain
+## Client Learns Using Provisioning Domain
 
 The client determines if the local network supports CIDFI by
 querying https://\<PvD-ID\>/.well-known/pvd as described in {{Section
 4.1 of !RFC8801}}.
 
-### Client Learns Using DHCP or 3GPP PCO
+## Client Learns Using DHCP or 3GPP PCO
 
 The client determines that a local network is CIDFI-capable if the
 client receives an explicit signal from the network, e.g., via a
