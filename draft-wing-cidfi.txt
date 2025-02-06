@@ -5,10 +5,10 @@
 Network Working Group                                            D. Wing
 Internet-Draft                                      Cloud Software Group
 Intended status: Standards Track                                T. Reddy
-Expires: 17 August 2024                                            Nokia
+Expires: 10 August 2025                                            Nokia
                                                             M. Boucadair
                                                                   Orange
-                                                        14 February 2024
+                                                         6 February 2025
 
 
                 Framework for CID Flow Indicator (CIDFI)
@@ -62,11 +62,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 August 2024.
+   This Internet-Draft will expire on 10 August 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1399,11 +1399,11 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc3168>.
 
    [I-D.ietf-avtcore-rtp-over-quic]
-              Ott, J., Engelbart, M., and S. Dawkins, "RTP over QUIC
+              Engelbart, M., Ott, J., and S. Dawkins, "RTP over QUIC
               (RoQ)", Work in Progress, Internet-Draft, draft-ietf-
-              avtcore-rtp-over-quic-08, 12 February 2024,
+              avtcore-rtp-over-quic-12, 21 October 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-avtcore-
-              rtp-over-quic-08>.
+              rtp-over-quic-12>.
 
    [I-D.ietf-moq-requirements]
               Gruessing, J. and S. Dawkins, "Media Over QUIC - Use Cases
@@ -1422,12 +1422,12 @@ Table of Contents
 
    [I-D.ietf-teas-5g-ns-ip-mpls]
               Szarkowicz, K. G., Roberts, R., Lucek, J., Boucadair, M.,
-              and L. M. Contreras, "A Realization of RFC XXXX Network
-              Slices for 5G Networks Using Current IP/MPLS
-              Technologies", Work in Progress, Internet-Draft, draft-
-              ietf-teas-5g-ns-ip-mpls-02, 30 November 2023,
+              and L. M. Contreras, "A Realization of Network Slices for
+              5G Networks Using Current IP/MPLS Technologies", Work in
+              Progress, Internet-Draft, draft-ietf-teas-5g-ns-ip-mpls-
+              16, 3 February 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-teas-5g-
-              ns-ip-mpls-02>.
+              ns-ip-mpls-16>.
 
    [I-D.joras-sadcdn]
               Joras, M., "Securing Ancillary Data for Communicating with
